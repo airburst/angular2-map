@@ -12,7 +12,9 @@ import {GpxService} from './services/gpx.service';
         </div>
         <div>
             <h2>Route</h2>
-            <code>{{route | json}}</code>
+            <p>Name: {{route.name}}</p>
+            <p>Total Ascent: {{route.ascent}}</p>
+            <p>Total Descent: {{route.descent}}</p>
         </div>
         `,
     directives: [FORM_DIRECTIVES],
@@ -23,12 +25,14 @@ export class AppComponent {
     constructor(private gpxService: GpxService, private fileService: FileService) { }
 
     route: any = '';
+    totalAscent: number = 0;
+    totalDescent: number = 0;
     
     // File load handler
     fileChange($event) {
         // Convert gpx file into json
         this.fileService.ReadTextFile($event.target, (data) => {
-            this.route = this.gpxService.parse(data);
+            this.route = this.gpxService.import(data);
         });
     }
 

@@ -5,12 +5,12 @@ import {Point, WayPoint, Marker, Route} from '../route';
 export class GpxService {
     
     // Parse xml into json
-    parse(gpxData: any): string {
+    import(gpxData: any): string {
         // Parse gpx format into data structure
         try {           
             let parser: DOMParser = new DOMParser();
             let xmlDoc: Document = parser.parseFromString(gpxData,'text/xml');
-            return this._extract(xmlDoc);
+            return this.gpxToJson(xmlDoc);
         }
         catch (err) {
             console.log(err);
@@ -18,7 +18,7 @@ export class GpxService {
         }
     }
     
-    private _extract(xml: Document): string {
+    private gpxToJson(xml: Document): string {
         let route = new Route();
 
         // Route Name (gpx/metadata/name)
@@ -38,16 +38,18 @@ export class GpxService {
             route.addMarker(marker);
         }
         
-        // Track Points (gpx/trk/trkseg/trkpt[@lat, @lon])
+        // Track Points (gpx/trk/trkseg/trkpt[@lat, @lon, ele])
         let trackPoints = xml.getElementsByTagName('trkpt');
         for (let i = 0; i < trackPoints.length; i++) {
             let point = new Point(
                 parseFloat(trackPoints[i].getAttribute('lat').valueOf()),
-                parseFloat(trackPoints[i].getAttribute('lon').valueOf())
+                parseFloat(trackPoints[i].getAttribute('lon').valueOf()),
+                parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent)
             );
             route.addPoint(point);
         }
-        return route.flatten();
+        route.calculateElevation();
+        return route.json();
     }
 
 }

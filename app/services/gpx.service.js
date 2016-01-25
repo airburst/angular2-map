@@ -23,19 +23,19 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                 function GpxService() {
                 }
                 // Parse xml into json
-                GpxService.prototype.parse = function (gpxData) {
+                GpxService.prototype.import = function (gpxData) {
                     // Parse gpx format into data structure
                     try {
                         var parser = new DOMParser();
                         var xmlDoc = parser.parseFromString(gpxData, 'text/xml');
-                        return this._extract(xmlDoc);
+                        return this.gpxToJson(xmlDoc);
                     }
                     catch (err) {
                         console.log(err);
                         return (err);
                     }
                 };
-                GpxService.prototype._extract = function (xml) {
+                GpxService.prototype.gpxToJson = function (xml) {
                     var route = new route_1.Route();
                     // Route Name (gpx/metadata/name)
                     var meta = xml.getElementsByTagName('metadata')[0];
@@ -46,13 +46,14 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                         var marker = new route_1.Marker(wayPoints[i].getElementsByTagName('name')[0].textContent, new route_1.Point(parseFloat(wayPoints[i].getAttribute('lat').valueOf()), parseFloat(wayPoints[i].getAttribute('lon').valueOf())));
                         route.addMarker(marker);
                     }
-                    // Track Points (gpx/trk/trkseg/trkpt[@lat, @lon])
+                    // Track Points (gpx/trk/trkseg/trkpt[@lat, @lon, ele])
                     var trackPoints = xml.getElementsByTagName('trkpt');
                     for (var i = 0; i < trackPoints.length; i++) {
-                        var point = new route_1.Point(parseFloat(trackPoints[i].getAttribute('lat').valueOf()), parseFloat(trackPoints[i].getAttribute('lon').valueOf()));
+                        var point = new route_1.Point(parseFloat(trackPoints[i].getAttribute('lat').valueOf()), parseFloat(trackPoints[i].getAttribute('lon').valueOf()), parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent));
                         route.addPoint(point);
                     }
-                    return route.flatten();
+                    route.calculateElevation();
+                    return route.json();
                 };
                 GpxService = __decorate([
                     core_1.Injectable(), 
