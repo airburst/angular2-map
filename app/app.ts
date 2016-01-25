@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
             this.route = this.gpxService.import(data);
             
             // Test - change centre of map
-            this.map.easting = 380001;
+            this.map.easting = 380000;
             this.map.centreMap();
         });
     }
