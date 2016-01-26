@@ -14,7 +14,13 @@ import {FORM_DIRECTIVES} from 'angular2/common';
     `]
 })
 
-export class OsMap {   
+export class OsMap {
+    url: string = 'http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js';
+    key: string = 'A73F02BD5E3B3B3AE0405F0AC8602805';
+    fullUrl(): string {
+        return this.url + '?key=' + this.key;
+    }
+    
     easting: number = 386210;
     northing: number = 168060;
     zoom: number = 7;

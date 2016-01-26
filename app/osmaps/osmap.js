@@ -21,6 +21,8 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
         execute: function() {
             OsMap = (function () {
                 function OsMap() {
+                    this.url = 'http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js';
+                    this.key = 'A73F02BD5E3B3B3AE0405F0AC8602805';
                     this.easting = 386210;
                     this.northing = 168060;
                     this.zoom = 7;
@@ -30,6 +32,9 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     this.markerVectorLayer = {};
                     this.gazetteer = {};
                 }
+                OsMap.prototype.fullUrl = function () {
+                    return this.url + '?key=' + this.key;
+                };
                 OsMap.prototype.init = function () {
                     // Instantiate the map canvas
                     var options = {

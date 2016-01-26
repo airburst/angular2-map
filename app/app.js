@@ -39,13 +39,14 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.route = {};
                     this.totalAscent = 0;
                     this.totalDescent = 0;
+                    this.map = new osmap_1.OsMap;
                 }
                 // Load OS script and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    this.scriptLoadService.load('http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=A73F02BD5E3B3B3AE0405F0AC8602805')
+                    this.scriptLoadService.load(this.map.fullUrl())
                         .then(function (value) {
-                        _this.map = new osmap_1.OsMap;
+                        //TODO: Test for OpenSpace unavailable in Window object
                         _this.map.init();
                     }, function (value) {
                         console.error('Script not found:', value);
