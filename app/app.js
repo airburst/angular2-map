@@ -58,11 +58,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     // Convert gpx file into json
                     this.fileService.ReadTextFile($event.target, function (data) {
                         _this.route = _this.gpxService.read(data);
-                        console.log(_this.route);
-                        // Test - change centre of map
-                        _this.map.easting = _this.route.centre.lat;
-                        _this.map.northing = _this.route.centre.lon;
-                        _this.map.centreMap();
+                        // Change centre of map
+                        var centre = _this.map.mapPoint(_this.route.centre);
+                        _this.map.centreMap(centre.x, centre.y, _this.route.zoom);
                     });
                 };
                 AppComponent = __decorate([

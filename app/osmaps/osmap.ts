@@ -1,6 +1,7 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
+import {Point} from '../route';
 
 @Component({
     selector: 'map',
@@ -29,6 +30,7 @@ export class OsMap {
     pointVectorLayer: any = {};
     markerVectorLayer: any = {};
     gazetteer: any = {};
+    gridProjection: any = {};
     
     init() {
         // Instantiate the map canvas
@@ -45,6 +47,9 @@ export class OsMap {
         };
         this.osMap = new window.OpenSpace.Map('map', options);
         this.centreMap();
+        
+        // Set the projection - needed for converting between northing-easting and latlng
+        this.gridProjection = new window.OpenSpace.GridProjection();
         
         // Initialise the vector layers
         this.lineVectorLayer = new window.OpenLayers.Layer.Vector('Line Vector Layer');
@@ -86,5 +91,18 @@ export class OsMap {
             new window.OpenSpace.MapPoint(this.easting, this.northing),
             this.zoom
         );
+    };
+    
+    // Convert OpenSpace Point into Google LatLng
+    // $scope.pointToGoogle = function(point) {
+    //     var ll = $scope.gridProjection.getLonLatFromMapPoint(point);
+    //     return new google.maps.LatLng(ll.lat, ll.lon);
+    // };
+
+    // Convert Point into OpenSpace MapPoint
+    mapPoint(point: Point) {
+        let mp = new window.OpenLayers.LonLat(point.lon, point.lat),
+            mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
+        return new window.OpenLayers.Geometry.Point(mapPoint.lon, mapPoint.lat);
     };
 }

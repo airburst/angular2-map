@@ -31,6 +31,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     this.pointVectorLayer = {};
                     this.markerVectorLayer = {};
                     this.gazetteer = {};
+                    this.gridProjection = {};
                 }
                 OsMap.prototype.fullUrl = function () {
                     return this.url + '?key=' + this.key;
@@ -50,6 +51,8 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     };
                     this.osMap = new window.OpenSpace.Map('map', options);
                     this.centreMap();
+                    // Set the projection - needed for converting between northing-easting and latlng
+                    this.gridProjection = new window.OpenSpace.GridProjection();
                     // Initialise the vector layers
                     this.lineVectorLayer = new window.OpenLayers.Layer.Vector('Line Vector Layer');
                     this.osMap.addLayer(this.lineVectorLayer);
@@ -83,6 +86,17 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                         this.zoom = zoom;
                     }
                     this.osMap.setCenter(new window.OpenSpace.MapPoint(this.easting, this.northing), this.zoom);
+                };
+                ;
+                // Convert OpenSpace Point into Google LatLng
+                // $scope.pointToGoogle = function(point) {
+                //     var ll = $scope.gridProjection.getLonLatFromMapPoint(point);
+                //     return new google.maps.LatLng(ll.lat, ll.lon);
+                // };
+                // Convert Point into OpenSpace MapPoint
+                OsMap.prototype.mapPoint = function (point) {
+                    var mp = new window.OpenLayers.LonLat(point.lon, point.lat), mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
+                    return new window.OpenLayers.Geometry.Point(mapPoint.lon, mapPoint.lat);
                 };
                 ;
                 OsMap = __decorate([
