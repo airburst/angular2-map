@@ -1,8 +1,9 @@
 System.register([], function(exports_1) {
-    var Point, WayPoint, Marker, Route;
+    var Point, MapPoint, WayPoint, Marker, Route;
     return {
         setters:[],
         execute: function() {
+            // LatLng coordinate (like Google Maps and GPX)
             Point = (function () {
                 function Point(lat, lon, ele) {
                     this.lat = this.lat;
@@ -18,6 +19,20 @@ System.register([], function(exports_1) {
                 return Point;
             })();
             exports_1("Point", Point);
+            // Northing - Easting Coordinate (like Ordnance Survey)
+            MapPoint = (function () {
+                function MapPoint(x, y) {
+                    this.x = this.x;
+                    this.y = this.y;
+                    this.x = x;
+                    this.y = y;
+                }
+                MapPoint.prototype.flatten = function () {
+                    return [this.x, this.y,];
+                };
+                return MapPoint;
+            })();
+            exports_1("MapPoint", MapPoint);
             WayPoint = (function () {
                 function WayPoint(point, routePoints) {
                     this.point = point;
@@ -86,13 +101,13 @@ System.register([], function(exports_1) {
                     this.maxLat = Math.max(this.maxLat, point.lat);
                     this.minLon = Math.min(this.minLon, point.lon);
                     this.maxLon = Math.max(this.maxLon, point.lon);
-                    this.diagonal = this.distance(this.minLat, this.minLon, this.maxLat, this.maxLon);
+                    this.diagonal = this.distanceBetween(this.minLat, this.minLon, this.maxLat, this.maxLon);
                 };
                 Route.prototype.centre = function () {
                     return new Point(this.minLat + ((this.maxLat - this.minLat) / 2), this.minLon + ((this.maxLon - this.minLon) / 2));
                 };
                 // Return distance (km) between two points
-                Route.prototype.distance = function (lat1, lon1, lat2, lon2) {
+                Route.prototype.distanceBetween = function (lat1, lon1, lat2, lon2) {
                     var p = 0.017453292519943295; // Math.PI / 180
                     var c = Math.cos;
                     var a = 0.5 - c((lat2 - lat1) * p) / 2 +
@@ -117,7 +132,7 @@ System.register([], function(exports_1) {
                         'ascent': this.ascent,
                         'descent': this.descent,
                         'waypoints': this.wayPoints,
-                        'route': this.points,
+                        'points': this.points,
                         'markers': this.markers,
                         'centre': this.centre(),
                         'zoom': this.zoom(this.diagonal)

@@ -1,7 +1,7 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point} from '../route';
+import {Point, MapPoint} from '../route';
 
 @Component({
     selector: 'map',
@@ -94,9 +94,23 @@ export class OsMap {
     // };
 
     // Convert Point into OpenSpace MapPoint
-    mapPoint(point: Point) {
+    convertToMapPoint(point: Point) {
         let mp = new window.OpenLayers.LonLat(point.lon, point.lat),
             mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
         return new window.OpenLayers.Geometry.Point(mapPoint.lon, mapPoint.lat);
     };
+    
+    // Convert Route into OpenSpace Path
+    toPath(route: Point[]): MapPoint[] {
+        let path: MapPoint[] = [];
+        route.forEach((point) => { path.push(this.convertToMapPoint(point)); });
+        return path;
+    }
+    
+    // Calculate total distance in km
+    getDistance(route: Point[]): number {
+        // Convert route into MapPoints
+        let distString = new window.OpenLayers.Geometry.Curve(this.toPath(route));
+        return (distString.getLength() / 1000);
+    }
 }

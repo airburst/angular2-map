@@ -1,3 +1,4 @@
+// LatLng coordinate (like Google Maps and GPX)
 export class Point {
     constructor(lat: number, lon: number, ele?: number) {
         this.lat = lat;
@@ -10,6 +11,20 @@ export class Point {
     
     public flatten(): any {
         return [this.lat, this.lon, this.ele];
+    }
+}
+
+// Northing - Easting Coordinate (like Ordnance Survey)
+export class MapPoint {
+    constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
+    public x: number = this.x;
+    public y: number = this.y;
+    
+    public flatten(): any {
+        return [this.x, this.y,];
     }
 }
 
@@ -99,7 +114,7 @@ export class Route {
         this.maxLat = Math.max(this.maxLat, point.lat);
         this.minLon = Math.min(this.minLon, point.lon);
         this.maxLon = Math.max(this.maxLon, point.lon);
-        this.diagonal = this.distance(this.minLat, this.minLon, this.maxLat, this.maxLon);
+        this.diagonal = this.distanceBetween(this.minLat, this.minLon, this.maxLat, this.maxLon);
     }
     
     private centre(): Point {
@@ -110,7 +125,7 @@ export class Route {
     }
     
     // Return distance (km) between two points
-    private distance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    private distanceBetween(lat1: number, lon1: number, lat2: number, lon2: number): number {
         let p = 0.017453292519943295;    // Math.PI / 180
         let c = Math.cos;
         let a = 0.5 - c((lat2 - lat1) * p)/2 + 
@@ -135,7 +150,7 @@ export class Route {
             'ascent': this.ascent,
             'descent': this.descent,
             'waypoints': this.wayPoints,
-            'route': this.points,
+            'points': this.points,
             'markers': this.markers,
             'centre': this.centre(),
             'zoom': this.zoom(this.diagonal)

@@ -6,7 +6,7 @@ System.register([], function(exports_1) {
             ScriptLoadService = (function () {
                 function ScriptLoadService() {
                 }
-                ScriptLoadService.prototype.load = function (url, success, failure) {
+                ScriptLoadService.prototype.load = function (url) {
                     var scriptPromise = new Promise(function (resolve, reject) {
                         // Create a new script tag
                         var script = document.createElement('script');

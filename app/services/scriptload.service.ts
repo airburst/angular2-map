@@ -1,5 +1,5 @@
 export class ScriptLoadService {   
-    load(url: string, success?: Function, failure?: Function): Promise<any> {
+    load(url: string): Promise<any> {
         var scriptPromise = new Promise(function(resolve, reject) {
             // Create a new script tag
             var script = document.createElement('script');

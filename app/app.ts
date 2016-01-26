@@ -19,7 +19,9 @@ import {settings} from './config/config';
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 Total Ascent: {{route.ascent | number:'1.1-2'}} m
                 &nbsp;&nbsp;|&nbsp;&nbsp;
-                Total Descent: {{route.descent | number:'1.1-2'}} m</p>
+                Total Descent: {{route.descent | number:'1.1-2'}} m
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                Distance: {{distance | number:'1.1-2'}} m</p>
         </div>
         <map></map>
         `,
@@ -35,13 +37,14 @@ export class AppComponent implements OnInit {
     ) { }
     
     route: any = {};
-    totalAscent: number = 0;
-    totalDescent: number = 0;
+    distance: number = 0;
     map: OsMap = new OsMap;
 
-    // Load OS script and initialise map canvas
+    // Load OS and Google scripts and initialise map canvas
     ngOnInit() {
-        this.scriptLoadService.load(settings.osMapUrl())
+        let scripts = [settings.osMapUrl(), settings.gMapUrl],
+            loadPromises = scripts.map(this.scriptLoadService.load);
+        Promise.all(loadPromises)
             .then((value) => {
                 //TODO: Test for OpenSpace unavailable in Window object
                 this.map.init();
@@ -55,8 +58,10 @@ export class AppComponent implements OnInit {
         // Convert gpx file into json
         this.fileService.ReadTextFile($event.target, (data) => {
             this.route = this.gpxService.read(data);
+            this.distance = this.map.getDistance(this.route.points);
+            
             // Change centre of map
-            let centre = this.map.mapPoint(this.route.centre);
+            let centre = this.map.convertToMapPoint(this.route.centre);
             this.map.centreMap(centre.x, centre.y, this.route.zoom);
         });
     }

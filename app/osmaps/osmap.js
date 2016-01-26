@@ -89,11 +89,24 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                 //     return new google.maps.LatLng(ll.lat, ll.lon);
                 // };
                 // Convert Point into OpenSpace MapPoint
-                OsMap.prototype.mapPoint = function (point) {
+                OsMap.prototype.convertToMapPoint = function (point) {
                     var mp = new window.OpenLayers.LonLat(point.lon, point.lat), mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
                     return new window.OpenLayers.Geometry.Point(mapPoint.lon, mapPoint.lat);
                 };
                 ;
+                // Convert Route into OpenSpace Path
+                OsMap.prototype.toPath = function (route) {
+                    var _this = this;
+                    var path = [];
+                    route.forEach(function (point) { path.push(_this.convertToMapPoint(point)); });
+                    return path;
+                };
+                // Calculate total distance in km
+                OsMap.prototype.getDistance = function (route) {
+                    // Convert route into MapPoints
+                    var distString = new window.OpenLayers.Geometry.Curve(this.toPath(route));
+                    return (distString.getLength() / 1000);
+                };
                 OsMap = __decorate([
                     core_1.Component({
                         selector: 'map',

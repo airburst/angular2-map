@@ -40,14 +40,14 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.fileService = fileService;
                     this.scriptLoadService = scriptLoadService;
                     this.route = {};
-                    this.totalAscent = 0;
-                    this.totalDescent = 0;
+                    this.distance = 0;
                     this.map = new osmap_1.OsMap;
                 }
-                // Load OS script and initialise map canvas
+                // Load OS and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    this.scriptLoadService.load(config_1.settings.osMapUrl())
+                    var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
+                    Promise.all(loadPromises)
                         .then(function (value) {
                         //TODO: Test for OpenSpace unavailable in Window object
                         _this.map.init();
@@ -61,15 +61,16 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     // Convert gpx file into json
                     this.fileService.ReadTextFile($event.target, function (data) {
                         _this.route = _this.gpxService.read(data);
+                        _this.distance = _this.map.getDistance(_this.route.points);
                         // Change centre of map
-                        var centre = _this.map.mapPoint(_this.route.centre);
+                        var centre = _this.map.convertToMapPoint(_this.route.centre);
                         _this.map.centreMap(centre.x, centre.y, _this.route.zoom);
                     });
                 };
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <div>\n            Load GPX File:\n            <input type=\"file\" (change)=\"fileChange($event)\">\n        </div>\n        <div>\n            <h2>Route</h2>\n            <p>Name: {{route.name}}\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Ascent: {{route.ascent | number:'1.1-2'}} m\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Descent: {{route.descent | number:'1.1-2'}} m</p>\n        </div>\n        <map></map>\n        ",
+                        template: "\n        <div>\n            Load GPX File:\n            <input type=\"file\" (change)=\"fileChange($event)\">\n        </div>\n        <div>\n            <h2>Route</h2>\n            <p>Name: {{route.name}}\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Ascent: {{route.ascent | number:'1.1-2'}} m\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Descent: {{route.descent | number:'1.1-2'}} m\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Distance: {{distance | number:'1.1-2'}} m</p>\n        </div>\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap],
                         providers: [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService]
                     }), 
