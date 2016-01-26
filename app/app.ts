@@ -4,6 +4,7 @@ import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
+import {settings} from './config/config';
 
 @Component({
     selector: 'my-app',
@@ -40,9 +41,9 @@ export class AppComponent implements OnInit {
 
     // Load OS script and initialise map canvas
     ngOnInit() {
-        this.scriptLoadService.load(this.map.fullUrl())
+        this.scriptLoadService.load(settings.osMapUrl())
             .then((value) => {
-                //]TODO: Test for OpenSpace unavailable in Window object
+                //TODO: Test for OpenSpace unavailable in Window object
                 this.map.init();
             }, function(value) {
                 console.error('Script not found:', value)

@@ -15,13 +15,7 @@ import {Point} from '../route';
     `]
 })
 
-export class OsMap {
-    url: string = 'http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js';
-    key: string = 'A73F02BD5E3B3B3AE0405F0AC8602805';
-    fullUrl(): string {
-        return this.url + '?key=' + this.key;
-    }
-    
+export class OsMap {    
     easting: number = 386210;
     northing: number = 168060;
     zoom: number = 7;

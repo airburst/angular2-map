@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './osmaps/gpx.service', './osmaps/osmap'], function(exports_1) {
+System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './osmaps/gpx.service', './osmaps/osmap', './config/config'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, gpx_service_1, osmap_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, gpx_service_1, osmap_1, config_1;
     var AppComponent;
     return {
         setters:[
@@ -29,6 +29,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             },
             function (osmap_1_1) {
                 osmap_1 = osmap_1_1;
+            },
+            function (config_1_1) {
+                config_1 = config_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -44,9 +47,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 // Load OS script and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    this.scriptLoadService.load(this.map.fullUrl())
+                    this.scriptLoadService.load(config_1.settings.osMapUrl())
                         .then(function (value) {
-                        //]TODO: Test for OpenSpace unavailable in Window object
+                        //TODO: Test for OpenSpace unavailable in Window object
                         _this.map.init();
                     }, function (value) {
                         console.error('Script not found:', value);
