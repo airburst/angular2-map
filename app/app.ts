@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
     fileChange($event) {
         // Convert gpx file into json
         this.fileService.ReadTextFile($event.target, (data) => {
-            this.route = this.gpxService.import(data);
+            this.route = this.gpxService.read(data);
             
             // Test - change centre of map
             this.map.easting = 380000;

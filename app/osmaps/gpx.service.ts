@@ -5,7 +5,7 @@ import {Point, WayPoint, Marker, Route} from '../route';
 export class GpxService {
     
     // Parse xml into json
-    import(gpxData: any): string {
+    read(gpxData: any): string {
         // Parse gpx format into data structure
         try {           
             let parser: DOMParser = new DOMParser();
