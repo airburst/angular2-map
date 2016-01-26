@@ -1,3 +1,4 @@
+///<reference path="../../typings/window.extend.d.ts"/>
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
 
