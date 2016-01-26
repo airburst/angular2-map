@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './services/file.service', './services/gpx.service', './services/scriptload.service', './osmaps/osmap'], function(exports_1) {
+System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './osmaps/gpx.service', './osmaps/osmap'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, gpx_service_1, scriptload_service_1, osmap_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, gpx_service_1, osmap_1;
     var AppComponent;
     return {
         setters:[
@@ -21,11 +21,11 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             function (file_service_1_1) {
                 file_service_1 = file_service_1_1;
             },
-            function (gpx_service_1_1) {
-                gpx_service_1 = gpx_service_1_1;
-            },
             function (scriptload_service_1_1) {
                 scriptload_service_1 = scriptload_service_1_1;
+            },
+            function (gpx_service_1_1) {
+                gpx_service_1 = gpx_service_1_1;
             },
             function (osmap_1_1) {
                 osmap_1 = osmap_1_1;
@@ -42,11 +42,11 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 }
                 // Load OS script and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
-                    var vm = this; // So we can bind the map to app scope
+                    var _this = this;
                     this.scriptLoadService.load('http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=A73F02BD5E3B3B3AE0405F0AC8602805')
                         .then(function (value) {
-                        vm.map = new osmap_1.OsMap;
-                        vm.map.init();
+                        _this.map = new osmap_1.OsMap;
+                        _this.map.init();
                     }, function (value) {
                         console.error('Script not found:', value);
                     });
@@ -56,7 +56,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     var _this = this;
                     // Convert gpx file into json
                     this.fileService.ReadTextFile($event.target, function (data) {
-                        _this.route = _this.gpxService.import(data);
+                        _this.route = _this.gpxService.read(data);
                         // Test - change centre of map
                         _this.map.easting = 380000;
                         _this.map.centreMap();

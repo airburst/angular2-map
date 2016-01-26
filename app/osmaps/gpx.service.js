@@ -23,7 +23,7 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                 function GpxService() {
                 }
                 // Parse xml into json
-                GpxService.prototype.import = function (gpxData) {
+                GpxService.prototype.read = function (gpxData) {
                     // Parse gpx format into data structure
                     try {
                         var parser = new DOMParser();
@@ -52,6 +52,7 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                         var point = new route_1.Point(parseFloat(trackPoints[i].getAttribute('lat').valueOf()), parseFloat(trackPoints[i].getAttribute('lon').valueOf()), parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent));
                         route.addPoint(point);
                     }
+                    // Add calculated total ascent and descent
                     route.calculateElevation();
                     return route.json();
                 };

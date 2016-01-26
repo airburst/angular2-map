@@ -40,11 +40,10 @@ export class AppComponent implements OnInit {
 
     // Load OS script and initialise map canvas
     ngOnInit() {
-        let vm = this;  // So we can bind the map to app scope
         this.scriptLoadService.load('http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=A73F02BD5E3B3B3AE0405F0AC8602805')
-            .then(function(value) {
-                vm.map = new OsMap;
-                vm.map.init();
+            .then((value) => {
+                this.map = new OsMap;
+                this.map.init();
             }, function(value) {
                 console.error('Script not found:', value)
             });

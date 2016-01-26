@@ -28,6 +28,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     this.lineVectorLayer = {};
                     this.pointVectorLayer = {};
                     this.markerVectorLayer = {};
+                    this.gazetteer = {};
                 }
                 OsMap.prototype.init = function () {
                     // Instantiate the map canvas
@@ -43,7 +44,6 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                         ]
                     };
                     this.osMap = new window.OpenSpace.Map('map', options);
-                    //this.centreMap(386210, 168060, 7);
                     this.centreMap();
                     // Initialise the vector layers
                     this.lineVectorLayer = new window.OpenLayers.Layer.Vector('Line Vector Layer');
@@ -61,7 +61,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     // $scope.osMap.events.register('touchend', $scope.osMap, $scope.touchPoint);
                     // $scope.osMap.events.register('click', $scope.osMap, $scope.clickPoint);
                     // //Initialise gazetteer
-                    // $scope.gazetteer = new OpenSpace.Gazetteer();
+                    this.gazetteer = new window.OpenSpace.Gazetteer();
                     // // Initialise GoogleMaps Elevator and Directions Services
                     // $scope.elevator = new google.maps.ElevationService();
                     // $scope.directionsService = new google.maps.DirectionsService()
@@ -78,7 +78,6 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                         this.zoom = zoom;
                     }
                     this.osMap.setCenter(new window.OpenSpace.MapPoint(this.easting, this.northing), this.zoom);
-                    console.log(this.easting, this.northing);
                 };
                 ;
                 OsMap = __decorate([
