@@ -48,7 +48,9 @@ export class GpxService {
             );
             route.addPoint(point);
         }
+        // Add calculated total ascent and descent
         route.calculateElevation();
+        
         return route.json();
     }
 

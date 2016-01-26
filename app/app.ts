@@ -1,8 +1,8 @@
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
 import {FileService} from './services/file.service';
-import {GpxService} from './services/gpx.service';
 import {ScriptLoadService} from './services/scriptload.service';
+import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 
 @Component({

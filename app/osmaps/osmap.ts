@@ -22,6 +22,7 @@ export class OsMap {
     lineVectorLayer: any = {};
     pointVectorLayer: any = {};
     markerVectorLayer: any = {};
+    gazetteer: any = {};
     
     init() {
         // Instantiate the map canvas
@@ -37,7 +38,6 @@ export class OsMap {
             ]
         };
         this.osMap = new window.OpenSpace.Map('map', options);
-        //this.centreMap(386210, 168060, 7);
         this.centreMap();
         
         // Initialise the vector layers
@@ -65,7 +65,7 @@ export class OsMap {
         // $scope.osMap.events.register('click', $scope.osMap, $scope.clickPoint);
 
         // //Initialise gazetteer
-        // $scope.gazetteer = new OpenSpace.Gazetteer();
+        this.gazetteer = new window.OpenSpace.Gazetteer();
 
         // // Initialise GoogleMaps Elevator and Directions Services
         // $scope.elevator = new google.maps.ElevationService();
@@ -80,6 +80,5 @@ export class OsMap {
             new window.OpenSpace.MapPoint(this.easting, this.northing),
             this.zoom
         );
-        console.log(this.easting, this.northing);
     };
 }
