@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this.scriptLoadService.load(this.map.fullUrl())
             .then((value) => {
-                //TODO: Test for OpenSpace unavailable in Window object
+                //]TODO: Test for OpenSpace unavailable in Window object
                 this.map.init();
             }, function(value) {
                 console.error('Script not found:', value)
