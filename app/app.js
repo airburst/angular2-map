@@ -46,7 +46,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     var _this = this;
                     this.scriptLoadService.load(this.map.fullUrl())
                         .then(function (value) {
-                        //TODO: Test for OpenSpace unavailable in Window object
+                        //]TODO: Test for OpenSpace unavailable in Window object
                         _this.map.init();
                     }, function (value) {
                         console.error('Script not found:', value);
@@ -58,8 +58,10 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     // Convert gpx file into json
                     this.fileService.ReadTextFile($event.target, function (data) {
                         _this.route = _this.gpxService.read(data);
+                        console.log(_this.route);
                         // Test - change centre of map
-                        _this.map.easting = 380000;
+                        _this.map.easting = _this.route.centre.lat;
+                        _this.map.northing = _this.route.centre.lon;
                         _this.map.centreMap();
                     });
                 };

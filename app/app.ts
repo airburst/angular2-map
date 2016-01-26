@@ -54,9 +54,11 @@ export class AppComponent implements OnInit {
         // Convert gpx file into json
         this.fileService.ReadTextFile($event.target, (data) => {
             this.route = this.gpxService.read(data);
+            console.log(this.route);
             
-            // Test - change centre of map
-            this.map.easting = 380000;
+            // Change centre of map
+            this.map.easting = this.route.centre.lat;       //TODO: convert from LatLng to N,E
+            this.map.northing = this.route.centre.lon;
             this.map.centreMap();
         });
     }

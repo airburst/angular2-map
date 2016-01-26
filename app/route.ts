@@ -51,6 +51,10 @@ export class Route {
         this.wayPoints = [];
         this.points = [];
         this.markers = [];
+        this.minLat = 1000000;
+        this.minLon = 1000000;
+        this.maxLat = 0;
+        this.maxLon = 0;
     }
     public name: string;
     public ascent: number;
@@ -61,6 +65,10 @@ export class Route {
     public addWayPoint(wayPoint) { this.wayPoints.push(wayPoint); }
     public addPoint(point) { this.points.push(point); }
     public addMarker(marker) { this.markers.push(marker); }
+    public minLat: number;
+    public minLon: number;
+    public maxLat: number;
+    public maxLon: number;
     
     public calculateElevation(): void {
         let totalAscent: number = 0,
@@ -79,7 +87,23 @@ export class Route {
                     lastElevation = e;
                 }   
             }
+            // Update route bounds
+            this.setBounds(this.points[i]);
         }
+    }
+    
+    private setBounds(point: Point): void {
+        this.minLat = Math.min(this.minLat, point.lat);
+        this.maxLat = Math.max(this.maxLat, point.lat);
+        this.minLon = Math.min(this.minLon, point.lon);
+        this.maxLon = Math.max(this.maxLon, point.lon);
+    }
+    
+    private centre(): Point {
+        return new Point(
+            this.minLat + (this.maxLat - this.minLat) / 2,
+            this.minLon + (this.maxLon - this.minLon) / 2
+        );
     }
     
     public json(): any {
@@ -89,7 +113,8 @@ export class Route {
             'descent': this.descent,
             'waypoints': this.wayPoints,
             'route': this.points,
-            'markers': this.markers
+            'markers': this.markers,
+            'centre': this.centre()
         };
     }
 }

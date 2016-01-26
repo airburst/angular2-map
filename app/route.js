@@ -54,6 +54,10 @@ System.register([], function(exports_1) {
                     this.wayPoints = [];
                     this.points = [];
                     this.markers = [];
+                    this.minLat = 1000000;
+                    this.minLon = 1000000;
+                    this.maxLat = 0;
+                    this.maxLon = 0;
                 }
                 Route.prototype.addWayPoint = function (wayPoint) { this.wayPoints.push(wayPoint); };
                 Route.prototype.addPoint = function (point) { this.points.push(point); };
@@ -72,7 +76,18 @@ System.register([], function(exports_1) {
                                 lastElevation = e;
                             }
                         }
+                        // Update route bounds
+                        this.setBounds(this.points[i]);
                     }
+                };
+                Route.prototype.setBounds = function (point) {
+                    this.minLat = Math.min(this.minLat, point.lat);
+                    this.maxLat = Math.max(this.maxLat, point.lat);
+                    this.minLon = Math.min(this.minLon, point.lon);
+                    this.maxLon = Math.max(this.maxLon, point.lon);
+                };
+                Route.prototype.centre = function () {
+                    return new Point(this.minLat + (this.maxLat - this.minLat) / 2, this.minLon + (this.maxLon - this.minLon) / 2);
                 };
                 Route.prototype.json = function () {
                     return {
@@ -81,7 +96,8 @@ System.register([], function(exports_1) {
                         'descent': this.descent,
                         'waypoints': this.wayPoints,
                         'route': this.points,
-                        'markers': this.markers
+                        'markers': this.markers,
+                        'centre': this.centre()
                     };
                 };
                 return Route;
