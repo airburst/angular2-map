@@ -79,6 +79,11 @@ export class AppComponent implements OnInit {
             
             // Plot path and markers
             this.map.drawPath(this.route);
+            
+            // Show elevation
+            this.elevationService.elevation(this.route, function(results, status) {
+                console.log(status, results);
+            })
         });
     }
 

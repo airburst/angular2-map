@@ -45,21 +45,34 @@ System.register(['angular2/core'], function(exports_1) {
                 }
                 ElevationService.prototype.init = function () {
                     this.elevator = new window.google.maps.ElevationService();
+                    this.status = window.google.maps.ElevationStatus;
                 };
                 // Return elevation data for route
-                ElevationService.prototype.elevation = function (points, callback) {
-                    if (points.length <= 1) {
-                        return [];
+                ElevationService.prototype.elevation = function (route, callback) {
+                    if (route.points.length <= 1) {
+                        console.log('No elevation requested: too few points in path');
+                        callback([], this.status.OK);
                     }
                     // Create an elevation request from path, with 256 sample points
                     // The max path size appears to be 412 data points
-                    var request = {
-                        'path': this.reducePath(points),
+                    var path = this.googleRoute(route.points);
+                    this.elevator.getElevationAlongPath({
+                        'path': path,
                         'samples': this.sampleSize
-                    };
-                    this.elevator.getElevationAlongPath(request, callback);
+                    }, callback);
                 };
                 ;
+                // Convert Point into Google LatLng
+                ElevationService.prototype.toLatLng = function (point) {
+                    return new window.google.maps.LatLng(point.lat, point.lon);
+                };
+                // Convert Path into Google Path
+                ElevationService.prototype.googleRoute = function (points) {
+                    var _this = this;
+                    var gPath = [];
+                    points.forEach(function (point) { gPath.push(_this.toLatLng(point)); });
+                    return gPath;
+                };
                 ElevationService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [])

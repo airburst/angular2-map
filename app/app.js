@@ -73,6 +73,10 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         _this.map.centreMap(centre.x, centre.y, _this.route.zoom);
                         // Plot path and markers
                         _this.map.drawPath(_this.route);
+                        // Show elevation
+                        _this.elevationService.elevation(_this.route, function (results, status) {
+                            console.log(status, results);
+                        });
                     });
                 };
                 AppComponent = __decorate([

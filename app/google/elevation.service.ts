@@ -5,25 +5,41 @@ import {Point, MapPoint, Route} from '../route';
 @Injectable()
 export class ElevationService {
     
+    status: any;
     private elevator: any = {};
-    sampleSize: number = 256;
+    private sampleSize: number = 256;
     
     init(): any {
         this.elevator = new window.google.maps.ElevationService();
+        this.status = window.google.maps.ElevationStatus;
     }
     
     // Return elevation data for route
-    elevation(points: Point[], callback: Function) {
-        if (points.length <= 1) { return []; }
-        
+    elevation(route: Route, callback: Function): any {
+        if (route.points.length <= 1) { 
+            console.log('No elevation requested: too few points in path');
+            callback([], this.status.OK);
+        }
         // Create an elevation request from path, with 256 sample points
         // The max path size appears to be 412 data points
-        let request: any = {
-            'path': this.reducePath(points),
+        let path = this.googleRoute(route.points);
+        this.elevator.getElevationAlongPath({
+            'path': path,
             'samples': this.sampleSize
-        }
-        this.elevator.getElevationAlongPath(request, callback);
+        }, callback);
     };
+    
+    // Convert Point into Google LatLng
+    toLatLng(point: Point): any {
+        return new window.google.maps.LatLng(point.lat, point.lon)
+    }
+    
+    // Convert Path into Google Path
+    googleRoute(points: Point[]): any {
+        let gPath = [];
+        points.forEach((point) => { gPath.push(this.toLatLng(point)); })
+        return gPath;
+    }
 
     // Reduce a path to <= maximum sample size (256)
     private reducePath = function(points: Point[]): Point[] {

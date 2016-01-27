@@ -18,9 +18,10 @@ System.register(['angular2/core'], function(exports_1) {
         execute: function() {
             DirectionsService = (function () {
                 function DirectionsService() {
+                    this.service = {};
                 }
                 DirectionsService.prototype.init = function () {
-                    this = new window.google.maps.DirectionsService();
+                    this.service = new window.google.maps.DirectionsService();
                 };
                 DirectionsService = __decorate([
                     core_1.Injectable(), 
