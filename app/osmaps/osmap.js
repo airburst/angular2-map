@@ -28,6 +28,8 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     this.lineVectorLayer = {};
                     this.pointVectorLayer = {};
                     this.markerVectorLayer = {};
+                    this.gazetteer = {};
+                    this.gridProjection = {};
                 }
                 OsMap.prototype.init = function () {
                     // Instantiate the map canvas
@@ -43,8 +45,9 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                         ]
                     };
                     this.osMap = new window.OpenSpace.Map('map', options);
-                    //this.centreMap(386210, 168060, 7);
                     this.centreMap();
+                    // Set the projection - needed for converting between northing-easting and latlng
+                    this.gridProjection = new window.OpenSpace.GridProjection();
                     // Initialise the vector layers
                     this.lineVectorLayer = new window.OpenLayers.Layer.Vector('Line Vector Layer');
                     this.osMap.addLayer(this.lineVectorLayer);
@@ -61,7 +64,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     // $scope.osMap.events.register('touchend', $scope.osMap, $scope.touchPoint);
                     // $scope.osMap.events.register('click', $scope.osMap, $scope.clickPoint);
                     // //Initialise gazetteer
-                    // $scope.gazetteer = new OpenSpace.Gazetteer();
+                    this.gazetteer = new window.OpenSpace.Gazetteer();
                     // // Initialise GoogleMaps Elevator and Directions Services
                     // $scope.elevator = new google.maps.ElevationService();
                     // $scope.directionsService = new google.maps.DirectionsService()
@@ -78,9 +81,32 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                         this.zoom = zoom;
                     }
                     this.osMap.setCenter(new window.OpenSpace.MapPoint(this.easting, this.northing), this.zoom);
-                    console.log(this.easting, this.northing);
                 };
                 ;
+                // Convert OpenSpace Point into Google LatLng
+                // $scope.pointToGoogle = function(point) {
+                //     var ll = $scope.gridProjection.getLonLatFromMapPoint(point);
+                //     return new google.maps.LatLng(ll.lat, ll.lon);
+                // };
+                // Convert Point into OpenSpace MapPoint
+                OsMap.prototype.convertToMapPoint = function (point) {
+                    var mp = new window.OpenLayers.LonLat(point.lon, point.lat), mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
+                    return new window.OpenLayers.Geometry.Point(mapPoint.lon, mapPoint.lat);
+                };
+                ;
+                // Convert Route into OpenSpace Path
+                OsMap.prototype.toPath = function (route) {
+                    var _this = this;
+                    var path = [];
+                    route.forEach(function (point) { path.push(_this.convertToMapPoint(point)); });
+                    return path;
+                };
+                // Calculate total distance in km
+                OsMap.prototype.getDistance = function (route) {
+                    // Convert route into MapPoints
+                    var distString = new window.OpenLayers.Geometry.Curve(this.toPath(route));
+                    return (distString.getLength() / 1000);
+                };
                 OsMap = __decorate([
                     core_1.Component({
                         selector: 'map',

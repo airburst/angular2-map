@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './services/file.service', './services/gpx.service', './services/scriptload.service', './osmaps/osmap'], function(exports_1) {
+System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './osmaps/gpx.service', './osmaps/osmap', './config/config'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, gpx_service_1, scriptload_service_1, osmap_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, gpx_service_1, osmap_1, config_1;
     var AppComponent;
     return {
         setters:[
@@ -21,14 +21,17 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             function (file_service_1_1) {
                 file_service_1 = file_service_1_1;
             },
-            function (gpx_service_1_1) {
-                gpx_service_1 = gpx_service_1_1;
-            },
             function (scriptload_service_1_1) {
                 scriptload_service_1 = scriptload_service_1_1;
             },
+            function (gpx_service_1_1) {
+                gpx_service_1 = gpx_service_1_1;
+            },
             function (osmap_1_1) {
                 osmap_1 = osmap_1_1;
+            },
+            function (config_1_1) {
+                config_1 = config_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -37,16 +40,17 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.fileService = fileService;
                     this.scriptLoadService = scriptLoadService;
                     this.route = {};
-                    this.totalAscent = 0;
-                    this.totalDescent = 0;
+                    this.distance = 0;
+                    this.map = new osmap_1.OsMap;
                 }
-                // Load OS script and initialise map canvas
+                // Load OS and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
-                    var vm = this; // So we can bind the map to app scope
-                    this.scriptLoadService.load('http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=A73F02BD5E3B3B3AE0405F0AC8602805')
+                    var _this = this;
+                    var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
+                    Promise.all(loadPromises)
                         .then(function (value) {
-                        vm.map = new osmap_1.OsMap;
-                        vm.map.init();
+                        //TODO: Test for OpenSpace unavailable in Window object
+                        _this.map.init();
                     }, function (value) {
                         console.error('Script not found:', value);
                     });
@@ -56,16 +60,17 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     var _this = this;
                     // Convert gpx file into json
                     this.fileService.ReadTextFile($event.target, function (data) {
-                        _this.route = _this.gpxService.import(data);
-                        // Test - change centre of map
-                        _this.map.easting = 380000;
-                        _this.map.centreMap();
+                        _this.route = _this.gpxService.read(data);
+                        _this.distance = _this.map.getDistance(_this.route.points);
+                        // Change centre of map
+                        var centre = _this.map.convertToMapPoint(_this.route.centre);
+                        _this.map.centreMap(centre.x, centre.y, _this.route.zoom);
                     });
                 };
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <div>\n            Load GPX File:\n            <input type=\"file\" (change)=\"fileChange($event)\">\n        </div>\n        <div>\n            <h2>Route</h2>\n            <p>Name: {{route.name}}\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Ascent: {{route.ascent | number:'1.1-2'}} m\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Descent: {{route.descent | number:'1.1-2'}} m</p>\n        </div>\n        <map></map>\n        ",
+                        template: "\n        <div>\n            Load GPX File:\n            <input type=\"file\" (change)=\"fileChange($event)\">\n        </div>\n        <div>\n            <h2>Route</h2>\n            <p>Name: {{route.name}}\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Ascent: {{route.ascent | number:'1.1-2'}} m\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Descent: {{route.descent | number:'1.1-2'}} m\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Distance: {{distance | number:'1.1-2'}} m</p>\n        </div>\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap],
                         providers: [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService]
                     }), 

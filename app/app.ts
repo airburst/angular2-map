@@ -1,9 +1,10 @@
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
 import {FileService} from './services/file.service';
-import {GpxService} from './services/gpx.service';
 import {ScriptLoadService} from './services/scriptload.service';
+import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
+import {settings} from './config/config';
 
 @Component({
     selector: 'my-app',
@@ -18,7 +19,9 @@ import {OsMap} from './osmaps/osmap';
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 Total Ascent: {{route.ascent | number:'1.1-2'}} m
                 &nbsp;&nbsp;|&nbsp;&nbsp;
-                Total Descent: {{route.descent | number:'1.1-2'}} m</p>
+                Total Descent: {{route.descent | number:'1.1-2'}} m
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                Distance: {{distance | number:'1.1-2'}} m</p>
         </div>
         <map></map>
         `,
@@ -34,17 +37,17 @@ export class AppComponent implements OnInit {
     ) { }
     
     route: any = {};
-    totalAscent: number = 0;
-    totalDescent: number = 0;
-    map: OsMap;
+    distance: number = 0;
+    map: OsMap = new OsMap;
 
-    // Load OS script and initialise map canvas
+    // Load OS and Google scripts and initialise map canvas
     ngOnInit() {
-        let vm = this;  // So we can bind the map to app scope
-        this.scriptLoadService.load('http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=A73F02BD5E3B3B3AE0405F0AC8602805')
-            .then(function(value) {
-                vm.map = new OsMap;
-                vm.map.init();
+        let scripts = [settings.osMapUrl(), settings.gMapUrl],
+            loadPromises = scripts.map(this.scriptLoadService.load);
+        Promise.all(loadPromises)
+            .then((value) => {
+                //TODO: Test for OpenSpace unavailable in Window object
+                this.map.init();
             }, function(value) {
                 console.error('Script not found:', value)
             });
@@ -54,11 +57,12 @@ export class AppComponent implements OnInit {
     fileChange($event) {
         // Convert gpx file into json
         this.fileService.ReadTextFile($event.target, (data) => {
-            this.route = this.gpxService.import(data);
+            this.route = this.gpxService.read(data);
+            this.distance = this.map.getDistance(this.route.points);
             
-            // Test - change centre of map
-            this.map.easting = 380000;
-            this.map.centreMap();
+            // Change centre of map
+            let centre = this.map.convertToMapPoint(this.route.centre);
+            this.map.centreMap(centre.x, centre.y, this.route.zoom);
         });
     }
 

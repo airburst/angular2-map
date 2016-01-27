@@ -21,9 +21,18 @@ System.register(['angular2/core', '../route'], function(exports_1) {
         execute: function() {
             GpxService = (function () {
                 function GpxService() {
+                    this.template = {
+                        header: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="maps.fairhursts.net">',
+                        title: '<metadata><name>{name}</name></metadata><rte><name>{name}</name>',
+                        point: '<rtept lon="{lon}" lat="{lat}">' +
+                            '<ele>0.0</ele>' +
+                            '<name></name>' +
+                            '</rtept>',
+                        end: '</rte></gpx>'
+                    };
                 }
                 // Parse xml into json
-                GpxService.prototype.import = function (gpxData) {
+                GpxService.prototype.read = function (gpxData) {
                     // Parse gpx format into data structure
                     try {
                         var parser = new DOMParser();
@@ -52,8 +61,26 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                         var point = new route_1.Point(parseFloat(trackPoints[i].getAttribute('lat').valueOf()), parseFloat(trackPoints[i].getAttribute('lon').valueOf()), parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent));
                         route.addPoint(point);
                     }
+                    // Add calculated total ascent and descent
                     route.calculateElevation();
                     return route.json();
+                };
+                GpxService.prototype.replaceAll = function (find, replace, str) {
+                    return str.replace(new RegExp(find, 'g'), replace);
+                };
+                GpxService.prototype.write = function (route, name) {
+                    if (name === undefined) {
+                        name = 'Route';
+                    }
+                    var gpxContent = this.template.header + this.replaceAll('{name}', name, this.template.title);
+                    for (var i = 0; i < route.points.length; i++) {
+                        gpxContent += this.template.point
+                            .replace('{lat}', route[i][0])
+                            .replace('{lon}', route[i][1]);
+                    }
+                    ;
+                    gpxContent += this.template.end;
+                    return gpxContent;
                 };
                 GpxService = __decorate([
                     core_1.Injectable(), 
