@@ -118,7 +118,8 @@ export class OsMap {
     // Draw path as a vector layer
     drawPath(route: any): void {
         let routeStyle: any = settings.routeStyle,
-            waypointsFeature: WayPoint[] = [];
+            waypointsFeature: WayPoint[] = [],
+            markersFeature: Marker[] = [];
 
         // Convert route into OS path format
         let path = this.toPath(route.points);
@@ -130,9 +131,16 @@ export class OsMap {
             routeStyle
         );
 
-        // Add waypoint markers
-        route.waypoints.forEach((w) => {
-            waypointsFeature.push(new window.OpenLayers.Feature.Vector(w.point));
+        // Add waypoints (editable)
+        route.waypoints.forEach((w: WayPoint) => {
+            waypointsFeature.push(
+                new window.OpenLayers.Feature.Vector(this.convertToMapPoint(w.point))
+            );
+        });
+        
+        // Add route markers
+        route.markers.forEach((m: Marker) => {
+            markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'))
         });
 
         // Replace the existing layer
@@ -140,5 +148,21 @@ export class OsMap {
         this.pointVectorLayer.addFeatures(waypointsFeature);
         this.lineVectorLayer.destroyFeatures();
         this.lineVectorLayer.addFeatures([routeFeature]);
+        this.markerVectorLayer.destroyFeatures();
+        this.markerVectorLayer.addFeatures(markersFeature);
     }
+    
+    addMarker(marker: Marker, image: string): any {
+        return new window.OpenLayers.Feature.Vector(
+            this.convertToMapPoint(marker.point),
+            { description: marker.name },
+            {
+                externalGraphic: image,
+                graphicHeight:   32,
+                graphicWidth:    32,
+                graphicXOffset:  -16,
+                graphicYOffset:  -16
+            }
+        );
+    };
 }

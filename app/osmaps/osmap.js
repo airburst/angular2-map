@@ -112,25 +112,38 @@ System.register(['angular2/core', 'angular2/common', '../config/config'], functi
                 };
                 // Draw path as a vector layer
                 OsMap.prototype.drawPath = function (route) {
-                    var routeStyle = config_1.settings.routeStyle, index, routeFeature, waypointsFeature = [];
+                    var _this = this;
+                    var routeStyle = config_1.settings.routeStyle, waypointsFeature = [], markersFeature = [];
                     // Convert route into OS path format
                     var path = this.toPath(route.points);
-                    // Update the distance calculation.
-                    //this.updateDistance();
                     // Set the lines array (line segments in route)
-                    routeFeature = new window.OpenLayers.Feature.Vector(
-                    // new window.OpenLayers.Geometry.LineString(points),
-                    new window.OpenLayers.Geometry.LineString(path), null, routeStyle);
-                    // Add waypoint markers
+                    var routeFeature = new window.OpenLayers.Feature.Vector(new window.OpenLayers.Geometry.LineString(path), null, routeStyle);
+                    // Add waypoints (editable)
                     route.waypoints.forEach(function (w) {
-                        waypointsFeature.push(new window.OpenLayers.Feature.Vector(w.point));
+                        waypointsFeature.push(new window.OpenLayers.Feature.Vector(_this.convertToMapPoint(w.point)));
+                    });
+                    // Add route markers
+                    route.markers.forEach(function (m) {
+                        markersFeature.push(_this.addMarker(m, 'dist/assets/images/map-marker.png'));
                     });
                     // Replace the existing layer
                     this.pointVectorLayer.destroyFeatures();
                     this.pointVectorLayer.addFeatures(waypointsFeature);
                     this.lineVectorLayer.destroyFeatures();
                     this.lineVectorLayer.addFeatures([routeFeature]);
+                    this.markerVectorLayer.destroyFeatures();
+                    this.markerVectorLayer.addFeatures(markersFeature);
                 };
+                OsMap.prototype.addMarker = function (marker, image) {
+                    return new window.OpenLayers.Feature.Vector(this.convertToMapPoint(marker.point), { description: marker.name }, {
+                        externalGraphic: image,
+                        graphicHeight: 32,
+                        graphicWidth: 32,
+                        graphicXOffset: -16,
+                        graphicYOffset: -16
+                    });
+                };
+                ;
                 OsMap = __decorate([
                     core_1.Component({
                         selector: 'map',
