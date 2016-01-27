@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './osmaps/gpx.service', './osmaps/osmap', './config/config'], function(exports_1) {
+System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './google/elevation.service', './osmaps/gpx.service', './osmaps/osmap', './config/config'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, gpx_service_1, osmap_1, config_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, gpx_service_1, osmap_1, config_1;
     var AppComponent;
     return {
         setters:[
@@ -24,6 +24,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             function (scriptload_service_1_1) {
                 scriptload_service_1 = scriptload_service_1_1;
             },
+            function (elevation_service_1_1) {
+                elevation_service_1 = elevation_service_1_1;
+            },
             function (gpx_service_1_1) {
                 gpx_service_1 = gpx_service_1_1;
             },
@@ -35,10 +38,11 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(gpxService, fileService, scriptLoadService) {
+                function AppComponent(gpxService, fileService, scriptLoadService, elevationService) {
                     this.gpxService = gpxService;
                     this.fileService = fileService;
                     this.scriptLoadService = scriptLoadService;
+                    this.elevationService = elevationService;
                     this.route = {};
                     this.path = [];
                     this.distance = 0;
@@ -52,6 +56,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         .then(function (value) {
                         //TODO: Test for OpenSpace unavailable in Window object
                         _this.map.init();
+                        _this.elevationService.init(); // Doesn't do much yet
                     }, function (value) {
                         console.error('Script not found:', value);
                     });
@@ -75,10 +80,10 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         selector: 'my-app',
                         template: "\n        <div>\n            Load GPX File:\n            <input type=\"file\" (change)=\"fileChange($event)\">\n        </div>\n        <div class=\"stats\">\n            Name: {{route.name}}\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Ascent: {{route.ascent | number:'1.1-2'}} m\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Descent: {{route.descent | number:'1.1-2'}} m\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Distance: {{distance | number:'1.1-2'}} km\n        </div>\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap],
-                        providers: [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService],
+                        providers: [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService],
                         styles: ["\n        .stats {\n            background-color: #222;\n            color: #fff;\n            font-family: 'Open Sans', 'Arial', 'Helvetica';\n            line-height: 2em;\n            padding: 10px;\n        }\n    "]
                     }), 
-                    __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService])
+                    __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService])
                 ], AppComponent);
                 return AppComponent;
             })();

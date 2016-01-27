@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
+import {ElevationService} from './google/elevation.service';
 import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {MapPoint} from './route';
@@ -26,7 +27,7 @@ import {settings} from './config/config';
         <map></map>
         `,
     directives: [FORM_DIRECTIVES, OsMap],
-    providers: [GpxService, FileService, ScriptLoadService],
+    providers: [GpxService, FileService, ScriptLoadService, ElevationService],
     styles: [`
         .stats {
             background-color: #222;
@@ -42,7 +43,8 @@ export class AppComponent implements OnInit {
     constructor(
         private gpxService: GpxService,
         private fileService: FileService,
-        private scriptLoadService: ScriptLoadService
+        private scriptLoadService: ScriptLoadService,
+        private elevationService: ElevationService
     ) { }
     
     route: any = {};
@@ -58,6 +60,7 @@ export class AppComponent implements OnInit {
             .then((value) => {
                 //TODO: Test for OpenSpace unavailable in Window object
                 this.map.init();
+                this.elevationService.init();    // Doesn't do much yet
             }, function(value) {
                 console.error('Script not found:', value)
             });
