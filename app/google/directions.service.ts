@@ -5,8 +5,10 @@ import {Point, MapPoint, WayPoint, Marker, Route} from '../route';
 @Injectable()
 export class DirectionsService {
     
+    private service: any = {};
+    
     init():void {
-        this = new window.google.maps.DirectionsService();
+        this.service = new window.google.maps.DirectionsService();
     }
     
     // Use the latest and previous points on map to make a call to the Google
