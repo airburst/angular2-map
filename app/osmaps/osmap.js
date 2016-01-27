@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common'], function(exports_1) {
+System.register(['angular2/core', 'angular2/common', '../config/config'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1;
+    var core_1, common_1, config_1;
     var OsMap;
     return {
         setters:[
@@ -17,6 +17,9 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
             },
             function (common_1_1) {
                 common_1 = common_1_1;
+            },
+            function (config_1_1) {
+                config_1 = config_1_1;
             }],
         execute: function() {
             OsMap = (function () {
@@ -106,6 +109,27 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     // Convert route into MapPoints
                     var distString = new window.OpenLayers.Geometry.Curve(this.toPath(route));
                     return (distString.getLength() / 1000);
+                };
+                // Draw path as a vector layer
+                OsMap.prototype.drawPath = function (route) {
+                    var routeStyle = config_1.settings.routeStyle, index, routeFeature, waypointsFeature = [];
+                    // Convert route into OS path format
+                    var path = this.toPath(route.points);
+                    // Update the distance calculation.
+                    //this.updateDistance();
+                    // Set the lines array (line segments in route)
+                    routeFeature = new window.OpenLayers.Feature.Vector(
+                    // new window.OpenLayers.Geometry.LineString(points),
+                    new window.OpenLayers.Geometry.LineString(path), null, routeStyle);
+                    // Add waypoint markers
+                    route.waypoints.forEach(function (w) {
+                        waypointsFeature.push(new window.OpenLayers.Feature.Vector(w.point));
+                    });
+                    // Replace the existing layer
+                    this.pointVectorLayer.destroyFeatures();
+                    this.pointVectorLayer.addFeatures(waypointsFeature);
+                    this.lineVectorLayer.destroyFeatures();
+                    this.lineVectorLayer.addFeatures([routeFeature]);
                 };
                 OsMap = __decorate([
                     core_1.Component({

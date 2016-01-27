@@ -4,5 +4,12 @@ export let settings: any = {
     osMapUrl(): string {
         return this.url + '?key=' + this.key;
     },
+    routeStyle: {
+        strokeColor: 'red',
+        strokeWidth: 4,
+        strokeOpacity: 0.7
+    },
+    
+    // Google
     gMapUrl: 'http://maps.googleapis.com/maps/api/js?v=3.exp'
 }

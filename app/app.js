@@ -40,6 +40,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.fileService = fileService;
                     this.scriptLoadService = scriptLoadService;
                     this.route = {};
+                    this.path = [];
                     this.distance = 0;
                     this.map = new osmap_1.OsMap;
                 }
@@ -65,6 +66,8 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         // Change centre of map
                         var centre = _this.map.convertToMapPoint(_this.route.centre);
                         _this.map.centreMap(centre.x, centre.y, _this.route.zoom);
+                        // Plot path and markers
+                        _this.map.drawPath(_this.route);
                     });
                 };
                 AppComponent = __decorate([
