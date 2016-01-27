@@ -1,7 +1,7 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point, MapPoint} from '../route';
+import {Point, MapPoint, WayPoint, Marker} from '../route';
 import {settings} from '../config/config';
 
 @Component({
@@ -117,20 +117,14 @@ export class OsMap {
     
     // Draw path as a vector layer
     drawPath(route: any): void {
-        let routeStyle = settings.routeStyle,
-            index,
-            routeFeature,
-            waypointsFeature = [];
+        let routeStyle: any = settings.routeStyle,
+            waypointsFeature: WayPoint[] = [];
 
         // Convert route into OS path format
         let path = this.toPath(route.points);
 
-        // Update the distance calculation.
-        //this.updateDistance();
-
         // Set the lines array (line segments in route)
-        routeFeature = new window.OpenLayers.Feature.Vector(
-            // new window.OpenLayers.Geometry.LineString(points),
+        let routeFeature = new window.OpenLayers.Feature.Vector(
             new window.OpenLayers.Geometry.LineString(path),
             null,
             routeStyle
