@@ -20,6 +20,8 @@ export class OsMap {
     easting: number = 386210;
     northing: number = 168060;
     zoom: number = 7;
+    os: any = {};
+    ol: any = {};
     osMap: any = {};
     lineVectorLayer: any = {};
     pointVectorLayer: any = {};
@@ -28,39 +30,42 @@ export class OsMap {
     gridProjection: any = {};
     
     init() {
+        this.ol = window.OpenLayers;
+        this.os = window.OpenSpace;
+        
         // Instantiate the map canvas
         let options = {
             controls: [
-                new window.OpenLayers.Control.Navigation(),
-                new window.OpenLayers.Control.TouchNavigation({
+                new this.ol.Control.Navigation(),
+                new this.ol.Control.TouchNavigation({
                     dragPanOptions: { enableKinetic: true }
                 }),
-                new window.OpenLayers.Control.KeyboardDefaults(),
-                new window.OpenSpace.Control.CopyrightCollection(),
-                new window.OpenLayers.Control.ArgParser()
+                new this.ol.Control.KeyboardDefaults(),
+                new this.os.Control.CopyrightCollection(),
+                new this.ol.Control.ArgParser()
             ]
         };
-        this.osMap = new window.OpenSpace.Map('map', options);
+        this.osMap = new this.os.Map('map', options);
         this.centreMap();
         
         // Set the projection - needed for converting between northing-easting and latlng
-        this.gridProjection = new window.OpenSpace.GridProjection();
+        this.gridProjection = new this.os.GridProjection();
         
         // Initialise the vector layers
-        this.lineVectorLayer = new window.OpenLayers.Layer.Vector('Line Vector Layer');
+        this.lineVectorLayer = new this.ol.Layer.Vector('Line Vector Layer');
         this.osMap.addLayer(this.lineVectorLayer);
-        this.pointVectorLayer = new window.OpenLayers.Layer.Vector('Point Vector Layer');
+        this.pointVectorLayer = new this.ol.Layer.Vector('Point Vector Layer');
         this.osMap.addLayer(this.pointVectorLayer);
-        this.markerVectorLayer = new window.OpenLayers.Layer.Vector('Point Vector Layer');
+        this.markerVectorLayer = new this.ol.Layer.Vector('Point Vector Layer');
         this.osMap.addLayer(this.markerVectorLayer);
         
         // Add controls
-        let position = new window.OpenSpace.Control.ControlPosition(
-            window.OpenSpace.Control.ControlAnchor.ANCHOR_TOP_LEFT,
-            new window.OpenLayers.Size(0, 100)
+        let position = new this.os.Control.ControlPosition(
+            this.os.Control.ControlAnchor.ANCHOR_TOP_LEFT,
+            new this.ol.Size(0, 100)
         );
         this.osMap.addControl(
-            new window.OpenSpace.Control.LargeMapControl(),
+            new this.os.Control.LargeMapControl(),
             position
         );
         
@@ -70,12 +75,8 @@ export class OsMap {
         // $scope.osMap.events.register('touchend', $scope.osMap, $scope.touchPoint);
         // $scope.osMap.events.register('click', $scope.osMap, $scope.clickPoint);
 
-        // //Initialise gazetteer
-        this.gazetteer = new window.OpenSpace.Gazetteer();
-
-        // // Initialise GoogleMaps Elevator and Directions Services
-        // $scope.elevator = new google.maps.ElevationService();
-        // $scope.directionsService = new google.maps.DirectionsService()
+        // Initialise gazetteer
+        this.gazetteer = new this.os.Gazetteer();
     };
     
     centreMap(easting?: number, northing?: number, zoom?: number): void {
@@ -83,7 +84,7 @@ export class OsMap {
         if (northing !== undefined) { this.northing = northing; }
         if (zoom !== undefined) { this.zoom = zoom; }
         this.osMap.setCenter(
-            new window.OpenSpace.MapPoint(this.easting, this.northing),
+            new this.os.MapPoint(this.easting, this.northing),
             this.zoom
         );
     };
@@ -96,9 +97,9 @@ export class OsMap {
 
     // Convert Point into OpenSpace MapPoint
     convertToMapPoint(point: Point) {
-        let mp = new window.OpenLayers.LonLat(point.lon, point.lat),
+        let mp = new this.ol.LonLat(point.lon, point.lat),
             mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
-        return new window.OpenLayers.Geometry.Point(mapPoint.lon, mapPoint.lat);
+        return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
     };
     
     // Convert Route into OpenSpace Path
@@ -111,7 +112,7 @@ export class OsMap {
     // Calculate total distance in km
     getDistance(route: Point[]): number {
         // Convert route into MapPoints
-        let distString = new window.OpenLayers.Geometry.Curve(this.toPath(route));
+        let distString = new this.ol.Geometry.Curve(this.toPath(route));
         return (distString.getLength() / 1000);
     }
     
@@ -125,8 +126,8 @@ export class OsMap {
         let path = this.toPath(route.points);
 
         // Set the lines array (line segments in route)
-        let routeFeature = new window.OpenLayers.Feature.Vector(
-            new window.OpenLayers.Geometry.LineString(path),
+        let routeFeature = new this.ol.Feature.Vector(
+            new this.ol.Geometry.LineString(path),
             null,
             routeStyle
         );
@@ -134,7 +135,7 @@ export class OsMap {
         // Add waypoints (editable)
         route.waypoints.forEach((w: WayPoint) => {
             waypointsFeature.push(
-                new window.OpenLayers.Feature.Vector(this.convertToMapPoint(w.point))
+                new this.ol.Feature.Vector(this.convertToMapPoint(w.point))
             );
         });
         
@@ -153,7 +154,7 @@ export class OsMap {
     }
     
     addMarker(marker: Marker, image: string): any {
-        return new window.OpenLayers.Feature.Vector(
+        return new this.ol.Feature.Vector(
             this.convertToMapPoint(marker.point),
             { description: marker.name },
             {
@@ -161,7 +162,7 @@ export class OsMap {
                 graphicHeight:   32,
                 graphicWidth:    32,
                 graphicXOffset:  -16,
-                graphicYOffset:  -16
+                graphicYOffset:  -32
             }
         );
     };

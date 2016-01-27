@@ -14,20 +14,28 @@ import {settings} from './config/config';
             Load GPX File:
             <input type="file" (change)="fileChange($event)">
         </div>
-        <div>
-            <h2>Route</h2>
-            <p>Name: {{route.name}}
+        <div class="stats">
+            Name: {{route.name}}
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 Total Ascent: {{route.ascent | number:'1.1-2'}} m
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 Total Descent: {{route.descent | number:'1.1-2'}} m
                 &nbsp;&nbsp;|&nbsp;&nbsp;
-                Distance: {{distance | number:'1.1-2'}} m</p>
+                Distance: {{distance | number:'1.1-2'}} km
         </div>
         <map></map>
         `,
     directives: [FORM_DIRECTIVES, OsMap],
-    providers: [GpxService, FileService, ScriptLoadService]
+    providers: [GpxService, FileService, ScriptLoadService],
+    styles: [`
+        .stats {
+            background-color: #222;
+            color: #fff;
+            font-family: 'Open Sans', 'Arial', 'Helvetica';
+            line-height: 2em;
+            padding: 10px;
+        }
+    `]
 })
 
 export class AppComponent implements OnInit {
