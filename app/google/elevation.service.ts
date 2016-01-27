@@ -4,29 +4,30 @@ import {Point, MapPoint, Route} from '../route';
 
 @Injectable()
 export class ElevationService {
-    
+
     status: any;
+    results: any = [];
     private elevator: any = {};
     private sampleSize: number = 256;
-    
+
     init(): any {
         this.elevator = new window.google.maps.ElevationService();
         this.status = window.google.maps.ElevationStatus;
     }
     
     // Return elevation data for route
-    elevation(route: Route, callback: Function): any {
-        if (route.points.length <= 1) { 
+    elevation(path: any, callback: Function): any {
+        console.log('path', path);
+        if (path.length <= 1) {
             console.log('No elevation requested: too few points in path');
             callback([], this.status.OK);
         }
-        // Create an elevation request from path, with 256 sample points
-        // The max path size appears to be 412 data points
-        let path = this.googleRoute(route.points);
+        
+        // Batch into samples and create an elevation request for each path
         this.elevator.getElevationAlongPath({
             'path': path,
             'samples': this.sampleSize
-        }, callback);
+        }, callback);        
     };
     
     // Convert Point into Google LatLng
@@ -35,10 +36,40 @@ export class ElevationService {
     }
     
     // Convert Path into Google Path
+    // TODO: Only return points that don't already have elevation data
     googleRoute(points: Point[]): any {
         let gPath = [];
         points.forEach((point) => { gPath.push(this.toLatLng(point)); })
         return gPath;
+    }
+    
+    // Combine several requests into single response
+    multiPathHandler(results, status, index): void {
+        if (status !== this.status.OK) {
+            console.log(status);
+        } else {
+            this.results[index] = results;
+            console.log(this.results);
+        }
+    }
+    
+    // Cut a path into an array of paths, each <= sample size
+    getElevation(route: Route): void {
+        let i,
+            j,
+            index = 0,
+            pathArray,
+            path = this.googleRoute(route.points),
+            self = this;
+        
+        for (i = 0, j = path.length; i < j; i += this.sampleSize) {
+            pathArray = path.slice(i, i + this.sampleSize);
+            this.elevation(pathArray, function(results, status) {
+                console.log(index);
+                self.multiPathHandler(results, status, index);
+            });
+            index++;
+        }
     }
 
     // Reduce a path to <= maximum sample size (256)
@@ -60,7 +91,7 @@ export class ElevationService {
         }
 
         // Then add the last individual points at frequency = 1
-        for (let i = eLast; i < eLen ; i++) {
+        for (let i = eLast; i < eLen; i++) {
             path.push(points[i]);
         }
 

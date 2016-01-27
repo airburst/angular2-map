@@ -74,9 +74,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         // Plot path and markers
                         _this.map.drawPath(_this.route);
                         // Show elevation
-                        _this.elevationService.elevation(_this.route, function (results, status) {
-                            console.log(status, results);
-                        });
+                        _this.elevationService.getElevation(_this.route);
                     });
                 };
                 AppComponent = __decorate([

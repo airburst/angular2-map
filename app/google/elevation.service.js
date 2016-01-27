@@ -18,6 +18,7 @@ System.register(['angular2/core'], function(exports_1) {
         execute: function() {
             ElevationService = (function () {
                 function ElevationService() {
+                    this.results = [];
                     this.elevator = {};
                     this.sampleSize = 256;
                     // Reduce a path to <= maximum sample size (256)
@@ -48,14 +49,13 @@ System.register(['angular2/core'], function(exports_1) {
                     this.status = window.google.maps.ElevationStatus;
                 };
                 // Return elevation data for route
-                ElevationService.prototype.elevation = function (route, callback) {
-                    if (route.points.length <= 1) {
+                ElevationService.prototype.elevation = function (path, callback) {
+                    console.log('path', path);
+                    if (path.length <= 1) {
                         console.log('No elevation requested: too few points in path');
                         callback([], this.status.OK);
                     }
-                    // Create an elevation request from path, with 256 sample points
-                    // The max path size appears to be 412 data points
-                    var path = this.googleRoute(route.points);
+                    // Batch into samples and create an elevation request for each path
                     this.elevator.getElevationAlongPath({
                         'path': path,
                         'samples': this.sampleSize
@@ -67,11 +67,34 @@ System.register(['angular2/core'], function(exports_1) {
                     return new window.google.maps.LatLng(point.lat, point.lon);
                 };
                 // Convert Path into Google Path
+                // TODO: Only return points that don't already have elevation data
                 ElevationService.prototype.googleRoute = function (points) {
                     var _this = this;
                     var gPath = [];
                     points.forEach(function (point) { gPath.push(_this.toLatLng(point)); });
                     return gPath;
+                };
+                // Combine several requests into single response
+                ElevationService.prototype.multiPathHandler = function (results, status, index) {
+                    if (status !== this.status.OK) {
+                        console.log(status);
+                    }
+                    else {
+                        this.results[index] = results;
+                        console.log(this.results);
+                    }
+                };
+                // Cut a path into an array of paths, each <= sample size
+                ElevationService.prototype.getElevation = function (route) {
+                    var i, j, index = 0, pathArray, path = this.googleRoute(route.points), self = this;
+                    for (i = 0, j = path.length; i < j; i += this.sampleSize) {
+                        pathArray = path.slice(i, i + this.sampleSize);
+                        this.elevation(pathArray, function (results, status) {
+                            console.log(index);
+                            self.multiPathHandler(results, status, index);
+                        });
+                        index++;
+                    }
                 };
                 ElevationService = __decorate([
                     core_1.Injectable(), 
