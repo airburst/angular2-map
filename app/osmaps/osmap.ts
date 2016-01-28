@@ -16,7 +16,7 @@ import {settings} from '../config/config';
     `]
 })
 
-export class OsMap {    
+export class OsMap {
     easting: number = 386210;
     northing: number = 168060;
     zoom: number = 7;
@@ -26,7 +26,6 @@ export class OsMap {
     lineVectorLayer: any = {};
     pointVectorLayer: any = {};
     markerVectorLayer: any = {};
-    gazetteer: any = {};
     gridProjection: any = {};
     
     init() {
@@ -74,9 +73,6 @@ export class OsMap {
         // $scope.osMap.events.register('touchmove', $scope.osMap, function() { $scope.dragging = true; });
         // $scope.osMap.events.register('touchend', $scope.osMap, $scope.touchPoint);
         // $scope.osMap.events.register('click', $scope.osMap, $scope.clickPoint);
-
-        // Initialise gazetteer
-        this.gazetteer = new this.os.Gazetteer();
     };
     
     centreMap(easting?: number, northing?: number, zoom?: number): void {

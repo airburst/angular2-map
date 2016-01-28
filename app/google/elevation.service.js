@@ -18,9 +18,6 @@ System.register(['angular2/core'], function(exports_1) {
         execute: function() {
             ElevationService = (function () {
                 function ElevationService() {
-                    this.results = [];
-                    this.elevator = {};
-                    this.sampleSize = 256;
                     // Reduce a path to <= maximum sample size (256)
                     this.reducePath = function (points) {
                         var path = [];
@@ -43,6 +40,9 @@ System.register(['angular2/core'], function(exports_1) {
                         }
                         return path;
                     };
+                    this.results = [];
+                    this.elevator = {};
+                    this.sampleSize = 256;
                 }
                 ElevationService.prototype.init = function () {
                     this.elevator = new window.google.maps.ElevationService();

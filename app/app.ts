@@ -5,6 +5,7 @@ import {ScriptLoadService} from './services/scriptload.service';
 import {ElevationService} from './google/elevation.service';
 import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
+import {GazetteerService} from './osmaps/gazetteer';
 import {MapPoint} from './route';
 import {settings} from './config/config';
 
@@ -12,8 +13,10 @@ import {settings} from './config/config';
     selector: 'my-app',
     template: `
         <div>
-            Load GPX File:
-            <input type="file" (change)="fileChange($event)">
+            <label for="file">Load GPX File:</label>
+            <input id="file" type="file" (change)="fileChange($event)">
+            <label for="search">Search for postcode or place:</label>
+            <input id="search" type="text" (change)="search($event)">
         </div>
         <div class="stats">
             Name: {{route.name}}
@@ -27,7 +30,7 @@ import {settings} from './config/config';
         <map></map>
         `,
     directives: [FORM_DIRECTIVES, OsMap],
-    providers: [GpxService, FileService, ScriptLoadService, ElevationService],
+    providers: [GpxService, FileService, ScriptLoadService, ElevationService, GazetteerService],
     styles: [`
         .stats {
             background-color: #222;
@@ -44,7 +47,8 @@ export class AppComponent implements OnInit {
         private gpxService: GpxService,
         private fileService: FileService,
         private scriptLoadService: ScriptLoadService,
-        private elevationService: ElevationService
+        private elevationService: ElevationService,
+        private gazetteerService: GazetteerService
     ) { }
     
     route: any = {};
@@ -83,6 +87,15 @@ export class AppComponent implements OnInit {
             // Show elevation
             this.elevationService.getElevation(this.route);
         });
+    }
+    
+    // Search handler
+    search($event) { 
+        if ($event.target.value !== '') {
+            this.gazetteerService.searchPostcode($event.target.value, function(results, type) {
+                console.log('Results in App:', type, results);
+            });
+        }
     }
 
 }

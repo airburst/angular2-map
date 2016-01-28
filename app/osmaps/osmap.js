@@ -33,7 +33,6 @@ System.register(['angular2/core', 'angular2/common', '../config/config'], functi
                     this.lineVectorLayer = {};
                     this.pointVectorLayer = {};
                     this.markerVectorLayer = {};
-                    this.gazetteer = {};
                     this.gridProjection = {};
                 }
                 OsMap.prototype.init = function () {
@@ -70,8 +69,6 @@ System.register(['angular2/core', 'angular2/common', '../config/config'], functi
                     // $scope.osMap.events.register('touchmove', $scope.osMap, function() { $scope.dragging = true; });
                     // $scope.osMap.events.register('touchend', $scope.osMap, $scope.touchPoint);
                     // $scope.osMap.events.register('click', $scope.osMap, $scope.clickPoint);
-                    // Initialise gazetteer
-                    this.gazetteer = new this.os.Gazetteer();
                 };
                 ;
                 OsMap.prototype.centreMap = function (easting, northing, zoom) {

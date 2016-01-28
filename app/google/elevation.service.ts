@@ -5,10 +5,15 @@ import {Point, MapPoint, Route} from '../route';
 @Injectable()
 export class ElevationService {
 
-    status: any;
-    results: any = [];
-    private elevator: any = {};
-    private sampleSize: number = 256;
+    constructor() {
+        this.results = [];
+        this.elevator = {};
+        this.sampleSize = 256;
+    }
+    public status: any;
+    public results: any;
+    private elevator: any;
+    private sampleSize: number;
 
     init(): any {
         this.elevator = new window.google.maps.ElevationService();
