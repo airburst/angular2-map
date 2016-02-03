@@ -88,7 +88,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                             // Plot path and markers
                             _this.map.drawPath(_this.route);
                             // Show elevation
-                            _this.elevationService.getElevation(_this.route);
+                            //this.elevationService.getElevation(this.route);
                         });
                     }
                 };

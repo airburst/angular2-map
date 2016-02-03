@@ -85,6 +85,10 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                         var point = new route_1.Point(parseFloat(trackPoints[i].getElementsByTagName('LatitudeDegrees')[0].textContent), parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent), parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent));
                         route.addPoint(point);
                     }
+                    // Markers - add start and finish points
+                    // TODO: find out whether courses support waypoints
+                    route.addMarker(new route_1.Marker('Start', route.points[0]));
+                    route.addMarker(new route_1.Marker('Finish', route.points[route.points.length - 1]));
                     // Add calculated total ascent and descent
                     route.calculateElevation();
                     return route.json();

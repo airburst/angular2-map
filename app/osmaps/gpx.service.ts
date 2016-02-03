@@ -80,6 +80,12 @@ export class GpxService {
             );
             route.addPoint(point);
         }
+        
+        // Markers - add start and finish points
+        // TODO: find out whether courses support waypoints
+        route.addMarker(new Marker('Start', route.points[0]));
+        route.addMarker(new Marker('Finish', route.points[route.points.length - 1]));
+
         // Add calculated total ascent and descent
         route.calculateElevation();
         

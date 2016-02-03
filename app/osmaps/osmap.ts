@@ -137,7 +137,7 @@ export class OsMap {
         
         // Add route markers
         route.markers.forEach((m: Marker) => {
-            markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'))
+            markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'));
         });
 
         // Replace the existing layer
@@ -147,18 +147,38 @@ export class OsMap {
         this.lineVectorLayer.addFeatures([routeFeature]);
         this.markerVectorLayer.destroyFeatures();
         this.markerVectorLayer.addFeatures(markersFeature);
+        
+        // Add background style behind marker text
+        // let labels = document.getElementsByTagName('text');
+        // for (let i = 0; i < labels.length; i++) {
+        //     let svgRect: SVGRect = labels[i].getBBox();
+        //     let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        //     rect.setAttribute('x', svgRect.x.toString());
+        //     rect.setAttribute('y', svgRect.y.toString());
+        //     rect.setAttribute('width', svgRect.width.toString());
+        //     rect.setAttribute('height', svgRect.height.toString());
+        //     rect.setAttribute('fill', 'yellow');
+        //     document.insertBefore(rect, labels[i]);
+        // }
     }
     
     addMarker(marker: Marker, image: string): any {
         return new this.ol.Feature.Vector(
-            this.convertToMapPoint(marker.point),
-            { description: marker.name },
-            {
-                externalGraphic: image,
-                graphicHeight:   32,
-                graphicWidth:    32,
-                graphicXOffset:  -16,
-                graphicYOffset:  -32
+            this.convertToMapPoint(marker.point),   /* Geometry */
+            { description: marker.name },           /* Attributes */
+            {                                       /* Style */
+                label:              marker.name,
+                labelAlign:         'l',
+                labelXOffset:       16,
+                labelYOffset:       32,
+                fontFamily:         'Arial',
+                fontColor:          'black',
+                fontSize:           '0.7em',
+                externalGraphic:    image,
+                graphicHeight:      32,
+                graphicWidth:       32,
+                graphicXOffset:     -16,
+                graphicYOffset:     -32
             }
         );
     };

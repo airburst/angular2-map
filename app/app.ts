@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
                 this.map.drawPath(this.route);
                 
                 // Show elevation
-                this.elevationService.getElevation(this.route);
+                //this.elevationService.getElevation(this.route);
             });
         }
     }
