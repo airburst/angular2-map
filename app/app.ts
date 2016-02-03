@@ -46,6 +46,8 @@ export class AppComponent implements OnInit {
 
     // Load OS and Google scripts and initialise map canvas
     ngOnInit() {
+        this.fileService.setAllowedExtensions(['tcx', 'gpx']);
+        
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
         Promise.all(loadPromises)
@@ -61,20 +63,22 @@ export class AppComponent implements OnInit {
     // File load handler
     fileChange($event) {
         // Convert gpx file into json
-        this.fileService.ReadTextFile($event.target, (data) => {
-            this.route = this.gpxService.read(data);
-            this.distance = this.map.getDistance(this.route.points);
-            
-            // Change centre of map
-            let centre = this.map.convertToMapPoint(this.route.centre);
-            this.map.centreMap(centre.x, centre.y, this.route.zoom);
-            
-            // Plot path and markers
-            this.map.drawPath(this.route);
-            
-            // Show elevation
-            this.elevationService.getElevation(this.route);
-        });
+        if (this.fileService.supports($event.target)) {
+            this.fileService.readTextFile($event.target, (...data) => {
+                this.route = this.gpxService.read(data);
+                this.distance = this.map.getDistance(this.route.points);
+                
+                // Change centre of map
+                let centre = this.map.convertToMapPoint(this.route.centre); //TODO: enbed this test inside centreMap()
+                this.map.centreMap(centre.x, centre.y, this.route.zoom);
+                
+                // Plot path and markers
+                this.map.drawPath(this.route);
+                
+                // Show elevation
+                this.elevationService.getElevation(this.route);
+            });
+        }
     }
     
     // Search handler

@@ -59,6 +59,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                 // Load OS and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
+                    this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
                     Promise.all(loadPromises)
                         .then(function (value) {
@@ -73,17 +74,23 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                 AppComponent.prototype.fileChange = function ($event) {
                     var _this = this;
                     // Convert gpx file into json
-                    this.fileService.ReadTextFile($event.target, function (data) {
-                        _this.route = _this.gpxService.read(data);
-                        _this.distance = _this.map.getDistance(_this.route.points);
-                        // Change centre of map
-                        var centre = _this.map.convertToMapPoint(_this.route.centre);
-                        _this.map.centreMap(centre.x, centre.y, _this.route.zoom);
-                        // Plot path and markers
-                        _this.map.drawPath(_this.route);
-                        // Show elevation
-                        _this.elevationService.getElevation(_this.route);
-                    });
+                    if (this.fileService.supports($event.target)) {
+                        this.fileService.readTextFile($event.target, function () {
+                            var data = [];
+                            for (var _i = 0; _i < arguments.length; _i++) {
+                                data[_i - 0] = arguments[_i];
+                            }
+                            _this.route = _this.gpxService.read(data);
+                            _this.distance = _this.map.getDistance(_this.route.points);
+                            // Change centre of map
+                            var centre = _this.map.convertToMapPoint(_this.route.centre); //TODO: enbed this test inside centreMap()
+                            _this.map.centreMap(centre.x, centre.y, _this.route.zoom);
+                            // Plot path and markers
+                            _this.map.drawPath(_this.route);
+                            // Show elevation
+                            _this.elevationService.getElevation(_this.route);
+                        });
+                    }
                 };
                 // Search handler
                 AppComponent.prototype.search = function ($event) {

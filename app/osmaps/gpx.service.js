@@ -33,10 +33,17 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                 }
                 // Try to convert xml into json
                 GpxService.prototype.read = function (gpxData) {
+                    var route = gpxData[0], name = gpxData[1], ext = gpxData[2];
                     try {
                         var parser = new DOMParser();
-                        var xmlDoc = parser.parseFromString(gpxData, 'text/xml');
-                        return this.tcxToJson(xmlDoc);
+                        var xmlDoc = parser.parseFromString(route, 'text/xml');
+                        // Parse the file dependent on type
+                        if (ext === 'gpx') {
+                            return this.gpxToJson(xmlDoc);
+                        }
+                        if (ext === 'tcx') {
+                            return this.tcxToJson(xmlDoc);
+                        }
                     }
                     catch (err) {
                         console.log(err);

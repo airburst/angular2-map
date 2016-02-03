@@ -18,15 +18,39 @@ System.register(['angular2/core'], function(exports_1) {
         execute: function() {
             FileService = (function () {
                 function FileService() {
+                    this.options = {
+                        'types': ['txt']
+                    };
                 }
-                FileService.prototype.ReadTextFile = function (input, response) {
-                    var file = input.files[0];
-                    var reader = new FileReader();
-                    // Return text file
+                FileService.prototype.readTextFile = function (input, response) {
+                    var file = input.files[0], name = file.name, ext = this.extension(name), reader = new FileReader();
                     reader.onloadend = function () {
-                        response(reader.result);
+                        response(reader.result, name, ext);
                     };
                     reader.readAsText(file);
+                };
+                FileService.prototype.extension = function (fileName) {
+                    var re = /(?:\.([^.]+))?$/;
+                    var ext = re.exec(fileName)[1];
+                    if (ext !== undefined) {
+                        return ext;
+                    }
+                    return '';
+                };
+                FileService.prototype.supports = function (input) {
+                    // Check whether cancel button pressed
+                    if (input.files.length === 0) {
+                        return false;
+                    }
+                    // Check whether file extension is in our whitelist
+                    var ext = this.extension(input.files[0].name);
+                    if (this.options.types.indexOf(ext) > -1) {
+                        return true;
+                    }
+                    return false;
+                };
+                FileService.prototype.setAllowedExtensions = function (extensions) {
+                    this.options.types = extensions;
                 };
                 FileService = __decorate([
                     core_1.Injectable(), 

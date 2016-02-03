@@ -6,10 +6,17 @@ export class GpxService {
     
     // Try to convert xml into json
     read(gpxData: any): string {
+        let route: any = gpxData[0],
+            name: string = gpxData[1],
+            ext: string = gpxData[2];
+
         try {           
             let parser: DOMParser = new DOMParser();
-            let xmlDoc: Document = parser.parseFromString(gpxData,'text/xml');
-            return this.tcxToJson(xmlDoc);
+            let xmlDoc: Document = parser.parseFromString(route,'text/xml');
+            
+            // Parse the file dependent on type
+            if (ext === 'gpx') { return this.gpxToJson(xmlDoc); }
+            if (ext === 'tcx') { return this.tcxToJson(xmlDoc); }
         }
         catch (err) {
             console.log(err);
