@@ -16,11 +16,33 @@ System.register(['angular2/core'], function(exports_1) {
                 core_1 = core_1_1;
             }],
         execute: function() {
+            // @Injectable()
+            // export class WikipediaService {
+            //     search(terms: Observable<string>, debounceDuration = 400) {
+            //         return terms.debounceTime(debounceDuration)
+            //             .distinctUntilChanged()
+            //             .switchMap(term => this.rawSearch(term));
+            //     }
+            //     // rawSearch(term: string) {
+            //     //     var search = new URLSearchParams()
+            //     //     search.set('action', 'opensearch');
+            //     //     search.set('search', term);
+            //     //     search.set('format', 'json');
+            //     //     return this.jsonp
+            //     //         .get('http://en.wikipedia.org/w/api.php?callback=JSONP_CALLBACK', { search })
+            //     //         .map((response) => response.json()[1]);
+            //     // }
+            // }
             GazetteerService = (function () {
                 function GazetteerService() {
                     this.sectorFlag = 0;
                     this.place = '';
                 }
+                // search(terms: Observable<string>, debounceDuration = 400) {
+                //     return terms.debounceTime(debounceDuration)
+                //         .distinctUntilChanged()
+                //         .switchMap(term => this.searchPostcode(term));
+                // }
                 GazetteerService.prototype.searchPostcode = function (place, callback) {
                     var postcodeService = new window.OpenSpace.Postcode();
                     this.place = place;

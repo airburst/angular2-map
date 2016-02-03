@@ -4,13 +4,12 @@ import {Point, WayPoint, Marker, Route} from '../route';
 @Injectable()
 export class GpxService {
     
-    // Parse xml into json
+    // Try to convert xml into json
     read(gpxData: any): string {
-        // Parse gpx format into data structure
         try {           
             let parser: DOMParser = new DOMParser();
             let xmlDoc: Document = parser.parseFromString(gpxData,'text/xml');
-            return this.gpxToJson(xmlDoc);
+            return this.tcxToJson(xmlDoc);
         }
         catch (err) {
             console.log(err);
@@ -45,6 +44,32 @@ export class GpxService {
                 parseFloat(trackPoints[i].getAttribute('lat').valueOf()),
                 parseFloat(trackPoints[i].getAttribute('lon').valueOf()),
                 parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent)
+            );
+            route.addPoint(point);
+        }
+        // Add calculated total ascent and descent
+        route.calculateElevation();
+        
+        return route.json();
+    }
+    
+    // TODO: understand the full schema:
+    // http://www8.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd
+    // This function only handles course[0], not activities or multiple courses
+    private tcxToJson(xml: Document): string {
+        let route = new Route();
+
+        // Course Name (Course/Name)
+        let course = xml.getElementsByTagName('Course')[0];
+        route.name = ((course.getElementsByTagName('Name')[0]) !== undefined) ? course.getElementsByTagName('Name')[0].textContent : '';
+        
+        // Track Points (Track/Trackpoint[Position/LatitudeDegrees, Position/LongitudeDegrees, AltitudeMeters])
+        let trackPoints = xml.getElementsByTagName('Trackpoint');
+        for (let i = 0; i < trackPoints.length; i++) {
+            let point = new Point(
+                parseFloat(trackPoints[i].getElementsByTagName('LatitudeDegrees')[0].textContent),
+                parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent),
+                parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent)
             );
             route.addPoint(point);
         }

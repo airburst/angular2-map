@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './google/elevation.service', './osmaps/gpx.service', './osmaps/osmap', './osmaps/gazetteer', './config/config'], function(exports_1) {
+System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'rxjs/add/operator/debounceTime', 'rxjs/add/operator/distinctUntilChanged', 'rxjs/add/operator/switchMap', './services/file.service', './services/scriptload.service', './google/elevation.service', './osmaps/gpx.service', './osmaps/osmap', './osmaps/gazetteer', './config/config'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -18,6 +18,10 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             function (common_1_1) {
                 common_1 = common_1_1;
             },
+            function (_1) {},
+            function (_2) {},
+            function (_3) {},
+            function (_4) {},
             function (file_service_1_1) {
                 file_service_1 = file_service_1_1;
             },
@@ -92,7 +96,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <div>\n            <label for=\"file\">Load GPX File:</label>\n            <input id=\"file\" type=\"file\" (change)=\"fileChange($event)\">\n            <label for=\"search\">Search for postcode or place:</label>\n            <input id=\"search\" type=\"text\" (change)=\"search($event)\">\n        </div>\n        <div class=\"stats\">\n            Name: {{route.name}}\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Ascent: {{route.ascent | number:'1.1-2'}} m\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Total Descent: {{route.descent | number:'1.1-2'}} m\n                &nbsp;&nbsp;|&nbsp;&nbsp;\n                Distance: {{distance | number:'1.1-2'}} km\n        </div>\n        <map></map>\n        ",
+                        templateUrl: '/app/app.template.html',
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap],
                         providers: [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, gazetteer_1.GazetteerService],
                         styles: ["\n        .stats {\n            background-color: #222;\n            color: #fff;\n            font-family: 'Open Sans', 'Arial', 'Helvetica';\n            line-height: 2em;\n            padding: 10px;\n        }\n    "]

@@ -31,13 +31,12 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                         end: '</rte></gpx>'
                     };
                 }
-                // Parse xml into json
+                // Try to convert xml into json
                 GpxService.prototype.read = function (gpxData) {
-                    // Parse gpx format into data structure
                     try {
                         var parser = new DOMParser();
                         var xmlDoc = parser.parseFromString(gpxData, 'text/xml');
-                        return this.gpxToJson(xmlDoc);
+                        return this.tcxToJson(xmlDoc);
                     }
                     catch (err) {
                         console.log(err);
@@ -59,6 +58,24 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                     var trackPoints = xml.getElementsByTagName('trkpt');
                     for (var i = 0; i < trackPoints.length; i++) {
                         var point = new route_1.Point(parseFloat(trackPoints[i].getAttribute('lat').valueOf()), parseFloat(trackPoints[i].getAttribute('lon').valueOf()), parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent));
+                        route.addPoint(point);
+                    }
+                    // Add calculated total ascent and descent
+                    route.calculateElevation();
+                    return route.json();
+                };
+                // TODO: understand the full schema:
+                // http://www8.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd
+                // This function only handles course[0], not activities or multiple courses
+                GpxService.prototype.tcxToJson = function (xml) {
+                    var route = new route_1.Route();
+                    // Course Name (Course/Name)
+                    var course = xml.getElementsByTagName('Course')[0];
+                    route.name = ((course.getElementsByTagName('Name')[0]) !== undefined) ? course.getElementsByTagName('Name')[0].textContent : '';
+                    // Track Points (Track/Trackpoint[Position/LatitudeDegrees, Position/LongitudeDegrees, AltitudeMeters])
+                    var trackPoints = xml.getElementsByTagName('Trackpoint');
+                    for (var i = 0; i < trackPoints.length; i++) {
+                        var point = new route_1.Point(parseFloat(trackPoints[i].getElementsByTagName('LatitudeDegrees')[0].textContent), parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent), parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent));
                         route.addPoint(point);
                     }
                     // Add calculated total ascent and descent

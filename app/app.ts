@@ -1,5 +1,10 @@
 import {Component, EventEmitter, OnInit} from 'angular2/core';
-import {FORM_DIRECTIVES} from 'angular2/common';
+import {FORM_DIRECTIVES, Control} from 'angular2/common';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/switchMap';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {ElevationService} from './google/elevation.service';
@@ -11,24 +16,7 @@ import {settings} from './config/config';
 
 @Component({
     selector: 'my-app',
-    template: `
-        <div>
-            <label for="file">Load GPX File:</label>
-            <input id="file" type="file" (change)="fileChange($event)">
-            <label for="search">Search for postcode or place:</label>
-            <input id="search" type="text" (change)="search($event)">
-        </div>
-        <div class="stats">
-            Name: {{route.name}}
-                &nbsp;&nbsp;|&nbsp;&nbsp;
-                Total Ascent: {{route.ascent | number:'1.1-2'}} m
-                &nbsp;&nbsp;|&nbsp;&nbsp;
-                Total Descent: {{route.descent | number:'1.1-2'}} m
-                &nbsp;&nbsp;|&nbsp;&nbsp;
-                Distance: {{distance | number:'1.1-2'}} km
-        </div>
-        <map></map>
-        `,
+    templateUrl: '/app/app.template.html',
     directives: [FORM_DIRECTIVES, OsMap],
     providers: [GpxService, FileService, ScriptLoadService, ElevationService, GazetteerService],
     styles: [`
