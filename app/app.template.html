@@ -1,12 +1,21 @@
-<div>
+<!--<div>
     <label for="file">Load GPX File:</label>
     <input id="file" type="file" (change)="fileChange($event)">
     <label for="search">Search for postcode or place:</label>
     <input id="search" type="text" (change)="search($event)">
-</div>
+</div>-->
+
+<!-- Header -->
 <div class="stats">
-    Name: {{route.name}} &nbsp;&nbsp;|&nbsp;&nbsp; Total Ascent: {{route.ascent | number:'1.1-2'}} m &nbsp;&nbsp;|&nbsp;&nbsp;
-    Total Descent: {{route.descent | number:'1.1-2'}} m &nbsp;&nbsp;|&nbsp;&nbsp; Distance: {{distance | number:'1.1-2'}}
-    km
-</div>
+    <div class="text">
+        Name: {{route.name}} &nbsp;&nbsp;|&nbsp;&nbsp; Total Ascent: {{route.ascent | number:'1.1-2'}} m &nbsp;&nbsp;|&nbsp;&nbsp;
+        Total Descent: {{route.descent | number:'1.1-2'}} m &nbsp;&nbsp;|&nbsp;&nbsp; Distance: {{distance | number:'1.1-2'}}
+        km
+    </div>
+    <div class="form">
+        <label for="file">Load GPX or TCX File:</label>
+        <input id="file" type="file" (change)="fileChange($event)">
+    </div>
+</div><!-- Header -->
+
 <map></map>

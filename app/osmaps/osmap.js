@@ -132,17 +132,17 @@ System.register(['angular2/core', 'angular2/common', '../config/config'], functi
                     this.markerVectorLayer.destroyFeatures();
                     this.markerVectorLayer.addFeatures(markersFeature);
                     // Add background style behind marker text
-                    var labels = document.getElementsByTagName('text');
-                    for (var i = 0; i < labels.length; i++) {
-                        var svgRect = labels[i].getBBox();
-                        var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                        rect.setAttribute('x', svgRect.x.toString());
-                        rect.setAttribute('y', svgRect.y.toString());
-                        rect.setAttribute('width', svgRect.width.toString());
-                        rect.setAttribute('height', svgRect.height.toString());
-                        rect.setAttribute('fill', 'yellow');
-                        document.insertBefore(rect, labels[i]);
-                    }
+                    // let labels = document.getElementsByTagName('text');
+                    // for (let i = 0; i < labels.length; i++) {
+                    //     let svgRect: SVGRect = labels[i].getBBox();
+                    //     let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    //     rect.setAttribute('x', svgRect.x.toString());
+                    //     rect.setAttribute('y', svgRect.y.toString());
+                    //     rect.setAttribute('width', svgRect.width.toString());
+                    //     rect.setAttribute('height', svgRect.height.toString());
+                    //     rect.setAttribute('fill', 'yellow');
+                    //     document.insertBefore(rect, labels[i]);
+                    // }
                 };
                 OsMap.prototype.addMarker = function (marker, image) {
                     return new this.ol.Feature.Vector(this.convertToMapPoint(marker.point), /* Geometry */ { description: marker.name }, /* Attributes */ {
