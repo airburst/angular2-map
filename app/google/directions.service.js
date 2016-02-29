@@ -23,6 +23,25 @@ System.register(['angular2/core'], function(exports_1) {
                 DirectionsService.prototype.init = function () {
                     this.service = new window.google.maps.DirectionsService();
                 };
+                DirectionsService.prototype.getRouteBetween = function (from, to) {
+                    this.service.route({
+                        origin: from,
+                        destination: to,
+                        travelMode: window.google.maps.DirectionsTravelMode.BICYCLING
+                    }, function (result, status) {
+                        if (status === window.google.maps.DirectionsStatus.OK) {
+                            return result; // Need to push values to Observable route
+                        }
+                        else {
+                            throw {
+                                message: 'There was a problem getting directions data.',
+                                status: status,
+                                type: 'Directions Service Error'
+                            };
+                        }
+                    });
+                };
+                ;
                 DirectionsService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [])

@@ -61,10 +61,12 @@ export class AppComponent implements OnInit {
 
     // Load OS and Google scripts and initialise map canvas
     ngOnInit() {
+        this.route = new Route();
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
+             
         Promise.all(loadPromises)
             .then((value) => {
                 //TODO: Test for OpenSpace unavailable in Window object

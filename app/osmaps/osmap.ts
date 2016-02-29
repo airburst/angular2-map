@@ -113,7 +113,7 @@ export class OsMap {
     }
     
     // Draw path as a vector layer
-    drawPath(route: any): void {
+    drawPath(route: Route): void {
         let routeStyle: any = settings.routeStyle,
             waypointsFeature: WayPoint[] = [],
             markersFeature: Marker[] = [];
@@ -129,7 +129,7 @@ export class OsMap {
         );
 
         // Add waypoints (editable)
-        route.waypoints.forEach((w: WayPoint) => {
+        route.wayPoints.forEach((w: WayPoint) => {
             waypointsFeature.push(
                 new this.ol.Feature.Vector(this.convertToMapPoint(w.point))
             );

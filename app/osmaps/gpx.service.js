@@ -39,10 +39,10 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                         var xmlDoc = parser.parseFromString(route, 'text/xml');
                         // Parse the file dependent on type
                         if (ext === 'gpx') {
-                            return this.gpxToJson(xmlDoc);
+                            return this.gpxToRoute(xmlDoc);
                         }
                         if (ext === 'tcx') {
-                            return this.tcxToJson(xmlDoc);
+                            return this.tcxToRoute(xmlDoc);
                         }
                     }
                     catch (err) {
@@ -50,7 +50,7 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                         return (err);
                     }
                 };
-                GpxService.prototype.gpxToJson = function (xml) {
+                GpxService.prototype.gpxToRoute = function (xml) {
                     var route = new route_1.Route();
                     // Route Name (gpx/metadata/name)
                     var meta = xml.getElementsByTagName('metadata')[0];
@@ -69,12 +69,12 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                     }
                     // Add calculated total ascent and descent
                     route.calculateElevation();
-                    return route.json();
+                    return route;
                 };
                 // TODO: understand the full schema:
                 // http://www8.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd
                 // This function only handles course[0], not activities or multiple courses
-                GpxService.prototype.tcxToJson = function (xml) {
+                GpxService.prototype.tcxToRoute = function (xml) {
                     var route = new route_1.Route();
                     // Course Name (Course/Name)
                     var course = xml.getElementsByTagName('Course')[0];
@@ -91,7 +91,7 @@ System.register(['angular2/core', '../route'], function(exports_1) {
                     route.addMarker(new route_1.Marker('Finish', route.points[route.points.length - 1]));
                     // Add calculated total ascent and descent
                     route.calculateElevation();
-                    return route.json();
+                    return route;
                 };
                 GpxService.prototype.replaceAll = function (find, replace, str) {
                     return str.replace(new RegExp(find, 'g'), replace);

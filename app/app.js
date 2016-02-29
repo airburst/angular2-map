@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'rxjs/add/operator/debounceTime', 'rxjs/add/operator/distinctUntilChanged', 'rxjs/add/operator/switchMap', './services/file.service', './services/scriptload.service', './google/elevation.service', './osmaps/gpx.service', './osmaps/osmap', './osmaps/gazetteer', './config/config'], function(exports_1) {
+System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'rxjs/add/operator/debounceTime', 'rxjs/add/operator/distinctUntilChanged', 'rxjs/add/operator/switchMap', './services/file.service', './services/scriptload.service', './google/elevation.service', './osmaps/gpx.service', './osmaps/osmap', './osmaps/gazetteer', './route', './config/config'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, gpx_service_1, osmap_1, gazetteer_1, config_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, gpx_service_1, osmap_1, gazetteer_1, route_1, config_1;
     var AppComponent;
     return {
         setters:[
@@ -40,6 +40,9 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
             function (gazetteer_1_1) {
                 gazetteer_1 = gazetteer_1_1;
             },
+            function (route_1_1) {
+                route_1 = route_1_1;
+            },
             function (config_1_1) {
                 config_1 = config_1_1;
             }],
@@ -51,7 +54,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                     this.scriptLoadService = scriptLoadService;
                     this.elevationService = elevationService;
                     this.gazetteerService = gazetteerService;
-                    this.route = {};
                     this.path = [];
                     this.distance = 0;
                     this.map = new osmap_1.OsMap;
@@ -59,6 +61,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                 // Load OS and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
+                    this.route = new route_1.Route();
                     this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
                     Promise.all(loadPromises)
@@ -83,8 +86,8 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                             _this.route = _this.gpxService.read(data);
                             _this.distance = _this.map.getDistance(_this.route.points);
                             // Change centre of map
-                            var centre = _this.map.convertToMapPoint(_this.route.centre); //TODO: enbed this test inside centreMap()
-                            _this.map.centreMap(centre.x, centre.y, _this.route.zoom);
+                            var centre = _this.map.convertToMapPoint(_this.route.centre());
+                            _this.map.centreMap(centre.x, centre.y, _this.route.getZoomLevel());
                             // Plot path and markers
                             _this.map.drawPath(_this.route);
                             // Show elevation

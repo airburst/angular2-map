@@ -75,9 +75,21 @@ System.register([], function(exports_1) {
                     this.maxLon = -1000000;
                     this.diagonal = 0;
                 }
-                Route.prototype.addWayPoint = function (wayPoint) { this.wayPoints.push(wayPoint); };
-                Route.prototype.addPoint = function (point) { this.points.push(point); };
-                Route.prototype.addMarker = function (marker) { this.markers.push(marker); };
+                Route.prototype.addWayPoint = function (wayPoint) {
+                    this.wayPoints.push(wayPoint);
+                };
+                Route.prototype.addPoints = function (points) {
+                    var _this = this;
+                    points.forEach(function (p) {
+                        _this.addPoint(p);
+                    });
+                };
+                Route.prototype.addPoint = function (point) {
+                    this.points.push(point);
+                };
+                Route.prototype.addMarker = function (marker) {
+                    this.markers.push(marker);
+                };
                 Route.prototype.calculateElevation = function () {
                     var totalAscent = 0, totalDescent = 0, lastElevation = 0;
                     for (var i = 0; i < this.points.length - 1; i++) {
@@ -115,7 +127,8 @@ System.register([], function(exports_1) {
                             (1 - c((lon2 - lon1) * p)) / 2;
                     return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
                 };
-                Route.prototype.zoom = function (distance) {
+                Route.prototype.getZoomLevel = function () {
+                    var distance = this.diagonal;
                     if (distance <= 0) {
                         return 10;
                     }
@@ -135,7 +148,7 @@ System.register([], function(exports_1) {
                         'points': this.points,
                         'markers': this.markers,
                         'centre': this.centre(),
-                        'zoom': this.zoom(this.diagonal)
+                        'zoom': this.getZoomLevel()
                     };
                 };
                 return Route;
