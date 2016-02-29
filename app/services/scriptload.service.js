@@ -1,4 +1,6 @@
-System.register([], function(exports_1) {
+System.register([], function(exports_1, context_1) {
+    "use strict";
+    var __moduleName = context_1 && context_1.id;
     var ScriptLoadService;
     return {
         setters:[],
@@ -27,7 +29,7 @@ System.register([], function(exports_1) {
                     return scriptPromise;
                 };
                 return ScriptLoadService;
-            })();
+            }());
             exports_1("ScriptLoadService", ScriptLoadService);
         }
     }

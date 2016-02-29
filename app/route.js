@@ -1,4 +1,6 @@
-System.register([], function(exports_1) {
+System.register([], function(exports_1, context_1) {
+    "use strict";
+    var __moduleName = context_1 && context_1.id;
     var Point, MapPoint, WayPoint, Marker, Route;
     return {
         setters:[],
@@ -17,7 +19,7 @@ System.register([], function(exports_1) {
                     return [this.lat, this.lon, this.ele];
                 };
                 return Point;
-            })();
+            }());
             exports_1("Point", Point);
             // Northing - Easting Coordinate (like Ordnance Survey)
             MapPoint = (function () {
@@ -31,7 +33,7 @@ System.register([], function(exports_1) {
                     return [this.x, this.y,];
                 };
                 return MapPoint;
-            })();
+            }());
             exports_1("MapPoint", MapPoint);
             WayPoint = (function () {
                 function WayPoint(point, routePoints) {
@@ -45,7 +47,7 @@ System.register([], function(exports_1) {
                     };
                 };
                 return WayPoint;
-            })();
+            }());
             exports_1("WayPoint", WayPoint);
             Marker = (function () {
                 function Marker(name, point) {
@@ -59,7 +61,7 @@ System.register([], function(exports_1) {
                     };
                 };
                 return Marker;
-            })();
+            }());
             exports_1("Marker", Marker);
             Route = (function () {
                 function Route() {
@@ -152,7 +154,7 @@ System.register([], function(exports_1) {
                     };
                 };
                 return Route;
-            })();
+            }());
             exports_1("Route", Route);
         }
     }

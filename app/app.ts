@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
+import {Immutable} from 'immutable';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {ElevationService} from './google/elevation.service';
@@ -62,8 +63,7 @@ export class AppComponent implements OnInit {
     // Load OS and Google scripts and initialise map canvas
     ngOnInit() {
         this.route = new Route();
-        this.fileService.setAllowedExtensions(['tcx', 'gpx']);
-        
+        this.fileService.setAllowedExtensions(['tcx', 'gpx']);   
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
              
