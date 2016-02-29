@@ -1,7 +1,7 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point, MapPoint, WayPoint, Marker} from '../route';
+import {Point, MapPoint, WayPoint, Marker, Route} from '../route';
 import {settings} from '../config/config';
 
 @Component({
@@ -147,20 +147,7 @@ export class OsMap {
         this.lineVectorLayer.addFeatures([routeFeature]);
         this.markerVectorLayer.destroyFeatures();
         this.markerVectorLayer.addFeatures(markersFeature);
-        
-        // Add background style behind marker text
-        // let labels = document.getElementsByTagName('text');
-        // for (let i = 0; i < labels.length; i++) {
-        //     let svgRect: SVGRect = labels[i].getBBox();
-        //     let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        //     rect.setAttribute('x', svgRect.x.toString());
-        //     rect.setAttribute('y', svgRect.y.toString());
-        //     rect.setAttribute('width', svgRect.width.toString());
-        //     rect.setAttribute('height', svgRect.height.toString());
-        //     rect.setAttribute('fill', 'yellow');
-        //     document.insertBefore(rect, labels[i]);
-        // }
-    }
+    };
     
     addMarker(marker: Marker, image: string): any {
         return new this.ol.Feature.Vector(

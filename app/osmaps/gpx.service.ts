@@ -5,7 +5,7 @@ import {Point, WayPoint, Marker, Route} from '../route';
 export class GpxService {
     
     // Try to convert xml into json
-    read(gpxData: any): string {
+    read(gpxData: any): Route {
         let route: any = gpxData[0],
             name: string = gpxData[1],
             ext: string = gpxData[2];
@@ -15,8 +15,8 @@ export class GpxService {
             let xmlDoc: Document = parser.parseFromString(route,'text/xml');
             
             // Parse the file dependent on type
-            if (ext === 'gpx') { return this.gpxToJson(xmlDoc); }
-            if (ext === 'tcx') { return this.tcxToJson(xmlDoc); }
+            if (ext === 'gpx') { return this.gpxToRoute(xmlDoc); }
+            if (ext === 'tcx') { return this.tcxToRoute(xmlDoc); }
         }
         catch (err) {
             console.log(err);
@@ -24,7 +24,7 @@ export class GpxService {
         }
     }
     
-    private gpxToJson(xml: Document): string {
+    private gpxToRoute(xml: Document): Route {
         let route = new Route();
 
         // Route Name (gpx/metadata/name)
@@ -57,13 +57,13 @@ export class GpxService {
         // Add calculated total ascent and descent
         route.calculateElevation();
         
-        return route.json();
+        return route;
     }
     
     // TODO: understand the full schema:
     // http://www8.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd
     // This function only handles course[0], not activities or multiple courses
-    private tcxToJson(xml: Document): string {
+    private tcxToRoute(xml: Document): Route {
         let route = new Route();
 
         // Course Name (Course/Name)
@@ -89,7 +89,7 @@ export class GpxService {
         // Add calculated total ascent and descent
         route.calculateElevation();
         
-        return route.json();
+        return route;
     }
     
     private template: any = {

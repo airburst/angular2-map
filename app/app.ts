@@ -11,7 +11,7 @@ import {ElevationService} from './google/elevation.service';
 import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {GazetteerService} from './osmaps/gazetteer';
-import {MapPoint} from './route';
+import {Route, MapPoint} from './route';
 import {settings} from './config/config';
 
 @Component({
@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
         private gazetteerService: GazetteerService
     ) { }
     
-    route: any = {};
+    route: Route;
     path: MapPoint[] = [];
     distance: number = 0;
     map: OsMap = new OsMap;
@@ -84,9 +84,9 @@ export class AppComponent implements OnInit {
                 this.distance = this.map.getDistance(this.route.points);
                 
                 // Change centre of map
-                let centre = this.map.convertToMapPoint(this.route.centre); //TODO: enbed this test inside centreMap()
-                this.map.centreMap(centre.x, centre.y, this.route.zoom);
-                
+                let centre = this.map.convertToMapPoint(this.route.centre());
+                this.map.centreMap(centre.x, centre.y, this.route.getZoomLevel());
+
                 // Plot path and markers
                 this.map.drawPath(this.route);
                 
