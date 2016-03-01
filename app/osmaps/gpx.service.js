@@ -33,7 +33,6 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                         end: '</rte></gpx>'
                     };
                 }
-                // Try to convert xml into json
                 GpxService.prototype.read = function (gpxData) {
                     var route = gpxData[0], name = gpxData[1], ext = gpxData[2];
                     try {
