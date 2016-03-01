@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
-import {Immutable} from 'immutable';
+import {Map} from 'immutable';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {ElevationService} from './google/elevation.service';

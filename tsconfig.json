@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "ES5",
+        "target": "es5",
         "module": "system",
         "moduleResolution": "node",
         "sourceMap": true,
@@ -9,7 +9,10 @@
         "removeComments": false,
         "noImplicitAny": false
     },
-    "exclude": [
-        "node_modules"
+    "files": [
+        "app/app.ts",
+        "node_modules/angular2/ts/typings/node/node.d.ts",
+        "node_modules/angular2/typings/browser.d.ts",
+        "node_modules/immutable/dist/immutable.d.ts"
     ]
 }
