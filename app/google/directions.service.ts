@@ -1,16 +1,16 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 import {Injectable} from 'angular2/core';
-import {Point, MapPoint, WayPoint, Marker, Route} from '../route';
+import {MapPoint} from '../route';
 
 @Injectable()
 export class DirectionsService {
 
     private service: any = {};
 
-    init(): void {
+    constructor() {
         this.service = new window.google.maps.DirectionsService();
     }
-
+    
     getRouteBetween(from: MapPoint, to: MapPoint) {
         this.service.route({
             origin: from,

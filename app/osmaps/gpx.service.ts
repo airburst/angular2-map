@@ -4,7 +4,6 @@ import {Point, WayPoint, Marker, Route} from '../route';
 @Injectable()
 export class GpxService {
     
-    // Try to convert xml into json
     read(gpxData: any): Route {
         let route: any = gpxData[0],
             name: string = gpxData[1],
