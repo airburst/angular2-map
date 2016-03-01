@@ -55,14 +55,14 @@ export class AppComponent implements OnInit {
         private gazetteerService: GazetteerService
     ) { }
     
-    route: Route;
+    route: Route = new Route();;
     path: MapPoint[] = [];
     distance: number = 0;
     map: OsMap = new OsMap;
 
     // Load OS and Google scripts and initialise map canvas
     ngOnInit() {
-        this.route = new Route();
+        //this.route = new Route();  
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);   
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);

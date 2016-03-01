@@ -7,9 +7,9 @@
 
 <!-- Header -->
 <div class="stats">
-    <div class="text">
-        Name: {{route.name}} &nbsp;&nbsp;|&nbsp;&nbsp; Total Ascent: {{route.ascent | number:'1.1-2'}} m &nbsp;&nbsp;|&nbsp;&nbsp;
-        Total Descent: {{route.descent | number:'1.1-2'}} m &nbsp;&nbsp;|&nbsp;&nbsp; Distance: {{distance | number:'1.1-2'}}
+    <div class="text" *ngIf="route.points.length > 0">
+        {{route.name}} &nbsp;&nbsp;&nbsp; Ascent: {{route.ascent | number:'1.1-2'}} m &nbsp;&nbsp;&nbsp;
+        Descent: {{route.descent | number:'1.1-2'}} m &nbsp;&nbsp;&nbsp; Distance: {{distance | number:'1.1-2'}}
         km
     </div>
     <div class="form">

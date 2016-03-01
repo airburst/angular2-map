@@ -56,14 +56,16 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                     this.scriptLoadService = scriptLoadService;
                     this.elevationService = elevationService;
                     this.gazetteerService = gazetteerService;
+                    this.route = new route_1.Route();
                     this.path = [];
                     this.distance = 0;
                     this.map = new osmap_1.OsMap;
                 }
+                ;
                 // Load OS and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    this.route = new route_1.Route();
+                    //this.route = new Route();  
                     this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
                     Promise.all(loadPromises)
