@@ -26,11 +26,12 @@ import {settings} from './config/config';
             color: #fff;
             font-family: 'Open Sans', 'Arial', 'Helvetica';
             line-height: 2em;
-            padding: 10px;
             position: absolute;
             top: 0;
             z-index: 999;
             width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
         }
         
         .text {
