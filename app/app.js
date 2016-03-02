@@ -62,26 +62,23 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                     this.map = new osmap_1.OsMap;
                 }
                 ;
-                // Load OS and Google scripts and initialise map canvas
+                // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    //this.route = new Route();  
                     this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
                     Promise.all(loadPromises)
                         .then(function (value) {
-                        //TODO: Test for OpenSpace unavailable in Window object
                         _this.map.init();
-                        _this.elevationService.init(); // Doesn't do much yet
+                        _this.elevationService.init();
                     }, function (value) {
                         console.error('Script not found:', value);
                     });
                 };
-                // File load handler
                 AppComponent.prototype.fileChange = function ($event) {
                     var _this = this;
-                    // Convert gpx file into json
                     if (this.fileService.supports($event.target)) {
+                        // TODO: wrap in a try-catch and throw exception if we cannot read file
                         this.fileService.readTextFile($event.target, function () {
                             var data = [];
                             for (var _i = 0; _i < arguments.length; _i++) {
@@ -94,12 +91,9 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                             _this.map.centreMap(centre.x, centre.y, _this.route.getZoomLevel());
                             // Plot path and markers
                             _this.map.drawPath(_this.route);
-                            // Show elevation
-                            //this.elevationService.getElevation(this.route);
                         });
                     }
                 };
-                // Search handler
                 AppComponent.prototype.search = function ($event) {
                     var place = $event.target.value;
                     if (place !== '') {
@@ -114,8 +108,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                         selector: 'my-app',
                         templateUrl: '/app/app.template.html',
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap],
-                        providers: [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, gazetteer_1.GazetteerService],
-                        styles: ["\n        .stats {\n            background-color: #222;\n            color: #fff;\n            font-family: 'Open Sans', 'Arial', 'Helvetica';\n            line-height: 2em;\n            position: absolute;\n            top: 0;\n            z-index: 999;\n            width: 100%;\n            padding: 10px;\n            box-sizing: border-box;\n        }\n        \n        .text {\n            width: 50%;\n            float: left;\n        }\n        \n        .form {\n            width: 50%;\n            float: right;\n            text-align: right;\n        }\n    "]
+                        providers: [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, gazetteer_1.GazetteerService]
                     }), 
                     __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, gazetteer_1.GazetteerService])
                 ], AppComponent);

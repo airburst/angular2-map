@@ -27,6 +27,7 @@ export class OsMap {
     pointVectorLayer: any = {};
     markerVectorLayer: any = {};
     gridProjection: any = {};
+    isMoving: boolean = false;
     
     init() {
         this.ol = window.OpenLayers;
@@ -68,11 +69,11 @@ export class OsMap {
             position
         );
         
-        // // Add map event handlers for touch and click
-        // $scope.osMap.events.remove('dblclick');
-        // $scope.osMap.events.register('touchmove', $scope.osMap, function() { $scope.dragging = true; });
-        // $scope.osMap.events.register('touchend', $scope.osMap, $scope.touchPoint);
-        // $scope.osMap.events.register('click', $scope.osMap, $scope.clickPoint);
+        // Add map event handlers for touch and click
+        this.osMap.events.remove('dblclick');
+        this.osMap.events.register('touchmove', this.osMap, function() { this.isMoving = true; });
+        // this.osMap.events.register('touchend', this.osMap, this.touchPoint);
+        // this.osMap.events.register('click', this.osMap, this.clickPoint);
     };
     
     centreMap(easting?: number, northing?: number, zoom?: number): void {

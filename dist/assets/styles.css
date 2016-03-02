@@ -1,0 +1,23 @@
+.stats {
+    background-color: #222;
+    color: #fff;
+    font-family: 'Open Sans', 'Arial', 'Helvetica';
+    line-height: 2em;
+    position: absolute;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.text {
+    width: 50%;
+    float: left;
+}
+
+.form {
+    width: 50%;
+    float: right;
+    text-align: right;
+}

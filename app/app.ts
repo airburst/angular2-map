@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
-import {Map} from 'immutable';
+//import {Map} from 'immutable';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {ElevationService} from './google/elevation.service';
@@ -19,32 +19,7 @@ import {settings} from './config/config';
     selector: 'my-app',
     templateUrl: '/app/app.template.html',
     directives: [FORM_DIRECTIVES, OsMap],
-    providers: [GpxService, FileService, ScriptLoadService, ElevationService, GazetteerService],
-    styles: [`
-        .stats {
-            background-color: #222;
-            color: #fff;
-            font-family: 'Open Sans', 'Arial', 'Helvetica';
-            line-height: 2em;
-            position: absolute;
-            top: 0;
-            z-index: 999;
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        
-        .text {
-            width: 50%;
-            float: left;
-        }
-        
-        .form {
-            width: 50%;
-            float: right;
-            text-align: right;
-        }
-    `]
+    providers: [GpxService, FileService, ScriptLoadService, ElevationService, GazetteerService]
 })
 
 export class AppComponent implements OnInit {
@@ -61,27 +36,24 @@ export class AppComponent implements OnInit {
     distance: number = 0;
     map: OsMap = new OsMap;
 
-    // Load OS and Google scripts and initialise map canvas
-    ngOnInit() {
-        //this.route = new Route();  
+    // Lazy load OpenSpace and Google scripts and initialise map canvas
+    ngOnInit() { 
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);   
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
              
         Promise.all(loadPromises)
             .then((value) => {
-                //TODO: Test for OpenSpace unavailable in Window object
                 this.map.init();
-                this.elevationService.init();    // Doesn't do much yet
+                this.elevationService.init();
             }, function(value) {
                 console.error('Script not found:', value)
             });
     }
     
-    // File load handler
     fileChange($event) {
-        // Convert gpx file into json
         if (this.fileService.supports($event.target)) {
+            // TODO: wrap in a try-catch and throw exception if we cannot read file
             this.fileService.readTextFile($event.target, (...data) => {
                 this.route = this.gpxService.read(data);
                 this.distance = this.map.getDistance(this.route.points);
@@ -92,14 +64,10 @@ export class AppComponent implements OnInit {
 
                 // Plot path and markers
                 this.map.drawPath(this.route);
-                
-                // Show elevation
-                //this.elevationService.getElevation(this.route);
             });
         }
     }
     
-    // Search handler
     search($event) { 
         let place: string = $event.target.value;
         if (place !== '') {

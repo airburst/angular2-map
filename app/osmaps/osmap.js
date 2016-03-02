@@ -36,6 +36,7 @@ System.register(['angular2/core', 'angular2/common', '../config/config'], functi
                     this.pointVectorLayer = {};
                     this.markerVectorLayer = {};
                     this.gridProjection = {};
+                    this.isMoving = false;
                 }
                 OsMap.prototype.init = function () {
                     this.ol = window.OpenLayers;
@@ -66,11 +67,11 @@ System.register(['angular2/core', 'angular2/common', '../config/config'], functi
                     // Add controls
                     var position = new this.os.Control.ControlPosition(this.os.Control.ControlAnchor.ANCHOR_TOP_LEFT, new this.ol.Size(0, 100));
                     this.osMap.addControl(new this.os.Control.LargeMapControl(), position);
-                    // // Add map event handlers for touch and click
-                    // $scope.osMap.events.remove('dblclick');
-                    // $scope.osMap.events.register('touchmove', $scope.osMap, function() { $scope.dragging = true; });
-                    // $scope.osMap.events.register('touchend', $scope.osMap, $scope.touchPoint);
-                    // $scope.osMap.events.register('click', $scope.osMap, $scope.clickPoint);
+                    // Add map event handlers for touch and click
+                    this.osMap.events.remove('dblclick');
+                    this.osMap.events.register('touchmove', this.osMap, function () { this.isMoving = true; });
+                    // this.osMap.events.register('touchend', this.osMap, this.touchPoint);
+                    // this.osMap.events.register('click', this.osMap, this.clickPoint);
                 };
                 ;
                 OsMap.prototype.centreMap = function (easting, northing, zoom) {
