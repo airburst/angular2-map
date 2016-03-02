@@ -101,11 +101,13 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                 };
                 // Search handler
                 AppComponent.prototype.search = function ($event) {
-                    if ($event.target.value !== '') {
-                        this.gazetteerService.searchPostcode($event.target.value, function (results, type) {
-                            console.log('Results in App:', type, results);
-                        });
+                    var place = $event.target.value;
+                    if (place !== '') {
+                        this.gazetteerService.searchPostcode(place, this.showSearchResults);
                     }
+                };
+                AppComponent.prototype.showSearchResults = function (results, type) {
+                    console.log('Results in App:', type, results);
                 };
                 AppComponent = __decorate([
                     core_1.Component({

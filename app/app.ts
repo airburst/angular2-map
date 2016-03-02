@@ -101,11 +101,14 @@ export class AppComponent implements OnInit {
     
     // Search handler
     search($event) { 
-        if ($event.target.value !== '') {
-            this.gazetteerService.searchPostcode($event.target.value, function(results, type) {
-                console.log('Results in App:', type, results);
-            });
+        let place: string = $event.target.value;
+        if (place !== '') {
+            this.gazetteerService.searchPostcode(place, this.showSearchResults);
         }
+    }
+    
+    showSearchResults(results, type) {
+        console.log('Results in App:', type, results);
     }
 
 }
