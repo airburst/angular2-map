@@ -1,5 +1,5 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
-import {Component, EventEmitter, Input} from 'angular2/core';
+import {Component, EventEmitter, Input, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
 import {Point, MapPoint, WayPoint, Marker, Route} from '../route';
 import {settings} from '../config/config';
@@ -70,9 +70,61 @@ export class OsMap {
         // Add map event handlers for touch and click
         this.osMap.events.remove('dblclick');
         this.osMap.events.register('touchmove', this.osMap, function() { this.isMoving = true; });
-        // this.osMap.events.register('touchend', this.osMap, this.touchPoint);
-        // this.osMap.events.register('click', this.osMap, this.clickPoint);
+        this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
+        this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
     };
+    
+    touchPoint(e) {
+        if (this.isMoving) {
+            this.isMoving = false;
+            return;
+        }
+
+        let p = {
+            x: e.changedTouches[0].clientX,
+            y: e.changedTouches[0].clientY
+        },
+            pt = this.osMap.getLonLatFromViewPortPx(p);
+        //this.addPointToMap(e, pt);
+        console.log(pt);
+    };
+
+    clickPoint(e) {
+        // Capture the clicked coordinates and convert into Point
+        var pt = this.osMap.getLonLatFromViewPortPx(e.xy);
+        //this.addPointToMap(e, pt);
+        console.log(pt);
+    };
+    
+    // $scope.addPointToMap = function(e, pt) {
+    //     // Add to waypoints collection
+    //     $scope.waypoints.push({
+    //         point: new OpenLayers.Geometry.Point(pt.lon, pt.lat),
+    //         gmap: $scope.pointToGoogle(pt),
+    //         routePoints: 1
+    //     });
+
+    //     if (($scope.followRoads) && ($scope.waypoints.length > 1)) {
+    //         // Try to use Google Directions API to make the route follow roads
+    //         $scope.snapToRoad();
+    //     } else {
+    //         // Push the waypoint into route and elevation collections
+    //         $scope.route.push($scope.waypoints[$scope.waypoints.length - 1].point);
+    //         $scope.elevationRoute.push($scope.waypoints[$scope.waypoints.length - 1].gmap);
+
+    //         //Redraw the route and elevation chart
+    //         $scope.drawRoute();
+    //         $scope.drawProfile();
+    //     }
+
+    //     OpenLayers.Event.stop(e);
+    // };
+    
+    // Convert OpenSpace Point into Google LatLng
+    // $scope.pointToGoogle = function(point) {
+    //     var ll = $scope.gridProjection.getLonLatFromMapPoint(point);
+    //     return new google.maps.LatLng(ll.lat, ll.lon);
+    // };
     
     centreMap(easting?: number, northing?: number, zoom?: number): void {
         if (easting !== undefined) { this.easting = easting; }
@@ -83,12 +135,6 @@ export class OsMap {
             this.zoom
         );
     };
-    
-    // Convert OpenSpace Point into Google LatLng
-    // $scope.pointToGoogle = function(point) {
-    //     var ll = $scope.gridProjection.getLonLatFromMapPoint(point);
-    //     return new google.maps.LatLng(ll.lat, ll.lon);
-    // };
 
     convertToOsMapPoint(point: Point) {
         let mp = new this.ol.LonLat(point.lon, point.lat),

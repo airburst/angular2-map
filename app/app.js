@@ -77,7 +77,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                 AppComponent.prototype.fileChange = function ($event) {
                     var _this = this;
                     if (this.fileService.supports($event.target)) {
-                        // TODO: wrap in a try-catch and throw exception if we cannot read file
                         this.fileService.readTextFile($event.target, function () {
                             var data = [];
                             for (var _i = 0; _i < arguments.length; _i++) {
@@ -85,10 +84,8 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                             }
                             _this.route = _this.gpxService.read(data);
                             _this.distance = _this.osmap.calculateDistanceInKm(_this.route.points);
-                            // Change centre of map
                             var centre = _this.osmap.convertToOsMapPoint(_this.route.centre());
                             _this.osmap.centreMap(centre.x, centre.y, _this.route.getZoomLevel());
-                            // Plot path and markers
                             _this.osmap.draw(_this.route);
                         });
                     }

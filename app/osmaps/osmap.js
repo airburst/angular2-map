@@ -70,10 +70,55 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                     // Add map event handlers for touch and click
                     this.osMap.events.remove('dblclick');
                     this.osMap.events.register('touchmove', this.osMap, function () { this.isMoving = true; });
-                    // this.osMap.events.register('touchend', this.osMap, this.touchPoint);
-                    // this.osMap.events.register('click', this.osMap, this.clickPoint);
+                    this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
+                    this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
                 };
                 ;
+                OsMap.prototype.touchPoint = function (e) {
+                    if (this.isMoving) {
+                        this.isMoving = false;
+                        return;
+                    }
+                    var p = {
+                        x: e.changedTouches[0].clientX,
+                        y: e.changedTouches[0].clientY
+                    }, pt = this.osMap.getLonLatFromViewPortPx(p);
+                    //this.addPointToMap(e, pt);
+                    console.log(pt);
+                };
+                ;
+                OsMap.prototype.clickPoint = function (e) {
+                    // Capture the clicked coordinates and convert into Point
+                    var pt = this.osMap.getLonLatFromViewPortPx(e.xy);
+                    //this.addPointToMap(e, pt);
+                    console.log(pt);
+                };
+                ;
+                // $scope.addPointToMap = function(e, pt) {
+                //     // Add to waypoints collection
+                //     $scope.waypoints.push({
+                //         point: new OpenLayers.Geometry.Point(pt.lon, pt.lat),
+                //         gmap: $scope.pointToGoogle(pt),
+                //         routePoints: 1
+                //     });
+                //     if (($scope.followRoads) && ($scope.waypoints.length > 1)) {
+                //         // Try to use Google Directions API to make the route follow roads
+                //         $scope.snapToRoad();
+                //     } else {
+                //         // Push the waypoint into route and elevation collections
+                //         $scope.route.push($scope.waypoints[$scope.waypoints.length - 1].point);
+                //         $scope.elevationRoute.push($scope.waypoints[$scope.waypoints.length - 1].gmap);
+                //         //Redraw the route and elevation chart
+                //         $scope.drawRoute();
+                //         $scope.drawProfile();
+                //     }
+                //     OpenLayers.Event.stop(e);
+                // };
+                // Convert OpenSpace Point into Google LatLng
+                // $scope.pointToGoogle = function(point) {
+                //     var ll = $scope.gridProjection.getLonLatFromMapPoint(point);
+                //     return new google.maps.LatLng(ll.lat, ll.lon);
+                // };
                 OsMap.prototype.centreMap = function (easting, northing, zoom) {
                     if (easting !== undefined) {
                         this.easting = easting;
@@ -87,11 +132,6 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                     this.osMap.setCenter(new this.os.MapPoint(this.easting, this.northing), this.zoom);
                 };
                 ;
-                // Convert OpenSpace Point into Google LatLng
-                // $scope.pointToGoogle = function(point) {
-                //     var ll = $scope.gridProjection.getLonLatFromMapPoint(point);
-                //     return new google.maps.LatLng(ll.lat, ll.lon);
-                // };
                 OsMap.prototype.convertToOsMapPoint = function (point) {
                     var mp = new this.ol.LonLat(point.lon, point.lat), mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
                     return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);

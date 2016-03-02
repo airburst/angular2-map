@@ -58,16 +58,13 @@ export class AppComponent implements OnInit {
 
     fileChange($event) {
         if (this.fileService.supports($event.target)) {
-            // TODO: wrap in a try-catch and throw exception if we cannot read file
             this.fileService.readTextFile($event.target, (...data) => {
                 this.route = this.gpxService.read(data);
                 this.distance = this.osmap.calculateDistanceInKm(this.route.points);
                 
-                // Change centre of map
                 let centre = this.osmap.convertToOsMapPoint(this.route.centre());
                 this.osmap.centreMap(centre.x, centre.y, this.route.getZoomLevel());
 
-                // Plot path and markers
                 this.osmap.draw(this.route);
             });
         }
