@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', '../config/config'], function(exports_1, context_1) {
+System.register(['angular2/core', '../route', '../config/config'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,15 +10,15 @@ System.register(['angular2/core', 'angular2/common', '../config/config'], functi
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, config_1;
+    var core_1, route_1, config_1;
     var OsMap;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (common_1_1) {
-                common_1 = common_1_1;
+            function (route_1_1) {
+                route_1 = route_1_1;
             },
             function (config_1_1) {
                 config_1 = config_1_1;
@@ -92,36 +92,32 @@ System.register(['angular2/core', 'angular2/common', '../config/config'], functi
                 //     var ll = $scope.gridProjection.getLonLatFromMapPoint(point);
                 //     return new google.maps.LatLng(ll.lat, ll.lon);
                 // };
-                // Convert Point into OpenSpace MapPoint
-                OsMap.prototype.convertToMapPoint = function (point) {
+                OsMap.prototype.convertToOsMapPoint = function (point) {
                     var mp = new this.ol.LonLat(point.lon, point.lat), mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
                     return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
                 };
                 ;
-                // Convert Route into OpenSpace Path
-                OsMap.prototype.toPath = function (route) {
+                OsMap.prototype.convertToOsPathFormat = function (route) {
                     var _this = this;
                     var path = [];
-                    route.forEach(function (point) { path.push(_this.convertToMapPoint(point)); });
+                    route.forEach(function (point) { path.push(_this.convertToOsMapPoint(point)); });
                     return path;
                 };
-                // Calculate total distance in km
-                OsMap.prototype.getDistance = function (route) {
-                    // Convert route into MapPoints
-                    var distString = new this.ol.Geometry.Curve(this.toPath(route));
+                OsMap.prototype.calculateDistanceInKm = function (route) {
+                    var distString = new this.ol.Geometry.Curve(this.convertToOsPathFormat(route));
                     return (distString.getLength() / 1000);
                 };
                 // Draw path as a vector layer
-                OsMap.prototype.drawPath = function (route) {
+                OsMap.prototype.draw = function (route) {
                     var _this = this;
+                    console.log(this.route);
                     var routeStyle = config_1.settings.routeStyle, waypointsFeature = [], markersFeature = [];
-                    // Convert route into OS path format
-                    var path = this.toPath(route.points);
+                    var path = this.convertToOsPathFormat(route.points);
                     // Set the lines array (line segments in route)
                     var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(path), null, routeStyle);
                     // Add waypoints (editable)
                     route.wayPoints.forEach(function (w) {
-                        waypointsFeature.push(new _this.ol.Feature.Vector(_this.convertToMapPoint(w.point)));
+                        waypointsFeature.push(new _this.ol.Feature.Vector(_this.convertToOsMapPoint(w.point)));
                     });
                     // Add route markers
                     route.markers.forEach(function (m) {
@@ -137,7 +133,7 @@ System.register(['angular2/core', 'angular2/common', '../config/config'], functi
                 };
                 ;
                 OsMap.prototype.addMarker = function (marker, image) {
-                    return new this.ol.Feature.Vector(this.convertToMapPoint(marker.point), /* Geometry */ { description: marker.name }, /* Attributes */ {
+                    return new this.ol.Feature.Vector(this.convertToOsMapPoint(marker.point), /* Geometry */ { description: marker.name }, /* Attributes */ {
                         label: marker.name,
                         labelAlign: 'l',
                         labelXOffset: 16,
@@ -153,12 +149,14 @@ System.register(['angular2/core', 'angular2/common', '../config/config'], functi
                     });
                 };
                 ;
+                __decorate([
+                    core_1.Input(), 
+                    __metadata('design:type', route_1.Route)
+                ], OsMap.prototype, "route", void 0);
                 OsMap = __decorate([
                     core_1.Component({
                         selector: 'map',
-                        template: '<div id="map"></div>',
-                        directives: [common_1.FORM_DIRECTIVES],
-                        styles: ["\n        #map: {\n            width: 100%;\n            height: 400px;\n        }\n    "]
+                        template: '<div id="map">{{route.name}}</div>'
                     }), 
                     __metadata('design:paramtypes', [])
                 ], OsMap);

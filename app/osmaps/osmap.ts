@@ -1,22 +1,18 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
-import {Component, EventEmitter, OnInit} from 'angular2/core';
+import {Component, EventEmitter, Input} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
 import {Point, MapPoint, WayPoint, Marker, Route} from '../route';
 import {settings} from '../config/config';
 
 @Component({
     selector: 'map',
-    template: '<div id="map"></div>',
-    directives: [FORM_DIRECTIVES],
-    styles: [`
-        #map: {
-            width: 100%;
-            height: 400px;
-        }
-    `]
+    template: '<div id="map">{{route.name}}</div>'
 })
 
 export class OsMap {
+    
+    @Input() route: Route;
+    
     easting: number = 386210;
     northing: number = 168060;
     zoom: number = 7;
@@ -28,6 +24,8 @@ export class OsMap {
     markerVectorLayer: any = {};
     gridProjection: any = {};
     isMoving: boolean = false;
+    
+    constructor() {}
     
     init() {
         this.ol = window.OpenLayers;
@@ -92,35 +90,31 @@ export class OsMap {
     //     return new google.maps.LatLng(ll.lat, ll.lon);
     // };
 
-    // Convert Point into OpenSpace MapPoint
-    convertToMapPoint(point: Point) {
+    convertToOsMapPoint(point: Point) {
         let mp = new this.ol.LonLat(point.lon, point.lat),
             mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
         return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
     };
     
-    // Convert Route into OpenSpace Path
-    toPath(route: Point[]): MapPoint[] {
+    convertToOsPathFormat(route: Point[]): MapPoint[] {
         let path: MapPoint[] = [];
-        route.forEach((point) => { path.push(this.convertToMapPoint(point)); });
+        route.forEach((point) => { path.push(this.convertToOsMapPoint(point)); });
         return path;
     }
     
-    // Calculate total distance in km
-    getDistance(route: Point[]): number {
-        // Convert route into MapPoints
-        let distString = new this.ol.Geometry.Curve(this.toPath(route));
+    calculateDistanceInKm(route: Point[]): number {
+        let distString = new this.ol.Geometry.Curve(this.convertToOsPathFormat(route));
         return (distString.getLength() / 1000);
     }
     
     // Draw path as a vector layer
-    drawPath(route: Route): void {
+    draw(route: Route): void {
+        console.log(this.route);
         let routeStyle: any = settings.routeStyle,
             waypointsFeature: WayPoint[] = [],
             markersFeature: Marker[] = [];
 
-        // Convert route into OS path format
-        let path = this.toPath(route.points);
+        let path = this.convertToOsPathFormat(route.points);
 
         // Set the lines array (line segments in route)
         let routeFeature = new this.ol.Feature.Vector(
@@ -132,7 +126,7 @@ export class OsMap {
         // Add waypoints (editable)
         route.wayPoints.forEach((w: WayPoint) => {
             waypointsFeature.push(
-                new this.ol.Feature.Vector(this.convertToMapPoint(w.point))
+                new this.ol.Feature.Vector(this.convertToOsMapPoint(w.point))
             );
         });
         
@@ -152,7 +146,7 @@ export class OsMap {
     
     addMarker(marker: Marker, image: string): any {
         return new this.ol.Feature.Vector(
-            this.convertToMapPoint(marker.point),   /* Geometry */
+            this.convertToOsMapPoint(marker.point),   /* Geometry */
             { description: marker.name },           /* Attributes */
             {                                       /* Style */
                 label:              marker.name,

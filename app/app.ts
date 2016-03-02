@@ -29,52 +29,57 @@ export class AppComponent implements OnInit {
         private scriptLoadService: ScriptLoadService,
         private elevationService: ElevationService,
         private gazetteerService: GazetteerService
-    ) { }
-    
-    route: Route = new Route();;
-    path: MapPoint[] = [];
-    distance: number = 0;
-    map: OsMap = new OsMap;
+    ) {
+        this.route = new Route();
+        this.osmap = new OsMap();
+        this.distance = 0;
+        this.path = [];
+    }
+
+    route: Route;
+    path: MapPoint[];
+    distance: number;
+    osmap: OsMap;
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
-    ngOnInit() { 
-        this.fileService.setAllowedExtensions(['tcx', 'gpx']);   
+    ngOnInit() {
+        this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
-             
+
         Promise.all(loadPromises)
             .then((value) => {
-                this.map.init();
+                this.osmap.init();
                 this.elevationService.init();
             }, function(value) {
                 console.error('Script not found:', value)
             });
     }
-    
+
     fileChange($event) {
         if (this.fileService.supports($event.target)) {
             // TODO: wrap in a try-catch and throw exception if we cannot read file
             this.fileService.readTextFile($event.target, (...data) => {
                 this.route = this.gpxService.read(data);
-                this.distance = this.map.getDistance(this.route.points);
+                this.distance = this.osmap.calculateDistanceInKm(this.route.points);
                 
                 // Change centre of map
-                let centre = this.map.convertToMapPoint(this.route.centre());
-                this.map.centreMap(centre.x, centre.y, this.route.getZoomLevel());
+                let centre = this.osmap.convertToOsMapPoint(this.route.centre());
+                this.osmap.centreMap(centre.x, centre.y, this.route.getZoomLevel());
 
                 // Plot path and markers
-                this.map.drawPath(this.route);
+                this.osmap.draw(this.route);
             });
         }
     }
-    
-    search($event) { 
+
+    search($event) {
         let place: string = $event.target.value;
         if (place !== '') {
             this.gazetteerService.searchPostcode(place, this.showSearchResults);
         }
     }
-    
+
     showSearchResults(results, type) {
         console.log('Results in App:', type, results);
     }

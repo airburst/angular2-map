@@ -57,11 +57,10 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                     this.elevationService = elevationService;
                     this.gazetteerService = gazetteerService;
                     this.route = new route_1.Route();
-                    this.path = [];
+                    this.osmap = new osmap_1.OsMap();
                     this.distance = 0;
-                    this.map = new osmap_1.OsMap;
+                    this.path = [];
                 }
-                ;
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
@@ -69,7 +68,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
                     Promise.all(loadPromises)
                         .then(function (value) {
-                        _this.map.init();
+                        _this.osmap.init();
                         _this.elevationService.init();
                     }, function (value) {
                         console.error('Script not found:', value);
@@ -85,12 +84,12 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                                 data[_i - 0] = arguments[_i];
                             }
                             _this.route = _this.gpxService.read(data);
-                            _this.distance = _this.map.getDistance(_this.route.points);
+                            _this.distance = _this.osmap.calculateDistanceInKm(_this.route.points);
                             // Change centre of map
-                            var centre = _this.map.convertToMapPoint(_this.route.centre());
-                            _this.map.centreMap(centre.x, centre.y, _this.route.getZoomLevel());
+                            var centre = _this.osmap.convertToOsMapPoint(_this.route.centre());
+                            _this.osmap.centreMap(centre.x, centre.y, _this.route.getZoomLevel());
                             // Plot path and markers
-                            _this.map.drawPath(_this.route);
+                            _this.osmap.draw(_this.route);
                         });
                     }
                 };
