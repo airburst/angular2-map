@@ -59,13 +59,9 @@ export class AppComponent implements OnInit {
     fileChange($event) {
         if (this.fileService.supports($event.target)) {
             this.fileService.readTextFile($event.target, (...data) => {
-                this.route = this.gpxService.read(data);
-                this.distance = this.osmap.calculateDistanceInKm(this.route.points);
-                
-                let centre = this.osmap.convertToOsMapPoint(this.route.centre());
-                this.osmap.centreMap(centre.x, centre.y, this.route.getZoomLevel());
-
-                this.osmap.draw(this.route);
+                this.osmap.route = this.gpxService.read(data);
+                this.distance = this.osmap.calculateDistanceInKm();
+                this.osmap.drawWholeRoute();
             });
         }
     }

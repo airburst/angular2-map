@@ -82,11 +82,9 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                             for (var _i = 0; _i < arguments.length; _i++) {
                                 data[_i - 0] = arguments[_i];
                             }
-                            _this.route = _this.gpxService.read(data);
-                            _this.distance = _this.osmap.calculateDistanceInKm(_this.route.points);
-                            var centre = _this.osmap.convertToOsMapPoint(_this.route.centre());
-                            _this.osmap.centreMap(centre.x, centre.y, _this.route.getZoomLevel());
-                            _this.osmap.draw(_this.route);
+                            _this.osmap.route = _this.gpxService.read(data);
+                            _this.distance = _this.osmap.calculateDistanceInKm();
+                            _this.osmap.drawWholeRoute();
                         });
                     }
                 };

@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../route', '../config/config'], function(exports_1, context_1) {
+System.register(['angular2/core', '../config/config'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,15 +10,12 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, route_1, config_1;
+    var core_1, config_1;
     var OsMap;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
-            },
-            function (route_1_1) {
-                route_1 = route_1_1;
             },
             function (config_1_1) {
                 config_1 = config_1_1;
@@ -88,7 +85,6 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                 };
                 ;
                 OsMap.prototype.clickPoint = function (e) {
-                    // Capture the clicked coordinates and convert into Point
                     var pt = this.osMap.getLonLatFromViewPortPx(e.xy);
                     //this.addPointToMap(e, pt);
                     console.log(pt);
@@ -119,6 +115,12 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                 //     var ll = $scope.gridProjection.getLonLatFromMapPoint(point);
                 //     return new google.maps.LatLng(ll.lat, ll.lon);
                 // };
+                OsMap.prototype.drawWholeRoute = function () {
+                    var centre = this.convertToOsMapPoint(this.route.centre());
+                    this.centreMap(centre.x, centre.y, this.route.getZoomLevel());
+                    this.draw();
+                };
+                ;
                 OsMap.prototype.centreMap = function (easting, northing, zoom) {
                     if (easting !== undefined) {
                         this.easting = easting;
@@ -132,35 +134,37 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                     this.osMap.setCenter(new this.os.MapPoint(this.easting, this.northing), this.zoom);
                 };
                 ;
+                OsMap.prototype.calculateDistanceInKm = function () {
+                    var distString = new this.ol.Geometry.Curve(this.convertToOsPathFormat());
+                    return (distString.getLength() / 1000);
+                };
                 OsMap.prototype.convertToOsMapPoint = function (point) {
                     var mp = new this.ol.LonLat(point.lon, point.lat), mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
                     return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
                 };
                 ;
-                OsMap.prototype.convertToOsPathFormat = function (route) {
+                OsMap.prototype.convertToOsPathFormat = function () {
                     var _this = this;
                     var path = [];
-                    route.forEach(function (point) { path.push(_this.convertToOsMapPoint(point)); });
+                    this.route.points.forEach(function (point) {
+                        path.push(_this.convertToOsMapPoint(point));
+                    });
                     return path;
                 };
-                OsMap.prototype.calculateDistanceInKm = function (route) {
-                    var distString = new this.ol.Geometry.Curve(this.convertToOsPathFormat(route));
-                    return (distString.getLength() / 1000);
-                };
                 // Draw path as a vector layer
-                OsMap.prototype.draw = function (route) {
+                OsMap.prototype.draw = function () {
                     var _this = this;
                     console.log(this.route);
                     var routeStyle = config_1.settings.routeStyle, waypointsFeature = [], markersFeature = [];
-                    var path = this.convertToOsPathFormat(route.points);
+                    var path = this.convertToOsPathFormat();
                     // Set the lines array (line segments in route)
                     var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(path), null, routeStyle);
                     // Add waypoints (editable)
-                    route.wayPoints.forEach(function (w) {
+                    this.route.wayPoints.forEach(function (w) {
                         waypointsFeature.push(new _this.ol.Feature.Vector(_this.convertToOsMapPoint(w.point)));
                     });
                     // Add route markers
-                    route.markers.forEach(function (m) {
+                    this.route.markers.forEach(function (m) {
                         markersFeature.push(_this.addMarker(m, 'dist/assets/images/map-marker.png'));
                     });
                     // Replace the existing layer
@@ -189,14 +193,10 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                     });
                 };
                 ;
-                __decorate([
-                    core_1.Input(), 
-                    __metadata('design:type', route_1.Route)
-                ], OsMap.prototype, "route", void 0);
                 OsMap = __decorate([
                     core_1.Component({
                         selector: 'map',
-                        template: '<div id="map">{{route.name}}</div>'
+                        template: '<div id="map"></div>'
                     }), 
                     __metadata('design:paramtypes', [])
                 ], OsMap);
