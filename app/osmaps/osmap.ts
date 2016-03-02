@@ -23,8 +23,11 @@ export class OsMap {
     gridProjection: any = {};
     isMoving: boolean = false;
     route: Route;
+    followsRoads: boolean = false;
     
-    constructor() {}
+    constructor() {
+        this.route = new Route();
+    }
     
     init() {
         this.ol = window.OpenLayers;
@@ -84,39 +87,28 @@ export class OsMap {
             y: e.changedTouches[0].clientY
         },
             pt = this.osMap.getLonLatFromViewPortPx(p);
-        //this.addPointToMap(e, pt);
-        console.log(pt);
+        this.addPointToMap(e, pt);
     };
 
     clickPoint(e) {
         var pt = this.osMap.getLonLatFromViewPortPx(e.xy);
-        //this.addPointToMap(e, pt);
-        console.log(pt);
+        this.addPointToMap(e, pt);
     };
     
-    // $scope.addPointToMap = function(e, pt) {
-    //     // Add to waypoints collection
-    //     $scope.waypoints.push({
-    //         point: new OpenLayers.Geometry.Point(pt.lon, pt.lat),
-    //         gmap: $scope.pointToGoogle(pt),
-    //         routePoints: 1
-    //     });
+    addPointToMap(e, pt) {
+        let clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat);
+        
+        // if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
+        //     // Try to use Google Directions API to make the route follow roads
+        //     //this.snapToRoad();
+        // } else {
+            this.route.addPoint(clickedPoint);
+            this.route.addWayPoint(new WayPoint(clickedPoint, 1));
+        //}
 
-    //     if (($scope.followRoads) && ($scope.waypoints.length > 1)) {
-    //         // Try to use Google Directions API to make the route follow roads
-    //         $scope.snapToRoad();
-    //     } else {
-    //         // Push the waypoint into route and elevation collections
-    //         $scope.route.push($scope.waypoints[$scope.waypoints.length - 1].point);
-    //         $scope.elevationRoute.push($scope.waypoints[$scope.waypoints.length - 1].gmap);
-
-    //         //Redraw the route and elevation chart
-    //         $scope.drawRoute();
-    //         $scope.drawProfile();
-    //     }
-
-    //     OpenLayers.Event.stop(e);
-    // };
+        this.ol.Event.stop(e);
+        this.draw();
+    };
     
     // Convert OpenSpace Point into Google LatLng
     // $scope.pointToGoogle = function(point) {
@@ -134,22 +126,13 @@ export class OsMap {
         if (easting !== undefined) { this.easting = easting; }
         if (northing !== undefined) { this.northing = northing; }
         if (zoom !== undefined) { this.zoom = zoom; }
-        this.osMap.setCenter(
-            new this.os.MapPoint(this.easting, this.northing),
-            this.zoom
-        );
+        this.osMap.setCenter(new this.os.MapPoint(this.easting, this.northing), this.zoom);
     };
     
     calculateDistanceInKm(): number {
         let distString = new this.ol.Geometry.Curve(this.convertToOsPathFormat());
         return (distString.getLength() / 1000);
     }
-
-    convertToOsMapPoint(point: Point) {
-        let mp = new this.ol.LonLat(point.lon, point.lat),
-            mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
-        return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
-    };
     
     convertToOsPathFormat(): MapPoint[] {
         let path: MapPoint[] = [];
@@ -158,8 +141,15 @@ export class OsMap {
         });
         return path;
     }
+    
+    convertToOsMapPoint(point: Point) {
+        console.log(point)
+        
+        let mp = new this.ol.LonLat(point.lon, point.lat),
+            mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
+        return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
+    };
 
-    // Draw path as a vector layer
     draw(): void {
         console.log(this.route);
         let routeStyle: any = settings.routeStyle,
@@ -167,15 +157,13 @@ export class OsMap {
             markersFeature: Marker[] = [];
 
         let path = this.convertToOsPathFormat();
-
+console.log(path);
         // Set the lines array (line segments in route)
         let routeFeature = new this.ol.Feature.Vector(
-            new this.ol.Geometry.LineString(path),
-            null,
-            routeStyle
+            new this.ol.Geometry.LineString(path), null, routeStyle
         );
 
-        // Add waypoints (editable)
+        // Add waypoints
         this.route.wayPoints.forEach((w: WayPoint) => {
             waypointsFeature.push(
                 new this.ol.Feature.Vector(this.convertToOsMapPoint(w.point))
@@ -199,8 +187,8 @@ export class OsMap {
     addMarker(marker: Marker, image: string): any {
         return new this.ol.Feature.Vector(
             this.convertToOsMapPoint(marker.point),   /* Geometry */
-            { description: marker.name },           /* Attributes */
-            {                                       /* Style */
+            { description: marker.name },             /* Attributes */
+            {                                         /* Style */
                 label:              marker.name,
                 labelAlign:         'l',
                 labelXOffset:       16,
