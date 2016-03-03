@@ -41,7 +41,7 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     this.markerVectorLayer = {};
                     this.gridProjection = {};
                     this.isMoving = false;
-                    this.followsRoads = false;
+                    this.followsRoads = true;
                     this.route = new route_1.Route();
                 }
                 OsMap.prototype.init = function () {
@@ -100,14 +100,15 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                 ;
                 OsMap.prototype.addPointToMap = function (e, pt) {
                     var clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat), mp = new route_1.MapPoint(clickedPoint.x, clickedPoint.y), p = this.convertToLatLng(pt);
-                    // if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
-                    //     // Try to use Google Directions API to make the route follow roads
-                    //     //this.snapToRoad();
-                    // } else {
-                    this.route.addMapPoint(mp);
-                    this.route.addPoint(p);
                     this.route.addWayPoint(new route_1.WayPoint(p, 1));
-                    //}
+                    if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
+                        var fp = this.route.lastWayPoint().point, from = this.directionsService.convertToGoogleMapPoint(fp), tp = this.route.penultimateWayPoint().point, to = this.directionsService.convertToGoogleMapPoint(tp);
+                        this.directionsService.getRouteBetween(from, to);
+                    }
+                    else {
+                        this.route.addMapPoint(mp);
+                        this.route.addPoint(p);
+                    }
                     this.ol.Event.stop(e);
                     this.draw();
                 };

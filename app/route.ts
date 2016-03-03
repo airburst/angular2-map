@@ -115,6 +115,14 @@ export class Route {
     public addMarker(marker: Marker) {
         this.markers.push(marker);
     }
+    
+    public lastWayPoint() {
+        return this.wayPoints[this.wayPoints.length - 1];
+    }
+    
+    public penultimateWayPoint() {
+        return this.wayPoints[this.wayPoints.length - 2];
+    }
 
     public calculateElevation(): void {
         let totalAscent: number = 0,

@@ -98,6 +98,12 @@ System.register([], function(exports_1, context_1) {
                 Route.prototype.addMarker = function (marker) {
                     this.markers.push(marker);
                 };
+                Route.prototype.lastWayPoint = function () {
+                    return this.wayPoints[this.wayPoints.length - 1];
+                };
+                Route.prototype.penultimateWayPoint = function () {
+                    return this.wayPoints[this.wayPoints.length - 2];
+                };
                 Route.prototype.calculateElevation = function () {
                     var totalAscent = 0, totalDescent = 0, lastElevation = 0;
                     for (var i = 0; i < this.points.length - 1; i++) {

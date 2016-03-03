@@ -24,7 +24,7 @@ export class OsMap {
     gridProjection: any = {};
     isMoving: boolean = false;
     route: Route;
-    followsRoads: boolean = false;
+    followsRoads: boolean = true;
     
     constructor(private directionsService: DirectionsService) {
         this.route = new Route();
@@ -102,15 +102,19 @@ export class OsMap {
         let clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat),
             mp = new MapPoint(clickedPoint.x, clickedPoint.y),
             p = this.convertToLatLng(pt);
+            
+        this.route.addWayPoint(new WayPoint(p, 1));
         
-        // if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
-        //     // Try to use Google Directions API to make the route follow roads
-        //     //this.snapToRoad();
-        // } else {
+        if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
+            let fp = this.route.lastWayPoint().point,
+                from = this.directionsService.convertToGoogleMapPoint(fp),
+                tp = this.route.penultimateWayPoint().point,
+                to = this.directionsService.convertToGoogleMapPoint(tp);
+            this.directionsService.getRouteBetween(from, to);
+        } else {
             this.route.addMapPoint(mp);
             this.route.addPoint(p);
-            this.route.addWayPoint(new WayPoint(p, 1));
-        //}
+        }
 
         this.ol.Event.stop(e);
         this.draw();
