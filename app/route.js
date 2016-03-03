@@ -65,6 +65,7 @@ System.register([], function(exports_1, context_1) {
                     this.descent = 0;
                     this.wayPoints = [];
                     this.points = [];
+                    this.mapPoints = [];
                     this.markers = [];
                     this.minLat = 1000000;
                     this.minLon = 1000000;
@@ -83,6 +84,15 @@ System.register([], function(exports_1, context_1) {
                 };
                 Route.prototype.addPoint = function (point) {
                     this.points.push(point);
+                };
+                Route.prototype.addMapPoints = function (mapPoints) {
+                    var _this = this;
+                    mapPoints.forEach(function (p) {
+                        _this.addMapPoint(p);
+                    });
+                };
+                Route.prototype.addMapPoint = function (mapPoint) {
+                    this.mapPoints.push(mapPoint);
                 };
                 Route.prototype.addMarker = function (marker) {
                     this.markers.push(marker);

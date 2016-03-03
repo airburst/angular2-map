@@ -65,6 +65,7 @@ export class Route {
         this.descent = 0;
         this.wayPoints = [];
         this.points = [];
+        this.mapPoints = [];
         this.markers = [];
         this.minLat = 1000000;
         this.minLon = 1000000;
@@ -77,6 +78,7 @@ export class Route {
     public descent: number;
     public wayPoints: WayPoint[];
     public points: Point[];
+    public mapPoints: MapPoint[];
     public markers: Marker[];
     public minLat: number;
     public minLon: number;
@@ -96,6 +98,16 @@ export class Route {
     
     public addPoint(point: Point) {
         this.points.push(point);
+    }
+    
+    public addMapPoints(mapPoints: MapPoint[]) {
+        mapPoints.forEach((p) => {
+            this.addMapPoint(p);
+        });
+    }
+    
+    public addMapPoint(mapPoint: MapPoint) {
+        this.mapPoints.push(mapPoint);
     }
     
     public addMarker(marker: Marker) {

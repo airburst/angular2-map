@@ -96,14 +96,17 @@ export class OsMap {
     };
     
     addPointToMap(e, pt) {
-        let clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat);
+        let clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat),
+            mp = new MapPoint(clickedPoint.x, clickedPoint.y),
+            p = this.convertMapPointToLatLng(pt);
         
         // if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
         //     // Try to use Google Directions API to make the route follow roads
         //     //this.snapToRoad();
         // } else {
-            this.route.addPoint(clickedPoint);
-            this.route.addWayPoint(new WayPoint(clickedPoint, 1));
+            this.route.addMapPoint(mp);
+            this.route.addPoint(p);
+            this.route.addWayPoint(new WayPoint(p, 1));
         //}
 
         this.ol.Event.stop(e);
@@ -136,7 +139,6 @@ export class OsMap {
     convertToOsPathFormat(): MapPoint[] {
         let path: MapPoint[] = [];
         this.route.points.forEach((point) => {
-            console.log(point)
             path.push(this.convertToOsMapPoint(point));
         });
         return path;
@@ -152,9 +154,9 @@ export class OsMap {
         let routeStyle: any = settings.routeStyle,
             waypointsFeature: WayPoint[] = [],
             markersFeature: Marker[] = [];
-
+            
         let path = this.convertToOsPathFormat();
-console.log(path);
+
         // Set the lines array (line segments in route)
         let routeFeature = new this.ol.Feature.Vector(
             new this.ol.Geometry.LineString(path), null, routeStyle

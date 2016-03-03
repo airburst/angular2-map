@@ -94,13 +94,14 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                 };
                 ;
                 OsMap.prototype.addPointToMap = function (e, pt) {
-                    var clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat);
+                    var clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat), mp = new route_1.MapPoint(clickedPoint.x, clickedPoint.y), p = this.convertMapPointToLatLng(pt);
                     // if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
                     //     // Try to use Google Directions API to make the route follow roads
                     //     //this.snapToRoad();
                     // } else {
-                    this.route.addPoint(clickedPoint);
-                    this.route.addWayPoint(new route_1.WayPoint(clickedPoint, 1));
+                    this.route.addMapPoint(mp);
+                    this.route.addPoint(p);
+                    this.route.addWayPoint(new route_1.WayPoint(p, 1));
                     //}
                     this.ol.Event.stop(e);
                     this.draw();
@@ -138,7 +139,6 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                     var _this = this;
                     var path = [];
                     this.route.points.forEach(function (point) {
-                        console.log(point);
                         path.push(_this.convertToOsMapPoint(point));
                     });
                     return path;
@@ -152,7 +152,6 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                     var _this = this;
                     var routeStyle = config_1.settings.routeStyle, waypointsFeature = [], markersFeature = [];
                     var path = this.convertToOsPathFormat();
-                    console.log(path);
                     // Set the lines array (line segments in route)
                     var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(path), null, routeStyle);
                     // Add waypoints
