@@ -70,6 +70,7 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                     }
                     // Add calculated total ascent and descent
                     route.calculateElevation();
+                    route.isImported = true;
                     return route;
                 };
                 // TODO: understand the full schema:
@@ -92,6 +93,7 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                     route.addMarker(new route_1.Marker('Finish', route.points[route.points.length - 1]));
                     // Add calculated total ascent and descent
                     route.calculateElevation();
+                    route.isImported = true;
                     return route;
                 };
                 GpxService.prototype.replaceAll = function (find, replace, str) {

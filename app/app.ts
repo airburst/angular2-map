@@ -9,6 +9,7 @@ import 'rxjs/add/operator/switchMap';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {ElevationService} from './google/elevation.service';
+import {DirectionsService} from './google/directions.service';
 import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {GazetteerService} from './osmaps/gazetteer';
@@ -19,7 +20,7 @@ import {settings} from './config/config';
     selector: 'my-app',
     templateUrl: '/app/app.template.html',
     directives: [FORM_DIRECTIVES, OsMap],
-    providers: [GpxService, FileService, ScriptLoadService, ElevationService, GazetteerService]
+    providers: [GpxService, FileService, ScriptLoadService, ElevationService, GazetteerService, DirectionsService]
 })
 
 export class AppComponent implements OnInit {
@@ -28,10 +29,10 @@ export class AppComponent implements OnInit {
         private fileService: FileService,
         private scriptLoadService: ScriptLoadService,
         private elevationService: ElevationService,
+        private directionsService: DirectionsService,
         private gazetteerService: GazetteerService
     ) {
         this.route = new Route();
-        this.osmap = new OsMap();
         this.distance = 0;
         this.path = [];
     }
@@ -49,8 +50,10 @@ export class AppComponent implements OnInit {
 
         Promise.all(loadPromises)
             .then((value) => {
-                this.osmap.init();
+                this.directionsService.init();
                 this.elevationService.init();
+                this.osmap = new OsMap(this.directionsService);
+                this.osmap.init();
             }, function(value) {
                 console.error('Script not found:', value)
             });

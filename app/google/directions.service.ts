@@ -5,9 +5,11 @@ import {MapPoint} from '../route';
 @Injectable()
 export class DirectionsService {
 
-    private service: any = {};
-
-    constructor() {
+    constructor() {}
+    
+    private service: any;
+    
+    init() {
         this.service = new window.google.maps.DirectionsService();
     }
     
@@ -19,7 +21,7 @@ export class DirectionsService {
         },
             function(result, status) {
                 if (status === window.google.maps.DirectionsStatus.OK) {
-                    return result;  // Need to push values to Observable route
+                    console.log(result);  // Need to push values to Observable route
                 } else {
                     throw {
                         message: 'There was a problem getting directions data.',
@@ -29,6 +31,6 @@ export class DirectionsService {
                 }
             }
         );
+        
     };
-
 }

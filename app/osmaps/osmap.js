@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../route', '../config/config'], function(exports_1, context_1) {
+System.register(['angular2/core', '../route', '../google/directions.service', '../config/config'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, route_1, config_1;
+    var core_1, route_1, directions_service_1, config_1;
     var OsMap;
     return {
         setters:[
@@ -20,12 +20,16 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
             function (route_1_1) {
                 route_1 = route_1_1;
             },
+            function (directions_service_1_1) {
+                directions_service_1 = directions_service_1_1;
+            },
             function (config_1_1) {
                 config_1 = config_1_1;
             }],
         execute: function() {
             OsMap = (function () {
-                function OsMap() {
+                function OsMap(directionsService) {
+                    this.directionsService = directionsService;
                     this.easting = 386210;
                     this.northing = 168060;
                     this.zoom = 7;
@@ -74,6 +78,7 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                     this.osMap.events.register('touchmove', this.osMap, function () { this.isMoving = true; });
                     this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
                     this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
+                    console.log(this.directionsService);
                 };
                 ;
                 OsMap.prototype.touchPoint = function (e) {
@@ -94,7 +99,7 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                 };
                 ;
                 OsMap.prototype.addPointToMap = function (e, pt) {
-                    var clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat), mp = new route_1.MapPoint(clickedPoint.x, clickedPoint.y), p = this.convertMapPointToLatLng(pt);
+                    var clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat), mp = new route_1.MapPoint(clickedPoint.x, clickedPoint.y), p = this.convertToLatLng(pt);
                     // if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
                     //     // Try to use Google Directions API to make the route follow roads
                     //     //this.snapToRoad();
@@ -107,7 +112,7 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                     this.draw();
                 };
                 ;
-                OsMap.prototype.convertMapPointToLatLng = function (point) {
+                OsMap.prototype.convertToLatLng = function (point) {
                     var latLng = this.gridProjection.getLonLatFromMapPoint(point);
                     return new route_1.Point(latLng.lat, latLng.lon);
                 };
@@ -132,10 +137,10 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                 };
                 ;
                 OsMap.prototype.calculateDistanceInKm = function () {
-                    var distString = new this.ol.Geometry.Curve(this.convertToOsPathFormat());
+                    var distString = new this.ol.Geometry.Curve(this.convertRouteToOsFormat());
                     return (distString.getLength() / 1000);
                 };
-                OsMap.prototype.convertToOsPathFormat = function () {
+                OsMap.prototype.convertRouteToOsFormat = function () {
                     var _this = this;
                     var path = [];
                     this.route.points.forEach(function (point) {
@@ -150,15 +155,16 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                 ;
                 OsMap.prototype.draw = function () {
                     var _this = this;
-                    var routeStyle = config_1.settings.routeStyle, waypointsFeature = [], markersFeature = [];
-                    var path = this.convertToOsPathFormat();
+                    var path = this.convertRouteToOsFormat();
                     // Set the lines array (line segments in route)
-                    var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(path), null, routeStyle);
+                    var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(path), null, config_1.settings.routeStyle);
                     // Add waypoints
+                    var waypointsFeature = [];
                     this.route.wayPoints.forEach(function (w) {
                         waypointsFeature.push(new _this.ol.Feature.Vector(_this.convertToOsMapPoint(w.point)));
                     });
                     // Add route markers
+                    var markersFeature = [];
                     this.route.markers.forEach(function (m) {
                         markersFeature.push(_this.addMarker(m, 'dist/assets/images/map-marker.png'));
                     });
@@ -193,7 +199,7 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                         selector: 'map',
                         template: '<div id="map"></div>'
                     }), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [directions_service_1.DirectionsService])
                 ], OsMap);
                 return OsMap;
             }());

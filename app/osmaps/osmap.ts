@@ -2,6 +2,7 @@
 import {Component, EventEmitter, Input, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
 import {Point, MapPoint, WayPoint, Marker, Route} from '../route';
+import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
 
 @Component({
@@ -25,7 +26,7 @@ export class OsMap {
     route: Route;
     followsRoads: boolean = false;
     
-    constructor() {
+    constructor(private directionsService: DirectionsService) {
         this.route = new Route();
     }
     
@@ -74,6 +75,8 @@ export class OsMap {
         this.osMap.events.register('touchmove', this.osMap, function() { this.isMoving = true; });
         this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
         this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
+        
+        console.log(this.directionsService)
     };
     
     touchPoint(e) {

@@ -20,7 +20,6 @@ System.register(['angular2/core'], function(exports_1, context_1) {
         execute: function() {
             DirectionsService = (function () {
                 function DirectionsService() {
-                    this.service = {};
                 }
                 DirectionsService.prototype.init = function () {
                     this.service = new window.google.maps.DirectionsService();
@@ -32,7 +31,7 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                         travelMode: window.google.maps.DirectionsTravelMode.BICYCLING
                     }, function (result, status) {
                         if (status === window.google.maps.DirectionsStatus.OK) {
-                            return result; // Need to push values to Observable route
+                            console.log(result); // Need to push values to Observable route
                         }
                         else {
                             throw {

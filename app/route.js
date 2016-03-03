@@ -72,6 +72,7 @@ System.register([], function(exports_1, context_1) {
                     this.maxLat = -1000000;
                     this.maxLon = -1000000;
                     this.diagonal = 0;
+                    this.isImported = false;
                 }
                 Route.prototype.addWayPoint = function (wayPoint) {
                     this.wayPoints.push(wayPoint);

@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'rxjs/add/operator/debounceTime', 'rxjs/add/operator/distinctUntilChanged', 'rxjs/add/operator/switchMap', './services/file.service', './services/scriptload.service', './google/elevation.service', './osmaps/gpx.service', './osmaps/osmap', './osmaps/gazetteer', './route', './config/config'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'rxjs/add/operator/debounceTime', 'rxjs/add/operator/distinctUntilChanged', 'rxjs/add/operator/switchMap', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './osmaps/gazetteer', './route', './config/config'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, gpx_service_1, osmap_1, gazetteer_1, route_1, config_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, gazetteer_1, route_1, config_1;
     var AppComponent;
     return {
         setters:[
@@ -33,6 +33,9 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
             function (elevation_service_1_1) {
                 elevation_service_1 = elevation_service_1_1;
             },
+            function (directions_service_1_1) {
+                directions_service_1 = directions_service_1_1;
+            },
             function (gpx_service_1_1) {
                 gpx_service_1 = gpx_service_1_1;
             },
@@ -50,14 +53,14 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(gpxService, fileService, scriptLoadService, elevationService, gazetteerService) {
+                function AppComponent(gpxService, fileService, scriptLoadService, elevationService, directionsService, gazetteerService) {
                     this.gpxService = gpxService;
                     this.fileService = fileService;
                     this.scriptLoadService = scriptLoadService;
                     this.elevationService = elevationService;
+                    this.directionsService = directionsService;
                     this.gazetteerService = gazetteerService;
                     this.route = new route_1.Route();
-                    this.osmap = new osmap_1.OsMap();
                     this.distance = 0;
                     this.path = [];
                 }
@@ -68,8 +71,10 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
                     Promise.all(loadPromises)
                         .then(function (value) {
-                        _this.osmap.init();
+                        _this.directionsService.init();
                         _this.elevationService.init();
+                        _this.osmap = new osmap_1.OsMap(_this.directionsService);
+                        _this.osmap.init();
                     }, function (value) {
                         console.error('Script not found:', value);
                     });
@@ -102,9 +107,9 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                         selector: 'my-app',
                         templateUrl: '/app/app.template.html',
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap],
-                        providers: [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, gazetteer_1.GazetteerService]
+                        providers: [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, gazetteer_1.GazetteerService, directions_service_1.DirectionsService]
                     }), 
-                    __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, gazetteer_1.GazetteerService])
+                    __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService])
                 ], AppComponent);
                 return AppComponent;
             }());
