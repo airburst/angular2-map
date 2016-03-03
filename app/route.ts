@@ -5,9 +5,9 @@ export class Point {
         this.lon = lon;
         this.ele = ele;
     }
-    public lat: number = this.lat;
-    public lon: number = this.lon;
-    public ele: number = this.ele;
+    public lat: number;
+    public lon: number;
+    public ele: number;
 
     public flatten(): any {
         return [this.lat, this.lon, this.ele];
@@ -20,8 +20,8 @@ export class MapPoint {
         this.x = x;
         this.y = y;
     }
-    public x: number = this.x;
-    public y: number = this.y;
+    public x: number;
+    public y: number;
 
     public flatten(): any {
         return [this.x, this.y, ];

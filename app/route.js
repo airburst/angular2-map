@@ -8,9 +8,6 @@ System.register([], function(exports_1, context_1) {
             // LatLng coordinate (like Google Maps and GPX)
             Point = (function () {
                 function Point(lat, lon, ele) {
-                    this.lat = this.lat;
-                    this.lon = this.lon;
-                    this.ele = this.ele;
                     this.lat = lat;
                     this.lon = lon;
                     this.ele = ele;
@@ -24,8 +21,6 @@ System.register([], function(exports_1, context_1) {
             // Northing - Easting Coordinate (like Ordnance Survey)
             MapPoint = (function () {
                 function MapPoint(x, y) {
-                    this.x = this.x;
-                    this.y = this.y;
                     this.x = x;
                     this.y = y;
                 }

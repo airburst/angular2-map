@@ -106,11 +106,11 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                     this.draw();
                 };
                 ;
-                // Convert OpenSpace Point into Google LatLng
-                // $scope.pointToGoogle = function(point) {
-                //     var ll = $scope.gridProjection.getLonLatFromMapPoint(point);
-                //     return new google.maps.LatLng(ll.lat, ll.lon);
-                // };
+                OsMap.prototype.convertMapPointToLatLng = function (point) {
+                    var latLng = this.gridProjection.getLonLatFromMapPoint(point);
+                    return new route_1.Point(latLng.lat, latLng.lon);
+                };
+                ;
                 OsMap.prototype.drawWholeRoute = function () {
                     var centre = this.convertToOsMapPoint(this.route.centre());
                     this.centreMap(centre.x, centre.y, this.route.getZoomLevel());
@@ -138,19 +138,18 @@ System.register(['angular2/core', '../route', '../config/config'], function(expo
                     var _this = this;
                     var path = [];
                     this.route.points.forEach(function (point) {
+                        console.log(point);
                         path.push(_this.convertToOsMapPoint(point));
                     });
                     return path;
                 };
                 OsMap.prototype.convertToOsMapPoint = function (point) {
-                    console.log(point);
                     var mp = new this.ol.LonLat(point.lon, point.lat), mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
                     return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
                 };
                 ;
                 OsMap.prototype.draw = function () {
                     var _this = this;
-                    console.log(this.route);
                     var routeStyle = config_1.settings.routeStyle, waypointsFeature = [], markersFeature = [];
                     var path = this.convertToOsPathFormat();
                     console.log(path);

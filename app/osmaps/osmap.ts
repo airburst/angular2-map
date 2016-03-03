@@ -110,11 +110,10 @@ export class OsMap {
         this.draw();
     };
     
-    // Convert OpenSpace Point into Google LatLng
-    // $scope.pointToGoogle = function(point) {
-    //     var ll = $scope.gridProjection.getLonLatFromMapPoint(point);
-    //     return new google.maps.LatLng(ll.lat, ll.lon);
-    // };
+    convertMapPointToLatLng(point) {
+        let latLng = this.gridProjection.getLonLatFromMapPoint(point);
+        return new Point(latLng.lat, latLng.lon);
+    };
     
     drawWholeRoute() {
         let centre = this.convertToOsMapPoint(this.route.centre());
@@ -137,21 +136,19 @@ export class OsMap {
     convertToOsPathFormat(): MapPoint[] {
         let path: MapPoint[] = [];
         this.route.points.forEach((point) => {
+            console.log(point)
             path.push(this.convertToOsMapPoint(point));
         });
         return path;
     }
     
     convertToOsMapPoint(point: Point) {
-        console.log(point)
-        
         let mp = new this.ol.LonLat(point.lon, point.lat),
             mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
         return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
     };
 
     draw(): void {
-        console.log(this.route);
         let routeStyle: any = settings.routeStyle,
             waypointsFeature: WayPoint[] = [],
             markersFeature: Marker[] = [];
