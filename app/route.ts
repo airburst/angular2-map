@@ -72,6 +72,7 @@ export class Route {
         this.maxLat = -1000000;
         this.maxLon = -1000000;
         this.diagonal = 0;
+        this.isImported = false;
     }
     public name: string;
     public ascent: number;
@@ -85,6 +86,7 @@ export class Route {
     public maxLat: number;
     public maxLon: number;
     public diagonal: number;
+    public isImported: boolean;
     
     public addWayPoint(wayPoint: WayPoint) {
         this.wayPoints.push(wayPoint);

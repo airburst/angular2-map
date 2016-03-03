@@ -55,6 +55,7 @@ export class GpxService {
         }
         // Add calculated total ascent and descent
         route.calculateElevation();
+        route.isImported = true;
         
         return route;
     }
@@ -87,6 +88,7 @@ export class GpxService {
 
         // Add calculated total ascent and descent
         route.calculateElevation();
+        route.isImported = true;
         
         return route;
     }

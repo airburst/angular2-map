@@ -98,7 +98,7 @@ export class OsMap {
     addPointToMap(e, pt) {
         let clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat),
             mp = new MapPoint(clickedPoint.x, clickedPoint.y),
-            p = this.convertMapPointToLatLng(pt);
+            p = this.convertToLatLng(pt);
         
         // if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
         //     // Try to use Google Directions API to make the route follow roads
@@ -113,7 +113,7 @@ export class OsMap {
         this.draw();
     };
     
-    convertMapPointToLatLng(point) {
+    convertToLatLng(point) {
         let latLng = this.gridProjection.getLonLatFromMapPoint(point);
         return new Point(latLng.lat, latLng.lon);
     };
@@ -132,11 +132,11 @@ export class OsMap {
     };
     
     calculateDistanceInKm(): number {
-        let distString = new this.ol.Geometry.Curve(this.convertToOsPathFormat());
+        let distString = new this.ol.Geometry.Curve(this.convertRouteToOsFormat());
         return (distString.getLength() / 1000);
     }
     
-    convertToOsPathFormat(): MapPoint[] {
+    convertRouteToOsFormat(): MapPoint[] {
         let path: MapPoint[] = [];
         this.route.points.forEach((point) => {
             path.push(this.convertToOsMapPoint(point));
@@ -151,18 +151,15 @@ export class OsMap {
     };
 
     draw(): void {
-        let routeStyle: any = settings.routeStyle,
-            waypointsFeature: WayPoint[] = [],
-            markersFeature: Marker[] = [];
-            
-        let path = this.convertToOsPathFormat();
+        let path = this.convertRouteToOsFormat();
 
         // Set the lines array (line segments in route)
         let routeFeature = new this.ol.Feature.Vector(
-            new this.ol.Geometry.LineString(path), null, routeStyle
+            new this.ol.Geometry.LineString(path), null, settings.routeStyle
         );
 
         // Add waypoints
+        let waypointsFeature: WayPoint[] = [];
         this.route.wayPoints.forEach((w: WayPoint) => {
             waypointsFeature.push(
                 new this.ol.Feature.Vector(this.convertToOsMapPoint(w.point))
@@ -170,6 +167,7 @@ export class OsMap {
         });
         
         // Add route markers
+        let markersFeature: Marker[] = [];
         this.route.markers.forEach((m: Marker) => {
             markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'));
         });
