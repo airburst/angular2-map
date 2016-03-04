@@ -61,17 +61,8 @@ export class Marker {
 export class Route {
     constructor() {
         this.name = '';
-        this.ascent = 0;
-        this.descent = 0;
-        this.wayPoints = [];
-        this.points = [];
-        this.markers = [];
-        this.minLat = 1000000;
-        this.minLon = 1000000;
-        this.maxLat = -1000000;
-        this.maxLon = -1000000;
-        this.diagonal = 0;
         this.isImported = false;
+        this.clear();
     }
     public name: string;
     public ascent: number;
@@ -86,6 +77,19 @@ export class Route {
     public diagonal: number;
     public isImported: boolean;
     
+    public clear() {
+        this.ascent = 0;
+        this.descent = 0;
+        this.wayPoints = [];
+        this.points = [];
+        this.markers = [];
+        this.minLat = 1000000;
+        this.minLon = 1000000;
+        this.maxLat = -1000000;
+        this.maxLon = -1000000;
+        this.diagonal = 0;
+    }
+        
     public addWayPoint(wayPoint: WayPoint) {
         this.wayPoints.push(wayPoint);
     }
