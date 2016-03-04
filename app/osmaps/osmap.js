@@ -167,7 +167,6 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     this.markerVectorLayer.addFeatures(markersFeature);
                     // Update distance
                     this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
-                    console.log(this.route.distance);
                 };
                 ;
                 OsMap.prototype.convertRouteToOsFormat = function () {

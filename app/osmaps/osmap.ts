@@ -174,7 +174,6 @@ export class OsMap {
         
         // Update distance
         this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
-        console.log(this.route.distance)
     };
       
     convertRouteToOsFormat(): MapPoint[] {
