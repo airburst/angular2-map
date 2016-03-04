@@ -146,25 +146,28 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                 OsMap.prototype.draw = function () {
                     var _this = this;
                     var path = this.convertRouteToOsFormat();
-                    // Set the lines array (line segments in route)
+                    // Plot route layer
                     var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(path), null, config_1.settings.routeStyle);
-                    // Add waypoints
+                    // Plot waypoints layer
                     var waypointsFeature = [];
                     this.route.wayPoints.forEach(function (w) {
                         waypointsFeature.push(new _this.ol.Feature.Vector(_this.convertToOsMapPoint(w.point)));
                     });
-                    // Add route markers
+                    // Plot route markers layer
                     var markersFeature = [];
                     this.route.markers.forEach(function (m) {
                         markersFeature.push(_this.addMarker(m, 'dist/assets/images/map-marker.png'));
                     });
-                    // Replace the existing layer
+                    // Replace existing layers
                     this.pointVectorLayer.destroyFeatures();
                     this.pointVectorLayer.addFeatures(waypointsFeature);
                     this.lineVectorLayer.destroyFeatures();
                     this.lineVectorLayer.addFeatures([routeFeature]);
                     this.markerVectorLayer.destroyFeatures();
                     this.markerVectorLayer.addFeatures(markersFeature);
+                    // Update distance
+                    this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
+                    console.log(this.route.distance);
                 };
                 ;
                 OsMap.prototype.convertRouteToOsFormat = function () {

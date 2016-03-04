@@ -61,8 +61,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                     this.directionsService = directionsService;
                     this.gazetteerService = gazetteerService;
                     this.route = new route_1.Route();
-                    this.distance = 0;
-                    this.path = [];
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
@@ -88,7 +86,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                                 data[_i - 0] = arguments[_i];
                             }
                             _this.osmap.route = _this.gpxService.read(data);
-                            _this.distance = _this.osmap.calculateDistanceInKm();
                             _this.osmap.drawWholeRoute();
                         });
                     }

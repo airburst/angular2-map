@@ -65,6 +65,7 @@ export class Route {
         this.clear();
     }
     public name: string;
+    public distance: number;
     public ascent: number;
     public descent: number;
     public wayPoints: WayPoint[];
@@ -78,6 +79,7 @@ export class Route {
     public isImported: boolean;
     
     public clear() {
+        this.distance = 0;
         this.ascent = 0;
         this.descent = 0;
         this.wayPoints = [];

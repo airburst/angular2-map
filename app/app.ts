@@ -33,14 +33,10 @@ export class AppComponent implements OnInit {
         private gazetteerService: GazetteerService
     ) {
         this.route = new Route();
-        this.distance = 0;
-        this.path = [];
     }
 
-    route: Route;
-    path: MapPoint[];
-    distance: number;
     osmap: OsMap;
+    route: Route;
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
@@ -63,7 +59,6 @@ export class AppComponent implements OnInit {
         if (this.fileService.supports($event.target)) {
             this.fileService.readTextFile($event.target, (...data) => {
                 this.osmap.route = this.gpxService.read(data);
-                this.distance = this.osmap.calculateDistanceInKm();
                 this.osmap.drawWholeRoute();
             });
         }

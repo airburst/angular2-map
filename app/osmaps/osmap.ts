@@ -145,12 +145,12 @@ export class OsMap {
     draw(): void {
         let path = this.convertRouteToOsFormat();
 
-        // Set the lines array (line segments in route)
+        // Plot route layer
         let routeFeature = new this.ol.Feature.Vector(
             new this.ol.Geometry.LineString(path), null, settings.routeStyle
         );
 
-        // Add waypoints
+        // Plot waypoints layer
         let waypointsFeature: WayPoint[] = [];
         this.route.wayPoints.forEach((w: WayPoint) => {
             waypointsFeature.push(
@@ -158,19 +158,23 @@ export class OsMap {
             );
         });
         
-        // Add route markers
+        // Plot route markers layer
         let markersFeature: Marker[] = [];
         this.route.markers.forEach((m: Marker) => {
             markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'));
         });
 
-        // Replace the existing layer
+        // Replace existing layers
         this.pointVectorLayer.destroyFeatures();
         this.pointVectorLayer.addFeatures(waypointsFeature);
         this.lineVectorLayer.destroyFeatures();
         this.lineVectorLayer.addFeatures([routeFeature]);
         this.markerVectorLayer.destroyFeatures();
         this.markerVectorLayer.addFeatures(markersFeature);
+        
+        // Update distance
+        this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
+        console.log(this.route.distance)
     };
       
     convertRouteToOsFormat(): MapPoint[] {

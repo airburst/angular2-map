@@ -65,6 +65,7 @@ System.register([], function(exports_1, context_1) {
                     this.clear();
                 }
                 Route.prototype.clear = function () {
+                    this.distance = 0;
                     this.ascent = 0;
                     this.descent = 0;
                     this.wayPoints = [];
