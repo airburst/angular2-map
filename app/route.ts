@@ -100,6 +100,10 @@ export class Route {
         this.points.push(point);
     }
     
+    private removePoints(number: number) {
+        this.points.splice(this.points.length - number)
+    }
+    
     public addMarker(marker: Marker) {
         this.markers.push(marker);
     }
@@ -110,6 +114,12 @@ export class Route {
     
     public penultimateWayPoint() {
         return this.wayPoints[this.wayPoints.length - 2];
+    }
+    
+    public removelastWayPoint() {
+        let n = this.lastWayPoint().routePoints;
+        this.removePoints(n);
+        this.wayPoints.pop();
     }
 
     public calculateElevation(): void {
