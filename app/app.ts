@@ -68,6 +68,16 @@ export class AppComponent implements OnInit {
             });
         }
     }
+    
+    clearRoute() {
+        this.osmap.route.clear();
+        this.osmap.draw();
+    }
+    
+    removeLast() {
+        this.osmap.route.removelastWayPoint();
+        this.osmap.draw();
+    }
 
     search($event) {
         let place: string = $event.target.value;

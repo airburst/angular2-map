@@ -93,6 +93,14 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                         });
                     }
                 };
+                AppComponent.prototype.clearRoute = function () {
+                    this.osmap.route.clear();
+                    this.osmap.draw();
+                };
+                AppComponent.prototype.removeLast = function () {
+                    this.osmap.route.removelastWayPoint();
+                    this.osmap.draw();
+                };
                 AppComponent.prototype.search = function ($event) {
                     var place = $event.target.value;
                     if (place !== '') {

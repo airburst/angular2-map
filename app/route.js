@@ -61,6 +61,10 @@ System.register([], function(exports_1, context_1) {
             Route = (function () {
                 function Route() {
                     this.name = '';
+                    this.isImported = false;
+                    this.clear();
+                }
+                Route.prototype.clear = function () {
                     this.ascent = 0;
                     this.descent = 0;
                     this.wayPoints = [];
@@ -71,8 +75,7 @@ System.register([], function(exports_1, context_1) {
                     this.maxLat = -1000000;
                     this.maxLon = -1000000;
                     this.diagonal = 0;
-                    this.isImported = false;
-                }
+                };
                 Route.prototype.addWayPoint = function (wayPoint) {
                     this.wayPoints.push(wayPoint);
                 };
@@ -85,6 +88,9 @@ System.register([], function(exports_1, context_1) {
                 Route.prototype.addPoint = function (point) {
                     this.points.push(point);
                 };
+                Route.prototype.removePoints = function (number) {
+                    this.points.splice(this.points.length - number);
+                };
                 Route.prototype.addMarker = function (marker) {
                     this.markers.push(marker);
                 };
@@ -93,6 +99,11 @@ System.register([], function(exports_1, context_1) {
                 };
                 Route.prototype.penultimateWayPoint = function () {
                     return this.wayPoints[this.wayPoints.length - 2];
+                };
+                Route.prototype.removelastWayPoint = function () {
+                    var n = this.lastWayPoint().routePoints;
+                    this.removePoints(n);
+                    this.wayPoints.pop();
                 };
                 Route.prototype.calculateElevation = function () {
                     var totalAscent = 0, totalDescent = 0, lastElevation = 0;

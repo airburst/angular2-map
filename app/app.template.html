@@ -11,6 +11,8 @@
         km
     </div>
     <div class="form">
+        <button id="clear" (click)="clearRoute()">Clear Route</button>
+        <button id="delete" (click)="removeLast()">Remove last WP</button>
         <label for="file">Load GPX or TCX File:</label>
         <input id="file" type="file" (change)="fileChange($event)">
     </div>
