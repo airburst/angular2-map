@@ -89,27 +89,27 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                         x: e.changedTouches[0].clientX,
                         y: e.changedTouches[0].clientY
                     }, pt = this.osMap.getLonLatFromViewPortPx(p);
-                    this.addPointToMap(e, pt);
+                    this.addWayPointToMap(e, pt);
                 };
                 ;
                 OsMap.prototype.clickPoint = function (e) {
                     var pt = this.osMap.getLonLatFromViewPortPx(e.xy);
-                    this.addPointToMap(e, pt);
+                    this.addWayPointToMap(e, pt);
                 };
                 ;
-                OsMap.prototype.addPointToMap = function (e, pt) {
+                OsMap.prototype.addWayPointToMap = function (e, pt) {
                     var _this = this;
-                    var clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat), p = this.convertToLatLng(pt);
+                    var p = this.convertToLatLng(pt);
                     this.route.addWayPoint(new route_1.WayPoint(p, 1));
                     if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
-                        var fp = this.route.lastWayPoint().point, from = this.directionsService.convertToGoogleMapPoint(fp), tp = this.route.penultimateWayPoint().point, to = this.directionsService.convertToGoogleMapPoint(tp);
+                        var fp = this.route.penultimateWayPoint().point, from = this.directionsService.convertToGoogleMapPoint(fp), tp = this.route.lastWayPoint().point, to = this.directionsService.convertToGoogleMapPoint(tp);
                         this.directionsService.getRouteBetween(from, to)
-                            .then(function (value) {
-                            _this.route.addPoints(value);
-                            _this.route.lastWayPoint().routePoints = value.length;
+                            .then(function (response) {
+                            _this.route.addPoints(response);
+                            _this.route.lastWayPoint().routePoints = response.length;
                             _this.draw();
-                        }, function (value) {
-                            console.error('Problem with directions service:', value);
+                        }, function (response) {
+                            console.error('Problem with directions service:', response);
                         });
                     }
                     else {
@@ -143,26 +143,8 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     this.osMap.setCenter(new this.os.MapPoint(this.easting, this.northing), this.zoom);
                 };
                 ;
-                OsMap.prototype.calculateDistanceInKm = function () {
-                    var distString = new this.ol.Geometry.Curve(this.convertRouteToOsFormat());
-                    return (distString.getLength() / 1000);
-                };
-                OsMap.prototype.convertRouteToOsFormat = function () {
-                    var _this = this;
-                    var path = [];
-                    this.route.points.forEach(function (point) {
-                        path.push(_this.convertToOsMapPoint(point));
-                    });
-                    return path;
-                };
-                OsMap.prototype.convertToOsMapPoint = function (point) {
-                    var mp = new this.ol.LonLat(point.lon, point.lat), mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
-                    return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
-                };
-                ;
                 OsMap.prototype.draw = function () {
                     var _this = this;
-                    console.log(this.route);
                     var path = this.convertRouteToOsFormat();
                     // Set the lines array (line segments in route)
                     var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(path), null, config_1.settings.routeStyle);
@@ -185,6 +167,19 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     this.markerVectorLayer.addFeatures(markersFeature);
                 };
                 ;
+                OsMap.prototype.convertRouteToOsFormat = function () {
+                    var _this = this;
+                    var path = [];
+                    this.route.points.forEach(function (point) {
+                        path.push(_this.convertToOsMapPoint(point));
+                    });
+                    return path;
+                };
+                OsMap.prototype.convertToOsMapPoint = function (point) {
+                    var mp = new this.ol.LonLat(point.lon, point.lat), mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
+                    return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
+                };
+                ;
                 OsMap.prototype.addMarker = function (marker, image) {
                     return new this.ol.Feature.Vector(this.convertToOsMapPoint(marker.point), /* Geometry */ { description: marker.name }, /* Attributes */ {
                         label: marker.name,
@@ -202,6 +197,10 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     });
                 };
                 ;
+                OsMap.prototype.calculateDistanceInKm = function () {
+                    var distString = new this.ol.Geometry.Curve(this.convertRouteToOsFormat());
+                    return (distString.getLength() / 1000);
+                };
                 OsMap = __decorate([
                     core_1.Component({
                         selector: 'map',

@@ -88,33 +88,32 @@ export class OsMap {
             y: e.changedTouches[0].clientY
         },
             pt = this.osMap.getLonLatFromViewPortPx(p);
-        this.addPointToMap(e, pt);
+        this.addWayPointToMap(e, pt);
     };
 
     clickPoint(e) {
         var pt = this.osMap.getLonLatFromViewPortPx(e.xy);
-        this.addPointToMap(e, pt);
+        this.addWayPointToMap(e, pt);
     };
     
-    addPointToMap(e, pt) {
-        let clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat),
-            p = this.convertToLatLng(pt);
-        
+    addWayPointToMap(e, pt) {
+        let p = this.convertToLatLng(pt);
+
         this.route.addWayPoint(new WayPoint(p, 1));
             
         if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
-            let fp = this.route.lastWayPoint().point,
+            let fp = this.route.penultimateWayPoint().point,
                 from = this.directionsService.convertToGoogleMapPoint(fp),
-                tp = this.route.penultimateWayPoint().point,
+                tp = this.route.lastWayPoint().point,
                 to = this.directionsService.convertToGoogleMapPoint(tp);
                 
             this.directionsService.getRouteBetween(from, to)
-                .then((value) => {
-                    this.route.addPoints(value);
-                    this.route.lastWayPoint().routePoints = value.length;
+                .then((response) => {
+                    this.route.addPoints(response);
+                    this.route.lastWayPoint().routePoints = response.length;
                     this.draw();
-                }, function(value) {
-                    console.error('Problem with directions service:', value)
+                }, function(response) {
+                    console.error('Problem with directions service:', response)
                 });
 
         } else {
@@ -143,27 +142,7 @@ export class OsMap {
         this.osMap.setCenter(new this.os.MapPoint(this.easting, this.northing), this.zoom);
     };
     
-    calculateDistanceInKm(): number {
-        let distString = new this.ol.Geometry.Curve(this.convertRouteToOsFormat());
-        return (distString.getLength() / 1000);
-    }
-    
-    convertRouteToOsFormat(): MapPoint[] {
-        let path: MapPoint[] = [];
-        this.route.points.forEach((point) => {
-            path.push(this.convertToOsMapPoint(point));
-        });
-        return path;
-    }
-    
-    convertToOsMapPoint(point: Point) {
-        let mp = new this.ol.LonLat(point.lon, point.lat),
-            mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
-        return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
-    };
-
     draw(): void {
-        console.log(this.route)
         let path = this.convertRouteToOsFormat();
 
         // Set the lines array (line segments in route)
@@ -193,6 +172,20 @@ export class OsMap {
         this.markerVectorLayer.destroyFeatures();
         this.markerVectorLayer.addFeatures(markersFeature);
     };
+      
+    convertRouteToOsFormat(): MapPoint[] {
+        let path: MapPoint[] = [];
+        this.route.points.forEach((point) => {
+            path.push(this.convertToOsMapPoint(point));
+        });
+        return path;
+    }
+    
+    convertToOsMapPoint(point: Point) {
+        let mp = new this.ol.LonLat(point.lon, point.lat),
+            mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
+        return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
+    };
     
     addMarker(marker: Marker, image: string): any {
         return new this.ol.Feature.Vector(
@@ -214,4 +207,9 @@ export class OsMap {
             }
         );
     };
+    
+    calculateDistanceInKm(): number {
+        let distString = new this.ol.Geometry.Curve(this.convertRouteToOsFormat());
+        return (distString.getLength() / 1000);
+    }
 }
