@@ -75,8 +75,6 @@ export class OsMap {
         this.osMap.events.register('touchmove', this.osMap, function() { this.isMoving = true; });
         this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
         this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
-        
-        console.log(this.directionsService)
     };
     
     touchPoint(e) {
@@ -100,24 +98,31 @@ export class OsMap {
     
     addPointToMap(e, pt) {
         let clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat),
-            mp = new MapPoint(clickedPoint.x, clickedPoint.y),
             p = this.convertToLatLng(pt);
-            
-        this.route.addWayPoint(new WayPoint(p, 1));
         
+        this.route.addWayPoint(new WayPoint(p, 1));
+            
         if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
             let fp = this.route.lastWayPoint().point,
                 from = this.directionsService.convertToGoogleMapPoint(fp),
                 tp = this.route.penultimateWayPoint().point,
                 to = this.directionsService.convertToGoogleMapPoint(tp);
-            this.directionsService.getRouteBetween(from, to);
+                
+            this.directionsService.getRouteBetween(from, to)
+                .then((value) => {
+                    this.route.addPoints(value);
+                    this.route.lastWayPoint().routePoints = value.length;
+                    this.draw();
+                }, function(value) {
+                    console.error('Problem with directions service:', value)
+                });
+
         } else {
-            this.route.addMapPoint(mp);
             this.route.addPoint(p);
+            this.draw();
         }
 
         this.ol.Event.stop(e);
-        this.draw();
     };
     
     convertToLatLng(point) {
@@ -158,6 +163,7 @@ export class OsMap {
     };
 
     draw(): void {
+        console.log(this.route)
         let path = this.convertRouteToOsFormat();
 
         // Set the lines array (line segments in route)

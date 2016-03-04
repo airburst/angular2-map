@@ -78,7 +78,6 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     this.osMap.events.register('touchmove', this.osMap, function () { this.isMoving = true; });
                     this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
                     this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
-                    console.log(this.directionsService);
                 };
                 ;
                 OsMap.prototype.touchPoint = function (e) {
@@ -99,18 +98,25 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                 };
                 ;
                 OsMap.prototype.addPointToMap = function (e, pt) {
-                    var clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat), mp = new route_1.MapPoint(clickedPoint.x, clickedPoint.y), p = this.convertToLatLng(pt);
+                    var _this = this;
+                    var clickedPoint = new this.ol.Geometry.Point(pt.lon, pt.lat), p = this.convertToLatLng(pt);
                     this.route.addWayPoint(new route_1.WayPoint(p, 1));
                     if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
                         var fp = this.route.lastWayPoint().point, from = this.directionsService.convertToGoogleMapPoint(fp), tp = this.route.penultimateWayPoint().point, to = this.directionsService.convertToGoogleMapPoint(tp);
-                        this.directionsService.getRouteBetween(from, to);
+                        this.directionsService.getRouteBetween(from, to)
+                            .then(function (value) {
+                            _this.route.addPoints(value);
+                            _this.route.lastWayPoint().routePoints = value.length;
+                            _this.draw();
+                        }, function (value) {
+                            console.error('Problem with directions service:', value);
+                        });
                     }
                     else {
-                        this.route.addMapPoint(mp);
                         this.route.addPoint(p);
+                        this.draw();
                     }
                     this.ol.Event.stop(e);
-                    this.draw();
                 };
                 ;
                 OsMap.prototype.convertToLatLng = function (point) {
@@ -156,6 +162,7 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                 ;
                 OsMap.prototype.draw = function () {
                     var _this = this;
+                    console.log(this.route);
                     var path = this.convertRouteToOsFormat();
                     // Set the lines array (line segments in route)
                     var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(path), null, config_1.settings.routeStyle);

@@ -28,26 +28,30 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                     this.service = new window.google.maps.DirectionsService();
                 };
                 DirectionsService.prototype.getRouteBetween = function (from, to) {
-                    this.service.route({
-                        origin: from,
-                        destination: to,
-                        travelMode: window.google.maps.DirectionsTravelMode.BICYCLING
-                    }, function (result, status) {
-                        if (status === window.google.maps.DirectionsStatus.OK) {
-                            // Hardcoded path to collection of points
-                            var googleMapPath = result.routes[0].overview_path, points_1 = [];
-                            googleMapPath.forEach(function (p) {
-                                points_1.push(new route_1.Point(p.lat(), p.lng()));
-                            });
-                        }
-                        else {
-                            throw {
-                                message: 'There was a problem getting directions data.',
-                                status: status,
-                                type: 'Directions Service Error'
-                            };
-                        }
+                    var ds = this.service, directionsPromise = new Promise(function (resolve, reject) {
+                        ds.route({
+                            origin: from,
+                            destination: to,
+                            travelMode: window.google.maps.DirectionsTravelMode.BICYCLING
+                        }, function (result, status) {
+                            if (status === window.google.maps.DirectionsStatus.OK) {
+                                // Hardcoded path to collection of points
+                                var googleMapPath = result.routes[0].overview_path, points_1 = [];
+                                googleMapPath.forEach(function (p) {
+                                    points_1.push(new route_1.Point(p.lat(), p.lng()));
+                                });
+                                resolve(points_1);
+                            }
+                            else {
+                                reject({
+                                    message: 'There was a problem getting directions data.',
+                                    status: status,
+                                    type: 'Directions Service Error'
+                                });
+                            }
+                        });
                     });
+                    return directionsPromise;
                 };
                 ;
                 DirectionsService.prototype.convertToGoogleMapPoint = function (point) {
