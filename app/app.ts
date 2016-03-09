@@ -44,17 +44,17 @@ export class AppComponent implements OnInit {
 
     osmap: OsMap;
     route: Route;
-
-    store: any;   
+        
+    store: any;
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
-        // You can subscribe to the updates manually, or use bindings to your view layer. 
+
         this.store = createStore(counter);
-        this.store.subscribe(() =>
-            console.log(this.store.getState())
-        ) 
-        
+        this.store.subscribe(() => {
+            console.log(this.store.getState());
+        })
+
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
@@ -78,19 +78,19 @@ export class AppComponent implements OnInit {
             });
         }
     }
-    
+
     clearRoute() {
         this.osmap.route.clear();
         this.osmap.draw();
 
         this.store.dispatch({ type: 'INCREMENT' });        
     }
-    
+
     removeLast() {
         this.osmap.route.removelastWayPoint();
         this.osmap.draw();
-
-        this.store.dispatch({ type: 'DECREMENT' });      
+        
+        this.store.dispatch({ type: 'DECREMENT' });
     }
 
     search($event) {

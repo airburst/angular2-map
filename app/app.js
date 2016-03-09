@@ -68,10 +68,9 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    // You can subscribe to the updates manually, or use bindings to your view layer. 
                     this.store = redux_1.createStore(counter_1.counter);
                     this.store.subscribe(function () {
-                        return console.log(_this.store.getState());
+                        console.log(_this.store.getState());
                     });
                     this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
