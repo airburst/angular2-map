@@ -1,11 +1,11 @@
+///<reference path="../node_modules/angular2/typings/browser.d.ts"/>
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES, Control} from 'angular2/common';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
-//import {Map} from 'immutable';
+import {createStore} from 'redux';
+import {counter} from './store/counter';
+
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {ElevationService} from './google/elevation.service';
@@ -20,7 +20,14 @@ import {settings} from './config/config';
     selector: 'my-app',
     templateUrl: '/app/app.template.html',
     directives: [FORM_DIRECTIVES, OsMap],
-    providers: [GpxService, FileService, ScriptLoadService, ElevationService, GazetteerService, DirectionsService]
+    providers: [
+        GpxService,
+        FileService,
+        ScriptLoadService,
+        ElevationService,
+        GazetteerService,
+        DirectionsService
+    ]
 })
 
 export class AppComponent implements OnInit {
@@ -38,8 +45,16 @@ export class AppComponent implements OnInit {
     osmap: OsMap;
     route: Route;
 
+    store: any;   
+
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
+        // You can subscribe to the updates manually, or use bindings to your view layer. 
+        this.store = createStore(counter);
+        this.store.subscribe(() =>
+            console.log(this.store.getState())
+        ) 
+        
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
@@ -67,11 +82,15 @@ export class AppComponent implements OnInit {
     clearRoute() {
         this.osmap.route.clear();
         this.osmap.draw();
+
+        this.store.dispatch({ type: 'INCREMENT' });        
     }
     
     removeLast() {
         this.osmap.route.removelastWayPoint();
         this.osmap.draw();
+
+        this.store.dispatch({ type: 'DECREMENT' });      
     }
 
     search($event) {

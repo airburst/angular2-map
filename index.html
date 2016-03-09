@@ -1,24 +1,31 @@
 <html>
-  <head>
+
+<head>
     <title>OS Mapping</title>
-    <link rel="stylesheet" href="dist/assets/styles.css"/>
+    <link rel="stylesheet" href="dist/assets/styles.css" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="OS Mapping and route planner">
     <meta name="author" content="Mark Fairhurst">
+
+    <script src="node_modules/es6-shim/es6-shim.min.js"></script>
+    <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
+    <script src="node_modules/angular2/es6/dev/src/testing/shims_for_IE.js"></script>
     <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
     <script src="node_modules/systemjs/dist/system.src.js"></script>
     <script src="node_modules/rxjs/bundles/Rx.js"></script>
     <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
+
     <script>
-      System.config({
+        System.config({
         packages: {        
           app: {
             format: 'register',
             defaultExtension: 'js'
           }
-        }
+        },
+        map: {'redux': 'node_modules/redux/dist/redux.js'}
       });
       System.import('app/boot')
             .then(null, console.error.bind(console));
@@ -31,10 +38,10 @@
         }
     </style>
 
-  </head>
-  
-  <body>
+</head>
+
+<body>
     <my-app>loading...</my-app>
-  </body>
+</body>
 
 </html>

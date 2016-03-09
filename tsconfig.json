@@ -9,10 +9,7 @@
         "removeComments": false,
         "noImplicitAny": false
     },
-    "files": [
-        "app/app.ts",
-        "node_modules/angular2/ts/typings/node/node.d.ts",
-        "node_modules/angular2/typings/browser.d.ts",
-        "node_modules/immutable/dist/immutable.d.ts"
+    "exclude": [
+        "node_modules"
     ]
 }
