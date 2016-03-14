@@ -11,9 +11,7 @@ import {SET, ADD_POINT, CLEAR} from '../reducers/route';
 
 @Component({
     selector: 'map',
-    template: `
-        <div id="map"></div>
-    `
+    template: '<div id="map"></div>'
 })
 
 export class OsMap {
@@ -111,7 +109,7 @@ export class OsMap {
     addWayPointToMap(e, pt) {
         let p = this.convertToLatLng(pt);
 
-        this.route.addWayPoint(new WayPoint(p, 1));
+        this.route.addWayPoint(new WayPoint(p, 1));     //CLASS
 
         //MF
         this.store.dispatch({
@@ -144,7 +142,7 @@ export class OsMap {
     
     convertToLatLng(point) {
         let latLng = this.gridProjection.getLonLatFromMapPoint(point);
-        return new Point(latLng.lat, latLng.lon);
+        return new Point(latLng.lat, latLng.lon);   //CLASS
     };
     
     drawWholeRoute() {
@@ -169,7 +167,7 @@ export class OsMap {
         );
 
         // Plot waypoints layer
-        let waypointsFeature: WayPoint[] = [];
+        let waypointsFeature: WayPoint[] = [];              //CLASS
         this.route.wayPoints.forEach((w: WayPoint) => {
             waypointsFeature.push(
                 new this.ol.Feature.Vector(this.convertToOsMapPoint(w.point))
@@ -177,7 +175,7 @@ export class OsMap {
         });
         
         // Plot route markers layer
-        let markersFeature: Marker[] = [];
+        let markersFeature: Marker[] = [];                  //CLASS
         this.route.markers.forEach((m: Marker) => {
             markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'));
         });
@@ -194,7 +192,7 @@ export class OsMap {
         this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
     };
       
-    convertRouteToOsFormat(): MapPoint[] {
+    convertRouteToOsFormat(): MapPoint[] {                  //CLASS
         let path: MapPoint[] = [];
         this.route.points.forEach((point) => {
             path.push(this.convertToOsMapPoint(point));
@@ -202,13 +200,13 @@ export class OsMap {
         return path;
     }
     
-    convertToOsMapPoint(point: Point) {
+    convertToOsMapPoint(point: Point) {                     //CLASS
         let mp = new this.ol.LonLat(point.lon, point.lat),
             mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
         return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
     };
     
-    addMarker(marker: Marker, image: string): any {
+    addMarker(marker: Marker, image: string): any {         //CLASS
         return new this.ol.Feature.Vector(
             this.convertToOsMapPoint(marker.point),   /* Geometry */
             { description: marker.name },             /* Attributes */

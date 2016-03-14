@@ -4,6 +4,18 @@ export interface IPoint {
     ele: number;
 }
 
+export interface IWayPoint {
+    point: IPoint;
+    trackPointsCount: number;
+}
+
+export interface IMarker {
+    point: IPoint;
+    name: string;
+}
+
+//MapPoint(x,y)
+
 export interface AppStore {
     points: IPoint[]
 }
