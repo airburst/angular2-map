@@ -70,9 +70,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                     this.route = new route_1.Route();
                     this.counter = store.select('counter');
                 }
-                // increment(){
-                //     this.store.dispatch({ type: INCREMENT });
-                // }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
@@ -124,7 +121,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <app-header [route]=\"route\"\n            (clear)=\"clearRoute()\"\n        >\n        </app-header>\n\n        <map></map>\n        ",
+                        template: "\n        <app-header [route]=\"route\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n        >\n        </app-header>\n\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader],
                         providers: [
                             gpx_service_1.GpxService,

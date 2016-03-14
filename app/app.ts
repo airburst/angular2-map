@@ -21,6 +21,7 @@ import {INCREMENT, DECREMENT, RESET} from './store/counter';
     template: `
         <app-header [route]="route"
             (clear)="clearRoute()"
+            (remove)="removeLast()"
         >
         </app-header>
 
@@ -54,9 +55,6 @@ export class AppComponent implements OnInit {
     osmap: OsMap;
     route: Route;
     counter: Observable<number>;
-    // increment(){
-    //     this.store.dispatch({ type: INCREMENT });
-    // }
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
