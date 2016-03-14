@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from 'angular2/core';
+import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
 import {IPoint} from './oroute';
 
 @Component({
@@ -18,7 +18,8 @@ import {IPoint} from './oroute';
                 <input id="file" type="file" (change)="fileChange($event)">
             </div>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class AppHeader {
