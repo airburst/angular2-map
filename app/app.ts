@@ -19,7 +19,6 @@ import {INCREMENT, DECREMENT, RESET} from './store/counter';
 
 @Component({
     selector: 'my-app',
-    // templateUrl: '/app/app.template.html',
     template: `
         <app-header [route]="route"></app-header>
         <map></map>

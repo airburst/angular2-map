@@ -121,7 +121,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        // templateUrl: '/app/app.template.html',
                         template: "\n        <app-header [route]=\"route\"></app-header>\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader],
                         providers: [
