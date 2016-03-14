@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'redux', './store/counter', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './osmaps/gazetteer', './route', './config/config'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, redux_1, counter_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, gazetteer_1, route_1, config_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1;
     var AppComponent;
     return {
         setters:[
@@ -21,12 +21,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                 common_1 = common_1_1;
             },
             function (_1) {},
-            function (redux_1_1) {
-                redux_1 = redux_1_1;
-            },
-            function (counter_1_1) {
-                counter_1 = counter_1_1;
-            },
             function (file_service_1_1) {
                 file_service_1 = file_service_1_1;
             },
@@ -45,6 +39,9 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
             function (osmap_1_1) {
                 osmap_1 = osmap_1_1;
             },
+            function (header_component_1_1) {
+                header_component_1 = header_component_1_1;
+            },
             function (gazetteer_1_1) {
                 gazetteer_1 = gazetteer_1_1;
             },
@@ -53,25 +50,30 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
             },
             function (config_1_1) {
                 config_1 = config_1_1;
+            },
+            function (store_1_1) {
+                store_1 = store_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(gpxService, fileService, scriptLoadService, elevationService, directionsService, gazetteerService) {
+                function AppComponent(gpxService, fileService, scriptLoadService, elevationService, directionsService, gazetteerService, store) {
                     this.gpxService = gpxService;
                     this.fileService = fileService;
                     this.scriptLoadService = scriptLoadService;
                     this.elevationService = elevationService;
                     this.directionsService = directionsService;
                     this.gazetteerService = gazetteerService;
+                    this.store = store;
                     this.route = new route_1.Route();
+                    this.counter = store.select('counter');
                 }
+                // increment(){
+                //     this.store.dispatch({ type: INCREMENT });
+                // }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    this.store = redux_1.createStore(counter_1.counter);
-                    this.store.subscribe(function () {
-                        console.log(_this.store.getState());
-                    });
+                    this.counter.subscribe(function (v) { return console.log(v); });
                     this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
                     Promise.all(loadPromises)
@@ -119,8 +121,9 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        templateUrl: '/app/app.template.html',
-                        directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap],
+                        // templateUrl: '/app/app.template.html',
+                        template: "\n        <app-header [route]=\"route\"></app-header>\n        <map></map>\n        ",
+                        directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader],
                         providers: [
                             gpx_service_1.GpxService,
                             file_service_1.FileService,
@@ -130,7 +133,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', 'r
                             directions_service_1.DirectionsService
                         ]
                     }), 
-                    __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService])
+                    __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService, store_1.Store])
                 ], AppComponent);
                 return AppComponent;
             }());

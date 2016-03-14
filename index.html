@@ -16,15 +16,20 @@
 
     <script>
         System.config({
-        packages: {        
-          app: {
-            format: 'register',
-            defaultExtension: 'js'
-          }
-        },
-        map: {'redux': 'node_modules/redux/dist/redux.js'}
-      });
-      System.import('app/boot')
+            packages: {        
+                app: {
+                    format: 'register'
+                },
+                '@ngrx/store': {
+                    main: 'index.js',
+                    format: 'cjs'           
+                }        
+            },
+            map: {
+                '@ngrx/store': 'node_modules/@ngrx/store/dist'
+            }  
+        });     
+        System.import('app/boot')
             .then(null, console.error.bind(console));
     </script>
 

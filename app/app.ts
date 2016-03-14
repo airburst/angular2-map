@@ -3,23 +3,28 @@ import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES, Control} from 'angular2/common';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {createStore} from 'redux';
-import {counter} from './store/counter';
-
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {ElevationService} from './google/elevation.service';
 import {DirectionsService} from './google/directions.service';
 import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
+import {AppHeader} from './header.component';
 import {GazetteerService} from './osmaps/gazetteer';
 import {Route, MapPoint} from './route';
 import {settings} from './config/config';
 
+import {Store} from '@ngrx/store';
+import {INCREMENT, DECREMENT, RESET} from './store/counter';
+
 @Component({
     selector: 'my-app',
-    templateUrl: '/app/app.template.html',
-    directives: [FORM_DIRECTIVES, OsMap],
+    // templateUrl: '/app/app.template.html',
+    template: `
+        <app-header [route]="route"></app-header>
+        <map></map>
+        `,
+    directives: [FORM_DIRECTIVES, OsMap, AppHeader],
     providers: [
         GpxService,
         FileService,
@@ -37,24 +42,25 @@ export class AppComponent implements OnInit {
         private scriptLoadService: ScriptLoadService,
         private elevationService: ElevationService,
         private directionsService: DirectionsService,
-        private gazetteerService: GazetteerService
+        private gazetteerService: GazetteerService,
+        public store: Store<number>
     ) {
         this.route = new Route();
+        this.counter = store.select('counter');
     }
 
     osmap: OsMap;
     route: Route;
-        
-    store: any;
+    counter: Observable<number>;
+    // increment(){
+    //     this.store.dispatch({ type: INCREMENT });
+    // }
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
 
-        this.store = createStore(counter);
-        this.store.subscribe(() => {
-            console.log(this.store.getState());
-        })
-
+        this.counter.subscribe(v => console.log(v));
+        
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
