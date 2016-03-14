@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../route', '../google/directions.service', '../config/config'], function(exports_1, context_1) {
+System.register(['angular2/core', '../route', '../google/directions.service', '../config/config', 'rxjs/add/operator/map', '@ngrx/store'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, route_1, directions_service_1, config_1;
+    var core_1, route_1, directions_service_1, config_1, store_1;
     var OsMap;
     return {
         setters:[
@@ -25,11 +25,16 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
             },
             function (config_1_1) {
                 config_1 = config_1_1;
+            },
+            function (_1) {},
+            function (store_1_1) {
+                store_1 = store_1_1;
             }],
         execute: function() {
             OsMap = (function () {
-                function OsMap(directionsService) {
+                function OsMap(directionsService, store) {
                     this.directionsService = directionsService;
+                    this.store = store;
                     this.easting = 386210;
                     this.northing = 168060;
                     this.zoom = 7;
@@ -43,10 +48,12 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     this.isMoving = false;
                     this.followsRoads = true;
                     this.route = new route_1.Route();
+                    this.waypoints = store.select('waypoints');
                 }
                 OsMap.prototype.init = function () {
                     this.ol = window.OpenLayers;
                     this.os = window.OpenSpace;
+                    this.waypoints.subscribe(function (v) { return console.log(v); });
                     // Instantiate the map canvas
                     var options = {
                         controls: [
@@ -206,9 +213,9 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                 OsMap = __decorate([
                     core_1.Component({
                         selector: 'map',
-                        template: '<div id="map"></div>'
+                        template: "\n        <div id=\"map\"></div>\n    "
                     }), 
-                    __metadata('design:paramtypes', [directions_service_1.DirectionsService])
+                    __metadata('design:paramtypes', [directions_service_1.DirectionsService, store_1.Store])
                 ], OsMap);
                 return OsMap;
             }());

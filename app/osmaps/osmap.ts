@@ -1,17 +1,22 @@
-///<reference path="../../typings/window.extend.d.ts"/>
-import {Component, EventEmitter, Input, OnInit} from 'angular2/core';
+import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
 import {Point, MapPoint, WayPoint, Marker, Route} from '../route';
 import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import {Store} from '@ngrx/store';
+import {IPoint, AppStore} from '../oroute';
+import {SET, ADD_POINT, CLEAR} from '../reducers/route';
 
 @Component({
     selector: 'map',
-    template: '<div id="map"></div>'
+    template: `
+        <div id="map"></div>
+    `
 })
 
 export class OsMap {
-    
     easting: number = 386210;
     northing: number = 168060;
     zoom: number = 7;
@@ -25,14 +30,21 @@ export class OsMap {
     isMoving: boolean = false;
     route: Route;
     followsRoads: boolean = true;
+    waypoints: Observable<Array<IPoint>>;
     
-    constructor(private directionsService: DirectionsService) {
+    constructor(
+        private directionsService: DirectionsService,
+        public store: Store<AppStore>
+    ) {
         this.route = new Route();
+        this.waypoints = store.select('waypoints');
     }
     
     init() {
         this.ol = window.OpenLayers;
         this.os = window.OpenSpace;
+
+        this.waypoints.subscribe(v => console.log(v));        
         
         // Instantiate the map canvas
         let options = {

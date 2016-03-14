@@ -72,15 +72,15 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
+                    //this.waypoints.subscribe(v => console.log(v));
                     var _this = this;
-                    this.waypoints.subscribe(function (v) { return console.log(v); });
                     this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
                     Promise.all(loadPromises)
                         .then(function (value) {
                         _this.directionsService.init();
                         _this.elevationService.init();
-                        _this.osmap = new osmap_1.OsMap(_this.directionsService);
+                        _this.osmap = new osmap_1.OsMap(_this.directionsService, _this.store);
                         _this.osmap.init();
                     }, function (value) {
                         console.error('Script not found:', value);

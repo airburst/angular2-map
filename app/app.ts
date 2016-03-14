@@ -60,7 +60,7 @@ export class AppComponent implements OnInit {
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
 
-        this.waypoints.subscribe(v => console.log(v));
+        //this.waypoints.subscribe(v => console.log(v));
         
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
@@ -70,7 +70,7 @@ export class AppComponent implements OnInit {
             .then((value) => {
                 this.directionsService.init();
                 this.elevationService.init();
-                this.osmap = new OsMap(this.directionsService);
+                this.osmap = new OsMap(this.directionsService, this.store);
                 this.osmap.init();
             }, function(value) {
                 console.error('Script not found:', value)
