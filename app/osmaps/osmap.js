@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../route', '../google/directions.service', '../config/config', 'rxjs/add/operator/map', '@ngrx/store'], function(exports_1, context_1) {
+System.register(['angular2/core', '../route', '../google/directions.service', '../config/config', 'rxjs/add/operator/map', '@ngrx/store', '../reducers/route'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, route_1, directions_service_1, config_1, store_1;
+    var core_1, route_1, directions_service_1, config_1, store_1, route_2;
     var OsMap;
     return {
         setters:[
@@ -29,6 +29,9 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
             function (_1) {},
             function (store_1_1) {
                 store_1 = store_1_1;
+            },
+            function (route_2_1) {
+                route_2 = route_2_1;
             }],
         execute: function() {
             OsMap = (function () {
@@ -108,6 +111,11 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     var _this = this;
                     var p = this.convertToLatLng(pt);
                     this.route.addWayPoint(new route_1.WayPoint(p, 1));
+                    //MF
+                    this.store.dispatch({
+                        type: route_2.ADD_POINT,
+                        payload: { lat: p.lat, lon: p.lon, ele: 0 }
+                    });
                     if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
                         var fp = this.route.penultimateWayPoint().point, from = this.directionsService.convertToGoogleMapPoint(fp), tp = this.route.lastWayPoint().point, to = this.directionsService.convertToGoogleMapPoint(tp);
                         this.directionsService.getRouteBetween(from, to)

@@ -112,6 +112,12 @@ export class OsMap {
         let p = this.convertToLatLng(pt);
 
         this.route.addWayPoint(new WayPoint(p, 1));
+
+        //MF
+        this.store.dispatch({
+            type: ADD_POINT, 
+            payload: { lat: p.lat, lon: p.lon, ele: 0 }
+        });
             
         if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
             let fp = this.route.penultimateWayPoint().point,
