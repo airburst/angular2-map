@@ -1,4 +1,3 @@
-///<reference path="../node_modules/angular2/typings/browser.d.ts"/>
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES, Control} from 'angular2/common';
 import {Observable} from 'rxjs/Observable';
@@ -20,7 +19,11 @@ import {INCREMENT, DECREMENT, RESET} from './store/counter';
 @Component({
     selector: 'my-app',
     template: `
-        <app-header [route]="route"></app-header>
+        <app-header [route]="route"
+            (clear)="clearRoute()"
+        >
+        </app-header>
+
         <map></map>
         `,
     directives: [FORM_DIRECTIVES, OsMap, AppHeader],
@@ -88,7 +91,7 @@ export class AppComponent implements OnInit {
         this.osmap.route.clear();
         this.osmap.draw();
 
-        this.store.dispatch({ type: 'INCREMENT' });        
+        this.store.dispatch({ type: INCREMENT });        
     }
 
     removeLast() {

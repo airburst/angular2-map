@@ -11,7 +11,7 @@ import {Route} from './route';
                 km
             </div>
             <div class="form">
-                <button id="clear" (click)="clearRoute.emit()">Clear Route</button>
+                <button id="clear" (click)="clear.emit()">Clear Route</button>
                 <button id="delete" (click)="removeLast()">Remove last WP</button>
                 <label for="file">Load GPX or TCX File:</label>
                 <input id="file" type="file" (change)="fileChange($event)">
@@ -22,5 +22,5 @@ import {Route} from './route';
 
 export class AppHeader {
     @Input() route: Route;
-    @Output() clearRoute = new EventEmitter();
+    @Output() clear = new EventEmitter();
 }

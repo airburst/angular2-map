@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './store/counter'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1, counter_1;
     var AppComponent;
     return {
         setters:[
@@ -53,6 +53,9 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
             },
             function (store_1_1) {
                 store_1 = store_1_1;
+            },
+            function (counter_1_1) {
+                counter_1 = counter_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -102,7 +105,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 AppComponent.prototype.clearRoute = function () {
                     this.osmap.route.clear();
                     this.osmap.draw();
-                    this.store.dispatch({ type: 'INCREMENT' });
+                    this.store.dispatch({ type: counter_1.INCREMENT });
                 };
                 AppComponent.prototype.removeLast = function () {
                     this.osmap.route.removelastWayPoint();
@@ -121,7 +124,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <app-header [route]=\"route\"></app-header>\n        <map></map>\n        ",
+                        template: "\n        <app-header [route]=\"route\"\n            (clear)=\"clearRoute()\"\n        >\n        </app-header>\n\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader],
                         providers: [
                             gpx_service_1.GpxService,
