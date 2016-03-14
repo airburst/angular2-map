@@ -73,12 +73,13 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                     for (var i = 0; i < trackPoints.length; i++) {
                         var point = {
                             lat: parseFloat(trackPoints[i].getAttribute('lat').valueOf()),
-                            lon: parseFloat(trackPoints[i].getAttribute('lon').valueOf())
+                            lon: parseFloat(trackPoints[i].getAttribute('lon').valueOf()),
+                            ele: parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent)
                         };
                         route.addPoint(point);
                     }
                     // Add calculated total ascent and descent
-                    // route.calculateElevation();
+                    route.calculateElevation();
                     route.isImported = true;
                     return route;
                 };
@@ -95,7 +96,8 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                     for (var i = 0; i < trackPoints.length; i++) {
                         var point = {
                             lat: parseFloat(trackPoints[i].getElementsByTagName('LatitudeDegrees')[0].textContent),
-                            lon: parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent)
+                            lon: parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent),
+                            ele: parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent)
                         };
                         route.addPoint(point);
                     }
@@ -104,7 +106,7 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                     route.addMarker({ name: 'Start', point: route.points[0] });
                     route.addMarker({ name: 'Finish', point: route.points[route.points.length - 1] });
                     // Add calculated total ascent and descent
-                    // route.calculateElevation();
+                    route.calculateElevation();
                     route.isImported = true;
                     return route;
                 };

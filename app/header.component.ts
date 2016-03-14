@@ -14,7 +14,7 @@ import {Point} from './route';
                 <button id="clear" (click)="clear.emit()">Clear Route</button>
                 <button id="delete" (click)="remove.emit()">Remove WayPoint</button>
                 <label for="file">Load GPX or TCX File:</label>
-                <input id="file" type="file" (change)="fileChange($event)">
+                <input id="file" type="file" (change)="load.emit($event)">
             </div>
         </div>
     `,
@@ -25,4 +25,5 @@ export class AppHeader {
     @Input() route: Point[];
     @Output() clear = new EventEmitter();
     @Output() remove = new EventEmitter();
+    @Output() load = new EventEmitter();
 }

@@ -46,17 +46,17 @@ export class GpxService {
         // Track Points (gpx/trk/trkseg/trkpt[@lat, @lon, ele])
         let trackPoints = xml.getElementsByTagName('trkpt');
         for (let i = 0; i < trackPoints.length; i++) {
-            let point = {
+            let point: Point = {
                 lat: parseFloat(trackPoints[i].getAttribute('lat').valueOf()),
-                lon: parseFloat(trackPoints[i].getAttribute('lon').valueOf())
-                //parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent)
+                lon: parseFloat(trackPoints[i].getAttribute('lon').valueOf()),
+                ele: parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent)
             };
             route.addPoint(point);
         }
         // Add calculated total ascent and descent
-        // route.calculateElevation();
+        route.calculateElevation();
         route.isImported = true;
-        
+      
         return route;
     }
     
@@ -75,8 +75,8 @@ export class GpxService {
         for (let i = 0; i < trackPoints.length; i++) {
             let point: Point = {
                 lat: parseFloat(trackPoints[i].getElementsByTagName('LatitudeDegrees')[0].textContent),
-                lon: parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent)
-                //parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent)
+                lon: parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent),
+                ele: parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent)
             };
             route.addPoint(point);
         }
@@ -87,9 +87,9 @@ export class GpxService {
         route.addMarker({name:'Finish', point: route.points[route.points.length - 1]});
 
         // Add calculated total ascent and descent
-        // route.calculateElevation();
+        route.calculateElevation();
         route.isImported = true;
-        
+    
         return route;
     }
     

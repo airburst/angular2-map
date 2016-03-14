@@ -10,9 +10,7 @@ System.register([], function(exports_1, context_1) {
                 }
                 ScriptLoadService.prototype.load = function (url) {
                     var scriptPromise = new Promise(function (resolve, reject) {
-                        // Create a new script tag
                         var script = document.createElement('script');
-                        // Use the url argument as source attribute
                         script.src = url;
                         script.async = true;
                         // Call resolve when it’s loaded
@@ -23,7 +21,6 @@ System.register([], function(exports_1, context_1) {
                         script.addEventListener('error', function () {
                             reject(url);
                         }, false);
-                        // Add it to the body
                         document.body.appendChild(script);
                     });
                     return scriptPromise;

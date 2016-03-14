@@ -22,6 +22,7 @@ import {SET, ADD_POINT, CLEAR} from './reducers/route';
         <app-header [route]="waypoints | async"
             (clear)="clearRoute()"
             (remove)="removeLast()"
+            (load)="fileChange($event)"
         >
         </app-header>
         <map></map>
@@ -74,8 +75,9 @@ export class AppComponent implements OnInit {
 
     fileChange($event) {
         if (this.fileService.supports($event.target)) {
-            this.fileService.readTextFile($event.target, (...data) => {
+            this.fileService.readTextFile($event.target, (...data) => {    
                 this.osmap.route = this.gpxService.read(data);
+                //this.store.dispatch({ type: SET, payload: this.osmap.route });
                 this.osmap.drawWholeRoute();
             });
         }

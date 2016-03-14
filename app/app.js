@@ -94,6 +94,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                                 data[_i - 0] = arguments[_i];
                             }
                             _this.osmap.route = _this.gpxService.read(data);
+                            //this.store.dispatch({ type: SET, payload: this.osmap.route });
                             _this.osmap.drawWholeRoute();
                         });
                     }
@@ -119,7 +120,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <app-header [route]=\"waypoints | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n        >\n        </app-header>\n        <map></map>\n        ",
+                        template: "\n        <app-header [route]=\"waypoints | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (load)=\"fileChange($event)\"\n        >\n        </app-header>\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader],
                         providers: [
                             gpx_service_1.GpxService,
