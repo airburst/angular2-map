@@ -110,7 +110,7 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                 OsMap.prototype.addWayPointToMap = function (e, pt) {
                     var _this = this;
                     var p = this.convertToLatLng(pt);
-                    this.route.addWayPoint(new route_1.WayPoint(p, 1));
+                    this.route.addWayPoint({ point: { lat: p.lat, lon: p.lon }, trackPointsCount: 1 }); //REMOVE
                     //MF
                     this.store.dispatch({
                         type: route_2.ADD_POINT,
@@ -121,7 +121,7 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                         this.directionsService.getRouteBetween(from, to)
                             .then(function (response) {
                             _this.route.addPoints(response);
-                            _this.route.lastWayPoint().routePoints = response.length;
+                            _this.route.lastWayPoint().trackPointsCount = response.length;
                             _this.draw();
                         }, function (response) {
                             console.error('Problem with directions service:', response);
@@ -135,8 +135,8 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                 };
                 ;
                 OsMap.prototype.convertToLatLng = function (point) {
-                    var latLng = this.gridProjection.getLonLatFromMapPoint(point);
-                    return new route_1.Point(latLng.lat, latLng.lon);
+                    var ll = this.gridProjection.getLonLatFromMapPoint(point);
+                    return { lat: ll.lat, lon: ll.lon };
                 };
                 ;
                 OsMap.prototype.drawWholeRoute = function () {
@@ -221,7 +221,7 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                 OsMap = __decorate([
                     core_1.Component({
                         selector: 'map',
-                        template: "\n        <div id=\"map\"></div>\n    "
+                        template: '<div id="map"></div>'
                     }), 
                     __metadata('design:paramtypes', [directions_service_1.DirectionsService, store_1.Store])
                 ], OsMap);

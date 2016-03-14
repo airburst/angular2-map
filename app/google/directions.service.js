@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../route'], function(exports_1, context_1) {
+System.register(['angular2/core'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,15 +10,12 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, route_1;
+    var core_1;
     var DirectionsService;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
-            },
-            function (route_1_1) {
-                route_1 = route_1_1;
             }],
         execute: function() {
             DirectionsService = (function () {
@@ -38,7 +35,7 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                                 // Hardcoded path to collection of points
                                 var googleMapPath = result.routes[0].overview_path, points_1 = [];
                                 googleMapPath.forEach(function (p) {
-                                    points_1.push(new route_1.Point(p.lat(), p.lng()));
+                                    points_1.push({ lat: p.lat(), lon: p.lng() });
                                 });
                                 resolve(points_1);
                             }

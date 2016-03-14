@@ -33,28 +33,28 @@ export class GpxService {
         // Waypoints (gpx/wpt[@lat, @lon, name])
         let wayPoints: NodeListOf<Element> = xml.getElementsByTagName('wpt');
         for (let i = 0; i < wayPoints.length; i++) {
-            let marker = new Marker(
-                wayPoints[i].getElementsByTagName('name')[0].textContent,
-                new Point(
-                    parseFloat(wayPoints[i].getAttribute('lat').valueOf()),
-                    parseFloat(wayPoints[i].getAttribute('lon').valueOf())
-                )
-            );
+            let marker: Marker = {
+                name: wayPoints[i].getElementsByTagName('name')[0].textContent,
+                point: {
+                    lat: parseFloat(wayPoints[i].getAttribute('lat').valueOf()),
+                    lon: parseFloat(wayPoints[i].getAttribute('lon').valueOf())
+                }
+            };
             route.addMarker(marker);
         }
         
         // Track Points (gpx/trk/trkseg/trkpt[@lat, @lon, ele])
         let trackPoints = xml.getElementsByTagName('trkpt');
         for (let i = 0; i < trackPoints.length; i++) {
-            let point = new Point(
-                parseFloat(trackPoints[i].getAttribute('lat').valueOf()),
-                parseFloat(trackPoints[i].getAttribute('lon').valueOf()),
-                parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent)
-            );
+            let point = {
+                lat: parseFloat(trackPoints[i].getAttribute('lat').valueOf()),
+                lon: parseFloat(trackPoints[i].getAttribute('lon').valueOf())
+                //parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent)
+            };
             route.addPoint(point);
         }
         // Add calculated total ascent and descent
-        route.calculateElevation();
+        // route.calculateElevation();
         route.isImported = true;
         
         return route;
@@ -73,21 +73,21 @@ export class GpxService {
         // Track Points (Track/Trackpoint[Position/LatitudeDegrees, Position/LongitudeDegrees, AltitudeMeters])
         let trackPoints = xml.getElementsByTagName('Trackpoint');
         for (let i = 0; i < trackPoints.length; i++) {
-            let point = new Point(
-                parseFloat(trackPoints[i].getElementsByTagName('LatitudeDegrees')[0].textContent),
-                parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent),
-                parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent)
-            );
+            let point: Point = {
+                lat: parseFloat(trackPoints[i].getElementsByTagName('LatitudeDegrees')[0].textContent),
+                lon: parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent)
+                //parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent)
+            };
             route.addPoint(point);
         }
         
         // Markers - add start and finish points
         // TODO: find out whether courses support waypoints
-        route.addMarker(new Marker('Start', route.points[0]));
-        route.addMarker(new Marker('Finish', route.points[route.points.length - 1]));
+        route.addMarker({name: 'Start', point: route.points[0]});
+        route.addMarker({name:'Finish', point: route.points[route.points.length - 1]});
 
         // Add calculated total ascent and descent
-        route.calculateElevation();
+        // route.calculateElevation();
         route.isImported = true;
         
         return route;

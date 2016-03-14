@@ -72,7 +72,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
-                    //this.waypoints.subscribe(v => console.log(v));
                     var _this = this;
                     this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
@@ -108,9 +107,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                     this.osmap.route.removelastWayPoint();
                     this.osmap.draw();
                 };
-                AppComponent.prototype.addPoint = function () {
-                    this.store.dispatch({ type: route_2.ADD_POINT, payload: { lat: 51, lon: -2, ele: 100 } });
-                };
                 AppComponent.prototype.search = function ($event) {
                     var place = $event.target.value;
                     if (place !== '') {
@@ -123,7 +119,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <app-header [route]=\"waypoints | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (add)=\"addPoint()\"\n        >\n        </app-header>\n        <map></map>\n        ",
+                        template: "\n        <app-header [route]=\"waypoints | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n        >\n        </app-header>\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader],
                         providers: [
                             gpx_service_1.GpxService,

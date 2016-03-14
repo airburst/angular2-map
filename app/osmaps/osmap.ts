@@ -1,12 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point, MapPoint, WayPoint, Marker, Route} from '../route';
+import {Point, MapPoint, WayPoint, Marker, Route, AppStore} from '../route';
 import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {Store} from '@ngrx/store';
-import {IPoint, AppStore} from '../oroute';
 import {SET, ADD_POINT, CLEAR} from '../reducers/route';
 
 @Component({
@@ -28,7 +27,7 @@ export class OsMap {
     isMoving: boolean = false;
     route: Route;
     followsRoads: boolean = true;
-    waypoints: Observable<Array<IPoint>>;
+    waypoints: Observable<Array<Point>>;
     
     constructor(
         private directionsService: DirectionsService,
@@ -107,9 +106,9 @@ export class OsMap {
     };
     
     addWayPointToMap(e, pt) {
-        let p = this.convertToLatLng(pt);
+        let p: Point = this.convertToLatLng(pt);
 
-        this.route.addWayPoint(new WayPoint(p, 1));     //CLASS
+        this.route.addWayPoint({point: {lat: p.lat, lon: p.lon}, trackPointsCount: 1});     //REMOVE
 
         //MF
         this.store.dispatch({
@@ -126,7 +125,7 @@ export class OsMap {
             this.directionsService.getRouteBetween(from, to)
                 .then((response) => {
                     this.route.addPoints(response);
-                    this.route.lastWayPoint().routePoints = response.length;
+                    this.route.lastWayPoint().trackPointsCount = response.length;
                     this.draw();
                 }, function(response) {
                     console.error('Problem with directions service:', response)
@@ -140,9 +139,9 @@ export class OsMap {
         this.ol.Event.stop(e);
     };
     
-    convertToLatLng(point) {
-        let latLng = this.gridProjection.getLonLatFromMapPoint(point);
-        return new Point(latLng.lat, latLng.lon);   //CLASS
+    convertToLatLng(point): Point {
+        let ll = this.gridProjection.getLonLatFromMapPoint(point);
+        return {lat: ll.lat, lon: ll.lon};
     };
     
     drawWholeRoute() {
@@ -167,7 +166,7 @@ export class OsMap {
         );
 
         // Plot waypoints layer
-        let waypointsFeature: WayPoint[] = [];              //CLASS
+        let waypointsFeature: WayPoint[] = [];
         this.route.wayPoints.forEach((w: WayPoint) => {
             waypointsFeature.push(
                 new this.ol.Feature.Vector(this.convertToOsMapPoint(w.point))
@@ -175,7 +174,7 @@ export class OsMap {
         });
         
         // Plot route markers layer
-        let markersFeature: Marker[] = [];                  //CLASS
+        let markersFeature: Marker[] = [];
         this.route.markers.forEach((m: Marker) => {
             markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'));
         });
@@ -192,7 +191,7 @@ export class OsMap {
         this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
     };
       
-    convertRouteToOsFormat(): MapPoint[] {                  //CLASS
+    convertRouteToOsFormat(): MapPoint[] {
         let path: MapPoint[] = [];
         this.route.points.forEach((point) => {
             path.push(this.convertToOsMapPoint(point));
@@ -200,13 +199,13 @@ export class OsMap {
         return path;
     }
     
-    convertToOsMapPoint(point: Point) {                     //CLASS
+    convertToOsMapPoint(point: Point) {
         let mp = new this.ol.LonLat(point.lon, point.lat),
             mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
         return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
     };
     
-    addMarker(marker: Marker, image: string): any {         //CLASS
+    addMarker(marker: Marker, image: string): any {
         return new this.ol.Feature.Vector(
             this.convertToOsMapPoint(marker.point),   /* Geometry */
             { description: marker.name },             /* Attributes */

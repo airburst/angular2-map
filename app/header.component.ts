@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
-import {IPoint} from './oroute';
+import {Point} from './route';
 
 @Component({
     selector: 'app-header',
@@ -13,7 +13,6 @@ import {IPoint} from './oroute';
             <div class="form">
                 <button id="clear" (click)="clear.emit()">Clear Route</button>
                 <button id="delete" (click)="remove.emit()">Remove WayPoint</button>
-                <button id="add" (click)="add.emit()">TEST Add</button>
                 <label for="file">Load GPX or TCX File:</label>
                 <input id="file" type="file" (change)="fileChange($event)">
             </div>
@@ -23,8 +22,7 @@ import {IPoint} from './oroute';
 })
 
 export class AppHeader {
-    @Input() route: IPoint[];
+    @Input() route: Point[];
     @Output() clear = new EventEmitter();
     @Output() remove = new EventEmitter();
-    @Output() add = new EventEmitter();
 }

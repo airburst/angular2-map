@@ -1,61 +1,25 @@
-// LatLng coordinate (like Google Maps and GPX)
-export class Point {
-    constructor(lat: number, lon: number, ele?: number) {
-        this.lat = lat;
-        this.lon = lon;
-        this.ele = ele;
-    }
-    public lat: number;
-    public lon: number;
-    public ele: number;
-
-    public flatten(): any {
-        return [this.lat, this.lon, this.ele];
-    }
+export interface Point {
+    lat: number;
+    lon: number;
 }
 
-// Northing - Easting Coordinate (like Ordnance Survey)
-export class MapPoint {
-    constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-    }
-    public x: number;
-    public y: number;
-
-    public flatten(): any {
-        return [this.x, this.y, ];
-    }
+export interface WayPoint {
+    point: Point;
+    trackPointsCount: number;
 }
 
-export class WayPoint {
-    constructor(point: Point, routePoints: number) {
-        this.point = point;
-        this.routePoints = routePoints;
-    }
-    public routePoints: number;
-    public point: Point;
-    public flatten(): any {
-        return {
-            'point': this.point.flatten(),
-            'routePoints': this.routePoints
-        };
-    }
+export interface Marker {
+    point: Point;
+    name: string;
 }
 
-export class Marker {
-    constructor(name: string, point: Point) {
-        this.name = name;
-        this.point = point;
-    }
-    public name: string;
-    public point: Point;
-    public flatten(): any {
-        return {
-            'name': this.name,
-            'point': this.point.flatten()
-        };
-    }
+export interface MapPoint {
+    x: number;
+    y: number;
+}
+
+export interface AppStore {
+    points: Point[]
 }
 
 export class Route {
@@ -123,32 +87,32 @@ export class Route {
     }
     
     public removelastWayPoint() {
-        let n = this.lastWayPoint().routePoints;
+        let n = this.lastWayPoint().trackPointsCount;
         this.removePoints(n);
         this.wayPoints.pop();
     }
 
-    public calculateElevation(): void {
-        let totalAscent: number = 0,
-            totalDescent: number = 0,
-            lastElevation: number = 0;
+    // public calculateElevation(): void {
+    //     let totalAscent: number = 0,
+    //         totalDescent: number = 0,
+    //         lastElevation: number = 0;
 
-        for (let i: number = 0; i < this.points.length - 1; i++) {
-            let e = this.points[i].ele;
-            if (e !== null) {
-                if (e > lastElevation) {
-                    this.ascent += (e - lastElevation);
-                    lastElevation = e;
-                }
-                if (e < lastElevation) {
-                    this.descent += (lastElevation - e);
-                    lastElevation = e;
-                }
-            }
+    //     for (let i: number = 0; i < this.points.length - 1; i++) {
+    //         let e = this.points[i].ele;
+    //         if (e !== null) {
+    //             if (e > lastElevation) {
+    //                 this.ascent += (e - lastElevation);
+    //                 lastElevation = e;
+    //             }
+    //             if (e < lastElevation) {
+    //                 this.descent += (lastElevation - e);
+    //                 lastElevation = e;
+    //             }
+    //         }
 
-            this.setBounds(this.points[i]);
-        }
-    }
+    //         this.setBounds(this.points[i]);
+    //     }
+    // }
 
     private setBounds(point: Point): void {
         this.minLat = Math.min(this.minLat, point.lat);
@@ -159,10 +123,10 @@ export class Route {
     }
 
     public centre(): Point {
-        return new Point(
-            this.minLat + ((this.maxLat - this.minLat) / 2),
-            this.minLon + ((this.maxLon - this.minLon) / 2)
-        );
+        return {
+            lat: this.minLat + ((this.maxLat - this.minLat) / 2),
+            lon: this.minLon + ((this.maxLon - this.minLon) / 2)
+        }
     }
     
     // Return distance (km) between two points

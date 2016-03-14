@@ -29,7 +29,7 @@ export class DirectionsService {
                         let googleMapPath = result.routes[0].overview_path,
                             points: Point[] = [];
                         googleMapPath.forEach((p) => {
-                            points.push(new Point(p.lat(), p.lng()));
+                            points.push({lat: p.lat(), lon: p.lng()});
                         });
                         resolve(points);
                     } else {

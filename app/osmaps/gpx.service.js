@@ -59,17 +59,26 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                     // Waypoints (gpx/wpt[@lat, @lon, name])
                     var wayPoints = xml.getElementsByTagName('wpt');
                     for (var i = 0; i < wayPoints.length; i++) {
-                        var marker = new route_1.Marker(wayPoints[i].getElementsByTagName('name')[0].textContent, new route_1.Point(parseFloat(wayPoints[i].getAttribute('lat').valueOf()), parseFloat(wayPoints[i].getAttribute('lon').valueOf())));
+                        var marker = {
+                            name: wayPoints[i].getElementsByTagName('name')[0].textContent,
+                            point: {
+                                lat: parseFloat(wayPoints[i].getAttribute('lat').valueOf()),
+                                lon: parseFloat(wayPoints[i].getAttribute('lon').valueOf())
+                            }
+                        };
                         route.addMarker(marker);
                     }
                     // Track Points (gpx/trk/trkseg/trkpt[@lat, @lon, ele])
                     var trackPoints = xml.getElementsByTagName('trkpt');
                     for (var i = 0; i < trackPoints.length; i++) {
-                        var point = new route_1.Point(parseFloat(trackPoints[i].getAttribute('lat').valueOf()), parseFloat(trackPoints[i].getAttribute('lon').valueOf()), parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent));
+                        var point = {
+                            lat: parseFloat(trackPoints[i].getAttribute('lat').valueOf()),
+                            lon: parseFloat(trackPoints[i].getAttribute('lon').valueOf())
+                        };
                         route.addPoint(point);
                     }
                     // Add calculated total ascent and descent
-                    route.calculateElevation();
+                    // route.calculateElevation();
                     route.isImported = true;
                     return route;
                 };
@@ -84,15 +93,18 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                     // Track Points (Track/Trackpoint[Position/LatitudeDegrees, Position/LongitudeDegrees, AltitudeMeters])
                     var trackPoints = xml.getElementsByTagName('Trackpoint');
                     for (var i = 0; i < trackPoints.length; i++) {
-                        var point = new route_1.Point(parseFloat(trackPoints[i].getElementsByTagName('LatitudeDegrees')[0].textContent), parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent), parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent));
+                        var point = {
+                            lat: parseFloat(trackPoints[i].getElementsByTagName('LatitudeDegrees')[0].textContent),
+                            lon: parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent)
+                        };
                         route.addPoint(point);
                     }
                     // Markers - add start and finish points
                     // TODO: find out whether courses support waypoints
-                    route.addMarker(new route_1.Marker('Start', route.points[0]));
-                    route.addMarker(new route_1.Marker('Finish', route.points[route.points.length - 1]));
+                    route.addMarker({ name: 'Start', point: route.points[0] });
+                    route.addMarker({ name: 'Finish', point: route.points[route.points.length - 1] });
                     // Add calculated total ascent and descent
-                    route.calculateElevation();
+                    // route.calculateElevation();
                     route.isImported = true;
                     return route;
                 };

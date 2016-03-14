@@ -10,11 +10,10 @@ import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {AppHeader} from './header.component';
 import {GazetteerService} from './osmaps/gazetteer';
-import {Route, MapPoint} from './route';
+import {Point, Route, MapPoint, AppStore} from './route';
 import {settings} from './config/config';
 
 import {Store} from '@ngrx/store';
-import {IPoint, AppStore} from './oroute';
 import {SET, ADD_POINT, CLEAR} from './reducers/route';
 
 @Component({
@@ -23,7 +22,6 @@ import {SET, ADD_POINT, CLEAR} from './reducers/route';
         <app-header [route]="waypoints | async"
             (clear)="clearRoute()"
             (remove)="removeLast()"
-            (add)="addPoint()"
         >
         </app-header>
         <map></map>
@@ -55,13 +53,10 @@ export class AppComponent implements OnInit {
 
     osmap: OsMap;
     route: Route;
-    waypoints: Observable<Array<IPoint>>;
+    waypoints: Observable<Array<Point>>;
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
-
-        //this.waypoints.subscribe(v => console.log(v));
-        
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
@@ -96,10 +91,6 @@ export class AppComponent implements OnInit {
     removeLast() {
         this.osmap.route.removelastWayPoint();
         this.osmap.draw();
-    }
-
-    addPoint() {       
-        this.store.dispatch({ type: ADD_POINT, payload: {lat:51, lon:-2, ele:100} });
     }
 
     search($event) {

@@ -1,63 +1,10 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Point, MapPoint, WayPoint, Marker, Route;
+    var Route;
     return {
         setters:[],
         execute: function() {
-            // LatLng coordinate (like Google Maps and GPX)
-            Point = (function () {
-                function Point(lat, lon, ele) {
-                    this.lat = lat;
-                    this.lon = lon;
-                    this.ele = ele;
-                }
-                Point.prototype.flatten = function () {
-                    return [this.lat, this.lon, this.ele];
-                };
-                return Point;
-            }());
-            exports_1("Point", Point);
-            // Northing - Easting Coordinate (like Ordnance Survey)
-            MapPoint = (function () {
-                function MapPoint(x, y) {
-                    this.x = x;
-                    this.y = y;
-                }
-                MapPoint.prototype.flatten = function () {
-                    return [this.x, this.y,];
-                };
-                return MapPoint;
-            }());
-            exports_1("MapPoint", MapPoint);
-            WayPoint = (function () {
-                function WayPoint(point, routePoints) {
-                    this.point = point;
-                    this.routePoints = routePoints;
-                }
-                WayPoint.prototype.flatten = function () {
-                    return {
-                        'point': this.point.flatten(),
-                        'routePoints': this.routePoints
-                    };
-                };
-                return WayPoint;
-            }());
-            exports_1("WayPoint", WayPoint);
-            Marker = (function () {
-                function Marker(name, point) {
-                    this.name = name;
-                    this.point = point;
-                }
-                Marker.prototype.flatten = function () {
-                    return {
-                        'name': this.name,
-                        'point': this.point.flatten()
-                    };
-                };
-                return Marker;
-            }());
-            exports_1("Marker", Marker);
             Route = (function () {
                 function Route() {
                     this.name = '';
@@ -102,27 +49,29 @@ System.register([], function(exports_1, context_1) {
                     return this.wayPoints[this.wayPoints.length - 2];
                 };
                 Route.prototype.removelastWayPoint = function () {
-                    var n = this.lastWayPoint().routePoints;
+                    var n = this.lastWayPoint().trackPointsCount;
                     this.removePoints(n);
                     this.wayPoints.pop();
                 };
-                Route.prototype.calculateElevation = function () {
-                    var totalAscent = 0, totalDescent = 0, lastElevation = 0;
-                    for (var i = 0; i < this.points.length - 1; i++) {
-                        var e = this.points[i].ele;
-                        if (e !== null) {
-                            if (e > lastElevation) {
-                                this.ascent += (e - lastElevation);
-                                lastElevation = e;
-                            }
-                            if (e < lastElevation) {
-                                this.descent += (lastElevation - e);
-                                lastElevation = e;
-                            }
-                        }
-                        this.setBounds(this.points[i]);
-                    }
-                };
+                // public calculateElevation(): void {
+                //     let totalAscent: number = 0,
+                //         totalDescent: number = 0,
+                //         lastElevation: number = 0;
+                //     for (let i: number = 0; i < this.points.length - 1; i++) {
+                //         let e = this.points[i].ele;
+                //         if (e !== null) {
+                //             if (e > lastElevation) {
+                //                 this.ascent += (e - lastElevation);
+                //                 lastElevation = e;
+                //             }
+                //             if (e < lastElevation) {
+                //                 this.descent += (lastElevation - e);
+                //                 lastElevation = e;
+                //             }
+                //         }
+                //         this.setBounds(this.points[i]);
+                //     }
+                // }
                 Route.prototype.setBounds = function (point) {
                     this.minLat = Math.min(this.minLat, point.lat);
                     this.maxLat = Math.max(this.maxLat, point.lat);
@@ -131,7 +80,10 @@ System.register([], function(exports_1, context_1) {
                     this.diagonal = this.distanceBetween(this.minLat, this.minLon, this.maxLat, this.maxLon);
                 };
                 Route.prototype.centre = function () {
-                    return new Point(this.minLat + ((this.maxLat - this.minLat) / 2), this.minLon + ((this.maxLon - this.minLon) / 2));
+                    return {
+                        lat: this.minLat + ((this.maxLat - this.minLat) / 2),
+                        lon: this.minLon + ((this.maxLon - this.minLon) / 2)
+                    };
                 };
                 // Return distance (km) between two points
                 Route.prototype.distanceBetween = function (lat1, lon1, lat2, lon2) {

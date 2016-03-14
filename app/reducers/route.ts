@@ -1,5 +1,5 @@
 import {Reducer, Action} from '@ngrx/store';
-import {IPoint, AppStore} from '../oroute';
+import {Point, AppStore} from '../route';
 
 export const CLEAR = 'CLEAR';
 export const SET = 'SET';
