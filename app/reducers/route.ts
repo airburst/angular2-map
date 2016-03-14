@@ -1,15 +1,23 @@
 import {Reducer, Action} from '@ngrx/store';
-import {Route} from '../route';
+import {IPoint, AppStore} from '../oroute';
 
 export const CLEAR = 'CLEAR';
+export const SET = 'SET';
+export const ADD_POINT = 'ADD_POINT';
 
-export const route:Reducer<Route> = (state:Route = new Route(), action:Action) => {
+export const waypoints = (state: any = [], {type, payload}) => {
+    switch (type) {
 
-    switch (action.type) {
+        case SET:
+            return payload;
+
+        case ADD_POINT:
+            return [...state, payload];
+
         case CLEAR:
-            return state.clear();
+            return [];
 
         default:
             return state;
-    }
-}
+        }
+};

@@ -14,14 +14,16 @@ import {Route, MapPoint} from './route';
 import {settings} from './config/config';
 
 import {Store} from '@ngrx/store';
-import {INCREMENT, DECREMENT, RESET} from './reducers/counter';
+import {IPoint, AppStore} from './oroute';
+import {SET, ADD_POINT, CLEAR} from './reducers/route';
 
 @Component({
     selector: 'my-app',
     template: `
-        <app-header [route]="route"
+        <app-header [route]="waypoints | async"
             (clear)="clearRoute()"
             (remove)="removeLast()"
+            (add)="addPoint()"
         >
         </app-header>
         <map></map>
@@ -45,22 +47,20 @@ export class AppComponent implements OnInit {
         private elevationService: ElevationService,
         private directionsService: DirectionsService,
         private gazetteerService: GazetteerService,
-        public store: Store<number>
+        public store: Store<AppStore>
     ) {
         this.route = new Route();
-        this.counter = store.select('counter');
-        //this.oRoute = store.select('route');
+        this.waypoints = store.select('waypoints');
     }
 
     osmap: OsMap;
     route: Route;
-    counter: Observable<number>;
-    oRoute: Observable<Route>;
+    waypoints: Observable<Array<IPoint>>;
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
 
-        this.counter.subscribe(v => console.log(v));
+        this.waypoints.subscribe(v => console.log(v));
         
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
@@ -90,14 +90,16 @@ export class AppComponent implements OnInit {
         this.osmap.route.clear();
         this.osmap.draw();
 
-        this.store.dispatch({ type: INCREMENT });        
+        this.store.dispatch({ type: CLEAR });        
     }
 
     removeLast() {
         this.osmap.route.removelastWayPoint();
         this.osmap.draw();
-        
-        this.store.dispatch({ type: 'DECREMENT' });
+    }
+
+    addPoint() {       
+        this.store.dispatch({ type: ADD_POINT, payload: {lat:51, lon:-2, ele:100} });
     }
 
     search($event) {

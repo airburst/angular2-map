@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './store/counter'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './reducers/route'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1, counter_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1, route_2;
     var AppComponent;
     return {
         setters:[
@@ -54,8 +54,8 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
             function (store_1_1) {
                 store_1 = store_1_1;
             },
-            function (counter_1_1) {
-                counter_1 = counter_1_1;
+            function (route_2_1) {
+                route_2 = route_2_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -68,12 +68,12 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                     this.gazetteerService = gazetteerService;
                     this.store = store;
                     this.route = new route_1.Route();
-                    this.counter = store.select('counter');
+                    this.waypoints = store.select('waypoints');
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    this.counter.subscribe(function (v) { return console.log(v); });
+                    this.waypoints.subscribe(function (v) { return console.log(v); });
                     this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
                     Promise.all(loadPromises)
@@ -102,12 +102,14 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 AppComponent.prototype.clearRoute = function () {
                     this.osmap.route.clear();
                     this.osmap.draw();
-                    this.store.dispatch({ type: counter_1.INCREMENT });
+                    this.store.dispatch({ type: route_2.CLEAR });
                 };
                 AppComponent.prototype.removeLast = function () {
                     this.osmap.route.removelastWayPoint();
                     this.osmap.draw();
-                    this.store.dispatch({ type: 'DECREMENT' });
+                };
+                AppComponent.prototype.addPoint = function () {
+                    this.store.dispatch({ type: route_2.ADD_POINT, payload: { lat: 51, lon: -2, ele: 100 } });
                 };
                 AppComponent.prototype.search = function ($event) {
                     var place = $event.target.value;
@@ -121,7 +123,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <app-header [route]=\"route\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n        >\n        </app-header>\n\n        <map></map>\n        ",
+                        template: "\n        <app-header [route]=\"waypoints | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (add)=\"addPoint()\"\n        >\n        </app-header>\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader],
                         providers: [
                             gpx_service_1.GpxService,
