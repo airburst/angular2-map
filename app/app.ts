@@ -14,7 +14,7 @@ import {Route, MapPoint} from './route';
 import {settings} from './config/config';
 
 import {Store} from '@ngrx/store';
-import {INCREMENT, DECREMENT, RESET} from './store/counter';
+import {INCREMENT, DECREMENT, RESET} from './reducers/counter';
 
 @Component({
     selector: 'my-app',
@@ -24,7 +24,6 @@ import {INCREMENT, DECREMENT, RESET} from './store/counter';
             (remove)="removeLast()"
         >
         </app-header>
-
         <map></map>
         `,
     directives: [FORM_DIRECTIVES, OsMap, AppHeader],
@@ -50,11 +49,13 @@ export class AppComponent implements OnInit {
     ) {
         this.route = new Route();
         this.counter = store.select('counter');
+        //this.oRoute = store.select('route');
     }
 
     osmap: OsMap;
     route: Route;
     counter: Observable<number>;
+    oRoute: Observable<Route>;
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
