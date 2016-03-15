@@ -1,4 +1,6 @@
+/// <reference path="../../node_modules/immutable/dist/immutable.d.ts"/>
 import {Reducer, Action} from '@ngrx/store';
+import {List, Map} from 'immutable';
 import {Point, AppStore} from '../route';
 
 export const CLEAR = 'CLEAR';
