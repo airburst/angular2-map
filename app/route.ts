@@ -1,3 +1,7 @@
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import {Store} from '@ngrx/store';
+
 export interface Point {
     lat: number;
     lon: number;
@@ -20,8 +24,23 @@ export interface MapPoint {
 }
 
 export interface AppStore {
+    name: string,
+    waypoints: WayPoint[],
+    markers: Marker[],
     points: Point[]
 }
+
+export class ORoute {
+    name: Observable<string>;
+    waypoints: Observable<Array<WayPoint>>;
+    points: Observable<Array<Point>>;
+    markers: Observable<Array<Marker>>;
+
+    constructor(private _store: Store<AppStore>) {
+        const store$ = this._store.select<AppStore>('waypoints');
+        //this.waypoints = store$.waypoints;
+    }
+}    
 
 export class Route {
     constructor() {

@@ -10,11 +10,10 @@ import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {AppHeader} from './header.component';
 import {GazetteerService} from './osmaps/gazetteer';
-import {Point, Route, MapPoint, AppStore} from './route';
+import {Point, Route, WayPoint, AppStore, ORoute} from './route';
 import {settings} from './config/config';
-
 import {Store} from '@ngrx/store';
-import {SET, ADD_POINT, CLEAR} from './reducers/route';
+import {SET, ADD, REMOVE, CLEAR} from './reducers/waypoints';
 
 @Component({
     selector: 'my-app',
@@ -54,7 +53,8 @@ export class AppComponent implements OnInit {
 
     osmap: OsMap;
     route: Route;
-    waypoints: Observable<Array<Point>>;
+
+    waypoints: Observable<Array<WayPoint>>;   
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
@@ -93,6 +93,8 @@ export class AppComponent implements OnInit {
     removeLast() {
         this.osmap.route.removelastWayPoint();
         this.osmap.draw();
+
+        this.store.dispatch({ type: REMOVE });        
     }
 
     search($event) {

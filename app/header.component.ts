@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
-import {Point} from './route';
+import {WayPoint} from './route';
 
 @Component({
     selector: 'app-header',
@@ -22,7 +22,7 @@ import {Point} from './route';
 })
 
 export class AppHeader {
-    @Input() route: Point[];
+    @Input() route: WayPoint[];
     @Output() clear = new EventEmitter();
     @Output() remove = new EventEmitter();
     @Output() load = new EventEmitter();

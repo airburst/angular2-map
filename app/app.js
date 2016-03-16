@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './reducers/route'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './reducers/waypoints'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1, route_2;
+    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1, waypoints_1;
     var AppComponent;
     return {
         setters:[
@@ -54,8 +54,8 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
             function (store_1_1) {
                 store_1 = store_1_1;
             },
-            function (route_2_1) {
-                route_2 = route_2_1;
+            function (waypoints_1_1) {
+                waypoints_1 = waypoints_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -102,11 +102,12 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 AppComponent.prototype.clearRoute = function () {
                     this.osmap.route.clear();
                     this.osmap.draw();
-                    this.store.dispatch({ type: route_2.CLEAR });
+                    this.store.dispatch({ type: waypoints_1.CLEAR });
                 };
                 AppComponent.prototype.removeLast = function () {
                     this.osmap.route.removelastWayPoint();
                     this.osmap.draw();
+                    this.store.dispatch({ type: waypoints_1.REMOVE });
                 };
                 AppComponent.prototype.search = function ($event) {
                     var place = $event.target.value;

@@ -1,12 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point, MapPoint, WayPoint, Marker, Route, AppStore} from '../route';
+import {Point, MapPoint, WayPoint, Marker, Route, AppStore, ORoute} from '../route';
 import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {Store} from '@ngrx/store';
-import {SET, ADD_POINT, CLEAR} from '../reducers/route';
+import {SET, ADD, REMOVE, CLEAR} from '../reducers/waypoints';
 
 @Component({
     selector: 'map',
@@ -27,13 +27,16 @@ export class OsMap {
     isMoving: boolean = false;
     route: Route;
     followsRoads: boolean = true;
-    waypoints: Observable<Array<Point>>;
+
+    oRoute: ORoute;
+    waypoints: Observable<Array<WayPoint>>;
     
     constructor(
         private directionsService: DirectionsService,
         public store: Store<AppStore>
     ) {
         this.route = new Route();
+        //this.oRoute = new ORoute();
         this.waypoints = store.select('waypoints');
     }
     
@@ -112,8 +115,8 @@ export class OsMap {
 
         //MF
         this.store.dispatch({
-            type: ADD_POINT, 
-            payload: { lat: p.lat, lon: p.lon, ele: 0 }
+            type: ADD, 
+            payload: { point: { lat: p.lat, lon: p.lon, ele: 0 }, trackPointsCount: 1 }
         });
             
         if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
