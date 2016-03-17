@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point, MapPoint, WayPoint, Marker, Route, AppStore, ORoute} from '../route';
+import {Point, MapPoint, WayPoint, Marker, Route, AppStore} from '../route';
 import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
 import {Observable} from 'rxjs/Observable';
@@ -27,8 +27,6 @@ export class OsMap {
     isMoving: boolean = false;
     route: Route;
     followsRoads: boolean = true;
-
-    oRoute: ORoute;
     waypoints: Observable<Array<WayPoint>>;
     
     constructor(
@@ -36,7 +34,6 @@ export class OsMap {
         public store: Store<AppStore>
     ) {
         this.route = new Route();
-        //this.oRoute = new ORoute();
         this.waypoints = store.select('waypoints');
     }
     

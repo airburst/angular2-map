@@ -51,7 +51,6 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     this.isMoving = false;
                     this.followsRoads = true;
                     this.route = new route_1.Route();
-                    //this.oRoute = new ORoute();
                     this.waypoints = store.select('waypoints');
                 }
                 OsMap.prototype.init = function () {

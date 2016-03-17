@@ -32,7 +32,6 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                             travelMode: window.google.maps.DirectionsTravelMode.BICYCLING
                         }, function (result, status) {
                             if (status === window.google.maps.DirectionsStatus.OK) {
-                                // Hardcoded path to collection of points
                                 var googleMapPath = result.routes[0].overview_path, points_1 = [];
                                 googleMapPath.forEach(function (p) {
                                     points_1.push({ lat: p.lat(), lon: p.lng() });

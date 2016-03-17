@@ -1,20 +1,10 @@
-System.register(['rxjs/add/operator/map'], function(exports_1, context_1) {
+System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ORoute, Route;
+    var Route;
     return {
-        setters:[
-            function (_1) {}],
+        setters:[],
         execute: function() {
-            ORoute = (function () {
-                function ORoute(_store) {
-                    this._store = _store;
-                    var store$ = this._store.select('waypoints');
-                    //this.waypoints = store$.waypoints;
-                }
-                return ORoute;
-            }());
-            exports_1("ORoute", ORoute);
             Route = (function () {
                 function Route() {
                     this.name = '';
