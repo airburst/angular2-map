@@ -1,2 +1,7 @@
-export {waypoints} from './waypoints';
-export {points} from './points';
+import {waypoints} from './waypoints';
+import {points} from './points';
+
+export const reducers = {
+    waypoints,
+    points
+};
