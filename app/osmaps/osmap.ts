@@ -6,7 +6,7 @@ import {settings} from '../config/config';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {Store} from '@ngrx/store';
-import {SET, ADD, REMOVE, CLEAR} from '../reducers/waypoints';
+import {ADD_WAYPOINT, UPDATE_LAST_WAYPOINT} from '../reducers/waypoints';
 
 @Component({
     selector: 'map',
@@ -112,9 +112,14 @@ export class OsMap {
 
         //MF
         this.store.dispatch({
-            type: ADD, 
+            type: ADD_WAYPOINT, 
             payload: { point: { lat: p.lat, lon: p.lon, ele: 0 }, trackPointsCount: 1 }
         });
+
+        // this.store.dispatch({
+        //     type: UPDATE_LAST_WAYPOINT,
+        //     payload: {trackPointsCount: 100}            
+        // })
             
         if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
             let fp = this.route.penultimateWayPoint().point,

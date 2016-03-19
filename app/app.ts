@@ -13,7 +13,7 @@ import {GazetteerService} from './osmaps/gazetteer';
 import {Point, Route, WayPoint, AppStore} from './route';
 import {settings} from './config/config';
 import {Store} from '@ngrx/store';
-import {SET, ADD, REMOVE, CLEAR} from './reducers/waypoints';
+import {SET_WAYPOINTS, ADD_WAYPOINT, UPDATE_LAST_WAYPOINT, REMOVE_WAYPOINT, CLEAR_WAYPOINTS} from './reducers/waypoints';
 
 @Component({
     selector: 'my-app',
@@ -86,14 +86,14 @@ export class AppComponent implements OnInit {
         this.osmap.route.clear();
         this.osmap.draw();
 
-        this.store.dispatch({ type: CLEAR });        
+        this.store.dispatch({ type: CLEAR_WAYPOINTS });        
     }
 
     removeLast() {
         this.osmap.route.removelastWayPoint();
         this.osmap.draw();
 
-        this.store.dispatch({ type: REMOVE });        
+        this.store.dispatch({ type: REMOVE_WAYPOINT });        
     }
 
     search($event) {

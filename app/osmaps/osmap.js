@@ -113,9 +113,13 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     this.route.addWayPoint({ point: { lat: p.lat, lon: p.lon }, trackPointsCount: 1 }); //REMOVE
                     //MF
                     this.store.dispatch({
-                        type: waypoints_1.ADD,
+                        type: waypoints_1.ADD_WAYPOINT,
                         payload: { point: { lat: p.lat, lon: p.lon, ele: 0 }, trackPointsCount: 1 }
                     });
+                    // this.store.dispatch({
+                    //     type: UPDATE_LAST_WAYPOINT,
+                    //     payload: {trackPointsCount: 100}            
+                    // })
                     if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
                         var fp = this.route.penultimateWayPoint().point, from = this.directionsService.convertToGoogleMapPoint(fp), tp = this.route.lastWayPoint().point, to = this.directionsService.convertToGoogleMapPoint(tp);
                         this.directionsService.getRouteBetween(from, to)
