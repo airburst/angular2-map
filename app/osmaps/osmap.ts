@@ -1,12 +1,13 @@
 import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point, MapPoint, WayPoint, Marker, Route, AppStore} from '../route';
+import {Point, MapPoint, WayPoint, Marker, Segment, Route, AppStore} from '../route';
 import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {Store} from '@ngrx/store';
 import {ADD_WAYPOINT, UPDATE_LAST_WAYPOINT} from '../reducers/waypoints';
+import {ADD_SEGMENT, UPDATE_SEGMENT, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from '../reducers/track';
 
 @Component({
     selector: 'map',
@@ -27,21 +28,23 @@ export class OsMap {
     isMoving: boolean = false;
     route: Route;
     followsRoads: boolean = true;
-    waypoints: Observable<Array<WayPoint>>;
+    //waypoints: Observable<Array<WayPoint>>;
+    track: Observable<Array<Segment>>;
     
     constructor(
         private directionsService: DirectionsService,
         public store: Store<AppStore>
     ) {
         this.route = new Route();
-        this.waypoints = store.select('waypoints');
+        //this.waypoints = store.select('waypoints');
+        this.track = store.select('track');
     }
     
     init() {
         this.ol = window.OpenLayers;
         this.os = window.OpenSpace;
 
-        this.waypoints.subscribe(v => console.log(v));        
+        this.track.subscribe(v => console.log(v));        
         
         // Instantiate the map canvas
         let options = {
@@ -112,14 +115,9 @@ export class OsMap {
 
         //MF
         this.store.dispatch({
-            type: ADD_WAYPOINT, 
-            payload: { point: { lat: p.lat, lon: p.lon, ele: 0 }, trackPointsCount: 1 }
+            type: ADD_SEGMENT, 
+            payload: { point: { lat: p.lat, lon: p.lon, ele: 0 } }
         });
-
-        // this.store.dispatch({
-        //     type: UPDATE_LAST_WAYPOINT,
-        //     payload: {trackPointsCount: 100}            
-        // })
             
         if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
             let fp = this.route.penultimateWayPoint().point,

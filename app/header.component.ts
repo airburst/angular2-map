@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
-import {WayPoint} from './route';
+import {Segment} from './route';
 
 @Component({
     selector: 'app-header',
@@ -22,7 +22,7 @@ import {WayPoint} from './route';
 })
 
 export class AppHeader {
-    @Input() route: WayPoint[];
+    @Input() route: Segment[];
     @Output() clear = new EventEmitter();
     @Output() remove = new EventEmitter();
     @Output() load = new EventEmitter();

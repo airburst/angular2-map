@@ -19,11 +19,18 @@ export interface MapPoint {
     y: number;
 }
 
+export interface Segment {
+    id: string;
+    waypoint: Point;
+    track: Array<Point>;
+}
+
 export interface AppStore {
-    name: string,
-    waypoints: WayPoint[],
-    markers: Marker[],
-    points: Point[]
+    name: string;
+    track: Segment[];
+    waypoints: WayPoint[];
+    markers: Marker[];
+    points: Point[];
 }  
 
 export class Route {

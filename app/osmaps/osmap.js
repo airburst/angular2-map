@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../route', '../google/directions.service', '../config/config', 'rxjs/add/operator/map', '@ngrx/store', '../reducers/waypoints'], function(exports_1, context_1) {
+System.register(['angular2/core', '../route', '../google/directions.service', '../config/config', 'rxjs/add/operator/map', '@ngrx/store', '../reducers/track'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, route_1, directions_service_1, config_1, store_1, waypoints_1;
+    var core_1, route_1, directions_service_1, config_1, store_1, track_1;
     var OsMap;
     return {
         setters:[
@@ -30,8 +30,8 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
             function (store_1_1) {
                 store_1 = store_1_1;
             },
-            function (waypoints_1_1) {
-                waypoints_1 = waypoints_1_1;
+            function (track_1_1) {
+                track_1 = track_1_1;
             }],
         execute: function() {
             OsMap = (function () {
@@ -51,12 +51,13 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     this.isMoving = false;
                     this.followsRoads = true;
                     this.route = new route_1.Route();
-                    this.waypoints = store.select('waypoints');
+                    //this.waypoints = store.select('waypoints');
+                    this.track = store.select('track');
                 }
                 OsMap.prototype.init = function () {
                     this.ol = window.OpenLayers;
                     this.os = window.OpenSpace;
-                    this.waypoints.subscribe(function (v) { return console.log(v); });
+                    this.track.subscribe(function (v) { return console.log(v); });
                     // Instantiate the map canvas
                     var options = {
                         controls: [
@@ -113,13 +114,9 @@ System.register(['angular2/core', '../route', '../google/directions.service', '.
                     this.route.addWayPoint({ point: { lat: p.lat, lon: p.lon }, trackPointsCount: 1 }); //REMOVE
                     //MF
                     this.store.dispatch({
-                        type: waypoints_1.ADD_WAYPOINT,
-                        payload: { point: { lat: p.lat, lon: p.lon, ele: 0 }, trackPointsCount: 1 }
+                        type: track_1.ADD_SEGMENT,
+                        payload: { point: { lat: p.lat, lon: p.lon, ele: 0 } }
                     });
-                    // this.store.dispatch({
-                    //     type: UPDATE_LAST_WAYPOINT,
-                    //     payload: {trackPointsCount: 100}            
-                    // })
                     if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
                         var fp = this.route.penultimateWayPoint().point, from = this.directionsService.convertToGoogleMapPoint(fp), tp = this.route.lastWayPoint().point, to = this.directionsService.convertToGoogleMapPoint(tp);
                         this.directionsService.getRouteBetween(from, to)

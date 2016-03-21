@@ -10,15 +10,16 @@ import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {AppHeader} from './header.component';
 import {GazetteerService} from './osmaps/gazetteer';
-import {Point, Route, WayPoint, AppStore} from './route';
+import {Point, Route, WayPoint, Segment, AppStore} from './route';
 import {settings} from './config/config';
 import {Store} from '@ngrx/store';
-import {SET_WAYPOINTS, ADD_WAYPOINT, UPDATE_LAST_WAYPOINT, REMOVE_WAYPOINT, CLEAR_WAYPOINTS} from './reducers/waypoints';
+//import {SET_WAYPOINTS, ADD_WAYPOINT, UPDATE_LAST_WAYPOINT, REMOVE_WAYPOINT, CLEAR_WAYPOINTS} from './reducers/waypoints';
+import {ADD_SEGMENT, UPDATE_SEGMENT, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
 
 @Component({
     selector: 'my-app',
     template: `
-        <app-header [route]="waypoints | async"
+        <app-header [route]="track | async"
             (clear)="clearRoute()"
             (remove)="removeLast()"
             (load)="fileChange($event)"
@@ -48,12 +49,14 @@ export class AppComponent implements OnInit {
         public store: Store<AppStore>
     ) {
         this.route = new Route();
-        this.waypoints = store.select('waypoints');
+        //this.waypoints = store.select('waypoints');
+        this.track = store.select('track');
     }
 
     osmap: OsMap;
     route: Route;
-    waypoints: Observable<Array<WayPoint>>;   
+    //waypoints: Observable<Array<WayPoint>>;   
+    track: Observable<Array<Segment>>;
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
@@ -86,14 +89,14 @@ export class AppComponent implements OnInit {
         this.osmap.route.clear();
         this.osmap.draw();
 
-        this.store.dispatch({ type: CLEAR_WAYPOINTS });        
+        this.store.dispatch({ type: CLEAR_TRACK });        
     }
 
     removeLast() {
         this.osmap.route.removelastWayPoint();
         this.osmap.draw();
 
-        this.store.dispatch({ type: REMOVE_WAYPOINT });        
+        this.store.dispatch({ type: REMOVE_LAST_SEGMENT });        
     }
 
     search($event) {
