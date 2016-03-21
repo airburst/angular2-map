@@ -15,7 +15,7 @@ export const track = (state: any = [], action: Action) => {
             return action.payload;
 
         case ADD_SEGMENT:
-            return [...state, addUUID(action.payload)];
+            return [...state, action.payload];
 
         case UPDATE_SEGMENT:
             return state.map(segment => {
@@ -34,16 +34,5 @@ export const track = (state: any = [], action: Action) => {
             return state;
     }
 
-    // Utility functions to create UUID
-    function addUUID(segment: Segment): Segment {
-        return Object.assign({}, segment, {id: generateUUID(action.payload)});
-    }
-
-    function generateUUID(): string {
-        return ('' + 1e7 + -1e3 + -4e3 + -8e3 + -1e11)
-            .replace(/1|0/g, function() {
-                return (0 | Math.random() * 16).toString(16);
-            });
-    };
 };
 

@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
 import {Point, MapPoint, WayPoint, Marker, Segment, Route, AppStore} from '../route';
+import {uuid} from '../utils/utils';
 import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
 import {Observable} from 'rxjs/Observable';
@@ -28,7 +29,6 @@ export class OsMap {
     isMoving: boolean = false;
     route: Route;
     followsRoads: boolean = true;
-    //waypoints: Observable<Array<WayPoint>>;
     track: Observable<Array<Segment>>;
     
     constructor(
@@ -36,7 +36,6 @@ export class OsMap {
         public store: Store<AppStore>
     ) {
         this.route = new Route();
-        //this.waypoints = store.select('waypoints');
         this.track = store.select('track');
     }
     
@@ -116,7 +115,7 @@ export class OsMap {
         //MF
         this.store.dispatch({
             type: ADD_SEGMENT, 
-            payload: { point: { lat: p.lat, lon: p.lon, ele: 0 } }
+            payload: { id: uuid(), point: { lat: p.lat, lon: p.lon, ele: 0 } }
         });
             
         if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {

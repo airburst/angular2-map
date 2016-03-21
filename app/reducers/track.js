@@ -17,7 +17,7 @@ System.register([], function(exports_1, context_1) {
                     case SET_TRACK:
                         return action.payload;
                     case ADD_SEGMENT:
-                        return state.concat([addUUID(action.payload)]);
+                        return state.concat([action.payload]);
                     case UPDATE_SEGMENT:
                         return state.map(function (segment) {
                             return segment.id === action.payload.id ? Object.assign({}, segment, action.payload) : segment;
@@ -31,17 +31,6 @@ System.register([], function(exports_1, context_1) {
                     default:
                         return state;
                 }
-                // Utility functions to create UUID
-                function addUUID(segment) {
-                    return Object.assign({}, segment, { id: generateUUID(action.payload) });
-                }
-                function generateUUID() {
-                    return ('' + 1e7 + -1e3 + -4e3 + -8e3 + -1e11)
-                        .replace(/1|0/g, function () {
-                        return (0 | Math.random() * 16).toString(16);
-                    });
-                }
-                ;
             });
         }
     }
