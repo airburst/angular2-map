@@ -57,9 +57,9 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     this.track = store.select('track');
                 }
                 OsMap.prototype.init = function () {
+                    var _this = this;
                     this.ol = window.OpenLayers;
                     this.os = window.OpenSpace;
-                    this.track.subscribe(function (v) { return console.log(v); });
                     // Instantiate the map canvas
                     var options = {
                         controls: [
@@ -91,6 +91,10 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     this.osMap.events.register('touchmove', this.osMap, function () { this.isMoving = true; });
                     this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
                     this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
+                    this.track.subscribe(function (v) {
+                        console.log(v);
+                        _this.draw(v);
+                    });
                 };
                 ;
                 OsMap.prototype.touchPoint = function (e) {
@@ -112,27 +116,24 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                 ;
                 OsMap.prototype.addWayPointToMap = function (e, pt) {
                     var _this = this;
-                    var p = this.convertToLatLng(pt);
-                    this.route.addWayPoint({ point: { lat: p.lat, lon: p.lon }, trackPointsCount: 1 }); //REMOVE
-                    //MF
+                    var p = this.convertToLatLng(pt), uid = utils_1.uuid();
                     this.store.dispatch({
                         type: track_1.ADD_SEGMENT,
-                        payload: { id: utils_1.uuid(), point: { lat: p.lat, lon: p.lon, ele: 0 } }
+                        payload: { id: uid, point: { lat: p.lat, lon: p.lon, ele: 0 }, track: [] }
                     });
-                    if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
-                        var fp = this.route.penultimateWayPoint().point, from = this.directionsService.convertToGoogleMapPoint(fp), tp = this.route.lastWayPoint().point, to = this.directionsService.convertToGoogleMapPoint(tp);
+                    // Get value from Observable
+                    var track = this.track.destination.value.track;
+                    if ((this.followsRoads) && (track.length > 1)) {
+                        var fp = track[track.length - 2].point, from = this.directionsService.convertToGoogleMapPoint(fp), tp = track[track.length - 1].point, to = this.directionsService.convertToGoogleMapPoint(tp);
                         this.directionsService.getRouteBetween(from, to)
                             .then(function (response) {
-                            _this.route.addPoints(response);
-                            _this.route.lastWayPoint().trackPointsCount = response.length;
-                            _this.draw();
+                            _this.store.dispatch({
+                                type: track_1.UPDATE_SEGMENT,
+                                payload: { id: uid, track: response }
+                            });
                         }, function (response) {
                             console.error('Problem with directions service:', response);
                         });
-                    }
-                    else {
-                        this.route.addPoint(p);
-                        this.draw();
                     }
                     this.ol.Event.stop(e);
                 };
@@ -145,7 +146,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                 OsMap.prototype.drawWholeRoute = function () {
                     var centre = this.convertToOsMapPoint(this.route.centre());
                     this.centreMap(centre.x, centre.y, this.route.getZoomLevel());
-                    this.draw();
+                    //this.draw();
                 };
                 ;
                 OsMap.prototype.centreMap = function (easting, northing, zoom) {
@@ -161,37 +162,39 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     this.osMap.setCenter(new this.os.MapPoint(this.easting, this.northing), this.zoom);
                 };
                 ;
-                OsMap.prototype.draw = function () {
+                OsMap.prototype.draw = function (track) {
                     var _this = this;
-                    var path = this.convertRouteToOsFormat();
+                    var path = this.convertRouteToOsFormat(track);
                     // Plot route layer
                     var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(path), null, config_1.settings.routeStyle);
                     // Plot waypoints layer
                     var waypointsFeature = [];
-                    this.route.wayPoints.forEach(function (w) {
+                    track.forEach(function (w) {
                         waypointsFeature.push(new _this.ol.Feature.Vector(_this.convertToOsMapPoint(w.point)));
                     });
                     // Plot route markers layer
-                    var markersFeature = [];
-                    this.route.markers.forEach(function (m) {
-                        markersFeature.push(_this.addMarker(m, 'dist/assets/images/map-marker.png'));
-                    });
+                    // let markersFeature: Marker[] = [];
+                    // this.route.markers.forEach((m: Marker) => {
+                    //     markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'));
+                    // });
                     // Replace existing layers
                     this.pointVectorLayer.destroyFeatures();
                     this.pointVectorLayer.addFeatures(waypointsFeature);
                     this.lineVectorLayer.destroyFeatures();
                     this.lineVectorLayer.addFeatures([routeFeature]);
-                    this.markerVectorLayer.destroyFeatures();
-                    this.markerVectorLayer.addFeatures(markersFeature);
+                    // this.markerVectorLayer.destroyFeatures();
+                    // this.markerVectorLayer.addFeatures(markersFeature);
                     // Update distance
                     this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
                 };
                 ;
-                OsMap.prototype.convertRouteToOsFormat = function () {
+                OsMap.prototype.convertRouteToOsFormat = function (track) {
                     var _this = this;
                     var path = [];
-                    this.route.points.forEach(function (point) {
-                        path.push(_this.convertToOsMapPoint(point));
+                    track.forEach(function (segment) {
+                        segment.track.forEach(function (point) {
+                            path.push(_this.convertToOsMapPoint(point));
+                        });
                     });
                     return path;
                 };

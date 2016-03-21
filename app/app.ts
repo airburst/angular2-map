@@ -13,7 +13,6 @@ import {GazetteerService} from './osmaps/gazetteer';
 import {Point, Route, WayPoint, Segment, AppStore} from './route';
 import {settings} from './config/config';
 import {Store} from '@ngrx/store';
-//import {SET_WAYPOINTS, ADD_WAYPOINT, UPDATE_LAST_WAYPOINT, REMOVE_WAYPOINT, CLEAR_WAYPOINTS} from './reducers/waypoints';
 import {ADD_SEGMENT, UPDATE_SEGMENT, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
 
 @Component({
@@ -49,13 +48,11 @@ export class AppComponent implements OnInit {
         public store: Store<AppStore>
     ) {
         this.route = new Route();
-        //this.waypoints = store.select('waypoints');
         this.track = store.select('track');
     }
 
     osmap: OsMap;
-    route: Route;
-    //waypoints: Observable<Array<WayPoint>>;   
+    route: Route; 
     track: Observable<Array<Segment>>;
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
@@ -78,24 +75,22 @@ export class AppComponent implements OnInit {
     fileChange($event) {
         if (this.fileService.supports($event.target)) {
             this.fileService.readTextFile($event.target, (...data) => {    
-                this.osmap.route = this.gpxService.read(data);
+                //this.osmap.route = this.gpxService.read(data);
                 //this.store.dispatch({ type: SET, payload: this.osmap.route });
-                this.osmap.drawWholeRoute();
+                //this.osmap.drawWholeRoute();
             });
         }
     }
 
     clearRoute() {
-        this.osmap.route.clear();
-        this.osmap.draw();
-
+        // this.osmap.route.clear();
+        // this.osmap.draw();
         this.store.dispatch({ type: CLEAR_TRACK });        
     }
 
     removeLast() {
-        this.osmap.route.removelastWayPoint();
-        this.osmap.draw();
-
+        // this.osmap.route.removelastWayPoint();
+        // this.osmap.draw();
         this.store.dispatch({ type: REMOVE_LAST_SEGMENT });        
     }
 

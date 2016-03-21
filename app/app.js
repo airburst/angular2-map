@@ -68,7 +68,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                     this.gazetteerService = gazetteerService;
                     this.store = store;
                     this.route = new route_1.Route();
-                    //this.waypoints = store.select('waypoints');
                     this.track = store.select('track');
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
@@ -87,27 +86,26 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                     });
                 };
                 AppComponent.prototype.fileChange = function ($event) {
-                    var _this = this;
                     if (this.fileService.supports($event.target)) {
                         this.fileService.readTextFile($event.target, function () {
                             var data = [];
                             for (var _i = 0; _i < arguments.length; _i++) {
                                 data[_i - 0] = arguments[_i];
                             }
-                            _this.osmap.route = _this.gpxService.read(data);
+                            //this.osmap.route = this.gpxService.read(data);
                             //this.store.dispatch({ type: SET, payload: this.osmap.route });
-                            _this.osmap.drawWholeRoute();
+                            //this.osmap.drawWholeRoute();
                         });
                     }
                 };
                 AppComponent.prototype.clearRoute = function () {
-                    this.osmap.route.clear();
-                    this.osmap.draw();
+                    // this.osmap.route.clear();
+                    // this.osmap.draw();
                     this.store.dispatch({ type: track_1.CLEAR_TRACK });
                 };
                 AppComponent.prototype.removeLast = function () {
-                    this.osmap.route.removelastWayPoint();
-                    this.osmap.draw();
+                    // this.osmap.route.removelastWayPoint();
+                    // this.osmap.draw();
                     this.store.dispatch({ type: track_1.REMOVE_LAST_SEGMENT });
                 };
                 AppComponent.prototype.search = function ($event) {

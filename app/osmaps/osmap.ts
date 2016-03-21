@@ -7,7 +7,6 @@ import {settings} from '../config/config';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {Store} from '@ngrx/store';
-import {ADD_WAYPOINT, UPDATE_LAST_WAYPOINT} from '../reducers/waypoints';
 import {ADD_SEGMENT, UPDATE_SEGMENT, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from '../reducers/track';
 
 @Component({
@@ -41,9 +40,7 @@ export class OsMap {
     
     init() {
         this.ol = window.OpenLayers;
-        this.os = window.OpenSpace;
-
-        this.track.subscribe(v => console.log(v));        
+        this.os = window.OpenSpace;        
         
         // Instantiate the map canvas
         let options = {
@@ -86,6 +83,11 @@ export class OsMap {
         this.osMap.events.register('touchmove', this.osMap, function() { this.isMoving = true; });
         this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
         this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
+        
+        this.track.subscribe((v) => {
+            console.log(v); 
+            this.draw(v);
+        });
     };
     
     touchPoint(e) {
@@ -108,34 +110,33 @@ export class OsMap {
     };
     
     addWayPointToMap(e, pt) {
-        let p: Point = this.convertToLatLng(pt);
+        let p: Point = this.convertToLatLng(pt),
+            uid = uuid();
 
-        this.route.addWayPoint({point: {lat: p.lat, lon: p.lon}, trackPointsCount: 1});     //REMOVE
-
-        //MF
         this.store.dispatch({
             type: ADD_SEGMENT, 
-            payload: { id: uuid(), point: { lat: p.lat, lon: p.lon, ele: 0 } }
+            payload: { id: uid, point: { lat: p.lat, lon: p.lon, ele: 0 }, track: [] }
         });
             
-        if ((this.followsRoads) && (this.route.wayPoints.length > 1)) {
-            let fp = this.route.penultimateWayPoint().point,
+        // Get value from Observable
+        let track = this.track.destination.value.track;
+        
+        if ((this.followsRoads) && (track.length > 1)) {
+            let fp = track[track.length - 2].point,
                 from = this.directionsService.convertToGoogleMapPoint(fp),
-                tp = this.route.lastWayPoint().point,
+                tp = track[track.length - 1].point,
                 to = this.directionsService.convertToGoogleMapPoint(tp);
-                
+ 
             this.directionsService.getRouteBetween(from, to)
                 .then((response) => {
-                    this.route.addPoints(response);
-                    this.route.lastWayPoint().trackPointsCount = response.length;
-                    this.draw();
+                    this.store.dispatch({
+                        type: UPDATE_SEGMENT,
+                        payload: {id: uid, track: response}
+                    });
                 }, function(response) {
                     console.error('Problem with directions service:', response)
                 });
 
-        } else {
-            this.route.addPoint(p);
-            this.draw();
         }
 
         this.ol.Event.stop(e);
@@ -149,7 +150,7 @@ export class OsMap {
     drawWholeRoute() {
         let centre = this.convertToOsMapPoint(this.route.centre());
         this.centreMap(centre.x, centre.y, this.route.getZoomLevel());
-        this.draw();
+        //this.draw();
     };
     
     centreMap(easting?: number, northing?: number, zoom?: number): void {
@@ -159,8 +160,8 @@ export class OsMap {
         this.osMap.setCenter(new this.os.MapPoint(this.easting, this.northing), this.zoom);
     };
     
-    draw(): void {
-        let path = this.convertRouteToOsFormat();
+    draw(track: Segment[]): void {
+        let path = this.convertRouteToOsFormat(track);
 
         // Plot route layer
         let routeFeature = new this.ol.Feature.Vector(
@@ -169,34 +170,36 @@ export class OsMap {
 
         // Plot waypoints layer
         let waypointsFeature: WayPoint[] = [];
-        this.route.wayPoints.forEach((w: WayPoint) => {
+        track.forEach((w: WayPoint) => {
             waypointsFeature.push(
                 new this.ol.Feature.Vector(this.convertToOsMapPoint(w.point))
             );
         });
         
         // Plot route markers layer
-        let markersFeature: Marker[] = [];
-        this.route.markers.forEach((m: Marker) => {
-            markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'));
-        });
+        // let markersFeature: Marker[] = [];
+        // this.route.markers.forEach((m: Marker) => {
+        //     markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'));
+        // });
 
         // Replace existing layers
         this.pointVectorLayer.destroyFeatures();
         this.pointVectorLayer.addFeatures(waypointsFeature);
         this.lineVectorLayer.destroyFeatures();
         this.lineVectorLayer.addFeatures([routeFeature]);
-        this.markerVectorLayer.destroyFeatures();
-        this.markerVectorLayer.addFeatures(markersFeature);
+        // this.markerVectorLayer.destroyFeatures();
+        // this.markerVectorLayer.addFeatures(markersFeature);
         
         // Update distance
         this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
     };
       
-    convertRouteToOsFormat(): MapPoint[] {
+    convertRouteToOsFormat(track: Segment[]): MapPoint[] {
         let path: MapPoint[] = [];
-        this.route.points.forEach((point) => {
-            path.push(this.convertToOsMapPoint(point));
+        track.forEach((segment) => {
+            segment.track.forEach((point) => {
+                path.push(this.convertToOsMapPoint(point));
+            });
         });
         return path;
     }
