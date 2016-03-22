@@ -4,7 +4,8 @@ import {chunk, flatten, elevationData} from '../utils/utils';
 import {Point, MapPoint, Segment, AppStore} from '../route';
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
-import {SET_ELEVATION, ADD_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from '../reducers/elevation';
+import {ADD_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from '../reducers/elevation';
+import {UPDATE_SEGMENT} from '../reducers/track';
 
 @Injectable()
 export class ElevationService {
@@ -32,6 +33,7 @@ export class ElevationService {
         // Subscribe to changes in the track and get elevation for 
         // the latest segment, if it hasn't already been processed
         this.track.subscribe((v) => {
+            console.log('Track:', v)
             this.getElevationData(v[v.length - 1]);
         });
         
@@ -46,16 +48,20 @@ export class ElevationService {
             path: Point[] = [],
             elevationPromises;
 
-        if ((segment !== undefined) && (segment.track.length > 0)) {
+        if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
             path = this.convertToGoogleRoute(segment.track);
             pathArray = chunk(path, this.sampleSize);
             elevationPromises = pathArray.map(this.elevation.bind(this));
             Promise.all(elevationPromises)
                 .then(function(response) {
-                    // Add array to the elevation store
+                    // Add array to the elevation store and set route segment.hasElevationData
                     this.store.dispatch({
                         type: ADD_ELEVATION,
                         payload: elevationData(flatten(response))
+                    });
+                    this.store.dispatch({
+                        type: UPDATE_SEGMENT,
+                        payload: {id: segment.id, hasElevationData: true}
                     });
                 }.bind(this), function(error) {
                     console.log(error);

@@ -113,7 +113,7 @@ export class OsMap {
 
         this.store.dispatch({
             type: ADD_SEGMENT, 
-            payload: { id: uid, waypoint: { lat: p.lat, lon: p.lon, ele: 0 }, track: [] }
+            payload: { id: uid, waypoint: { lat: p.lat, lon: p.lon, ele: 0 }, track: [], hasElevationData: false }
         });
             
         // Get value from Observable

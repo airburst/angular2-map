@@ -115,7 +115,7 @@ System.register(['angular2/core', '../utils/utils', '../google/directions.servic
                     var p = this.convertToLatLng(pt), uid = utils_1.uuid();
                     this.store.dispatch({
                         type: track_1.ADD_SEGMENT,
-                        payload: { id: uid, waypoint: { lat: p.lat, lon: p.lon, ele: 0 }, track: [] }
+                        payload: { id: uid, waypoint: { lat: p.lat, lon: p.lon, ele: 0 }, track: [], hasElevationData: false }
                     });
                     // Get value from Observable
                     var track = this.track.destination.value.track;

@@ -23,6 +23,7 @@ export interface Segment {
     id: string;
     waypoint: Point;
     track: Array<Point>;
+    hasElevationData: boolean;
 }
 
 export interface AppStore {

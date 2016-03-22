@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/elevation'], function(exports_1, context_1) {
+System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/elevation', '../reducers/track'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, utils_1, store_1, elevation_1;
+    var core_1, utils_1, store_1, elevation_1, track_1;
     var ElevationService;
     return {
         setters:[
@@ -25,6 +25,9 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/
             },
             function (elevation_1_1) {
                 elevation_1 = elevation_1_1;
+            },
+            function (track_1_1) {
+                track_1 = track_1_1;
             }],
         execute: function() {
             ElevationService = (function () {
@@ -66,6 +69,7 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/
                     // Subscribe to changes in the track and get elevation for 
                     // the latest segment, if it hasn't already been processed
                     this.track.subscribe(function (v) {
+                        console.log('Track:', v);
                         _this.getElevationData(v[v.length - 1]);
                     });
                     this.ele.subscribe(function (v) {
@@ -75,16 +79,20 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/
                 ;
                 ElevationService.prototype.getElevationData = function (segment) {
                     var i, pathArray, path = [], elevationPromises;
-                    if ((segment !== undefined) && (segment.track.length > 0)) {
+                    if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
                         path = this.convertToGoogleRoute(segment.track);
                         pathArray = utils_1.chunk(path, this.sampleSize);
                         elevationPromises = pathArray.map(this.elevation.bind(this));
                         Promise.all(elevationPromises)
                             .then(function (response) {
-                            // Add array to the elevation store
+                            // Add array to the elevation store and set route segment.hasElevationData
                             this.store.dispatch({
                                 type: elevation_1.ADD_ELEVATION,
                                 payload: utils_1.elevationData(utils_1.flatten(response))
+                            });
+                            this.store.dispatch({
+                                type: track_1.UPDATE_SEGMENT,
+                                payload: { id: segment.id, hasElevationData: true }
                             });
                         }.bind(this), function (error) {
                             console.log(error);

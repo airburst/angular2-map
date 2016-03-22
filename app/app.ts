@@ -82,11 +82,13 @@ export class AppComponent implements OnInit {
     }
 
     clearRoute() {
-        this.store.dispatch({ type: CLEAR_TRACK });        
+        this.store.dispatch({ type: CLEAR_TRACK });
+        this.store.dispatch({ type: CLEAR_ELEVATION });       
     }
 
     removeLast() {
-        this.store.dispatch({ type: REMOVE_LAST_SEGMENT });        
+        this.store.dispatch({ type: REMOVE_LAST_SEGMENT });
+        this.store.dispatch({ type: REMOVE_ELEVATION });  
     }
 
     search($event) {
