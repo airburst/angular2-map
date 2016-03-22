@@ -11,6 +11,8 @@ export const initialState: RouteDetails = {
     descent: 0,
     easting: 386210,
     northing: 168060,
+    lat: 0,
+    lon: 0,
     zoom: 7,
     followsRoads: true,
     isImported: false

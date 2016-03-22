@@ -10,10 +10,8 @@ export class GpxService {
 
     public appStore: AppStore;
 
-    constructor(public store: Store<AppStore>) {
-        //this.init();
-    }
-    
+    constructor(public store: Store<AppStore>) { }
+
     init() {
         this.appStore = <AppStore>{
             details: initialState,
@@ -29,7 +27,6 @@ export class GpxService {
             ext: string = gpxData[2];
 
         this.init();
-        
         try {
             let parser: DOMParser = new DOMParser();
             let xmlDoc: Document = parser.parseFromString(route, 'text/xml');
@@ -109,11 +106,11 @@ export class GpxService {
         this.appStore.markers.push({ name: 'Start', point: track[0] });
         this.appStore.markers.push({ name: 'Finish', point: track[track.length - 1] });
         this.appStore.details.isImported = true;
-        
+
         this.updateStore();
     }
 
-    updateStore() {       
+    updateStore() {
         this.store.dispatch({
             type: SET_DETAILS,
             payload: this.appStore.details

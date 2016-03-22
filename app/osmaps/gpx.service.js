@@ -33,7 +33,6 @@ System.register(['angular2/core', '@ngrx/store', '../reducers/track', '../reduce
             GpxService = (function () {
                 function GpxService(store) {
                     this.store = store;
-                    //this.init();
                 }
                 GpxService.prototype.init = function () {
                     this.appStore = {

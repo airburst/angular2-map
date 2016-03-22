@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation', './reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1, track_1, elevation_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1, track_1, elevation_1, details_1;
     var AppComponent;
     return {
         setters:[
@@ -58,6 +58,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             },
             function (elevation_1_1) {
                 elevation_1 = elevation_1_1;
+            },
+            function (details_1_1) {
+                details_1 = details_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -84,6 +87,14 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         _this.osmap.init();
                     }, function (value) {
                         console.error('Script not found:', value);
+                    });
+                    // Set centre and zoom when route changes ===TODO: may want to move this into osmap
+                    this.route.track$.subscribe(function (t) {
+                        var b = route_1.boundingRectangle(t);
+                        _this.store.dispatch({
+                            type: details_1.UPDATE_DETAILS,
+                            payload: { lat: b.lat, lon: b.lon, zoom: b.zoom }
+                        });
                     });
                 };
                 AppComponent.prototype.fileChange = function ($event) {

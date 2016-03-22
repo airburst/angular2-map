@@ -8,12 +8,12 @@ import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {AppHeader} from './header.component';
 import {GazetteerService} from './osmaps/gazetteer';
-import {Route, RouteDetails, AppStore} from './route';
+import {Route, RouteDetails, AppStore, boundingRectangle} from './route';
 import {settings} from './config/config';
 import {Store} from '@ngrx/store';
 import {SET_TRACK, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
 import {SET_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from './reducers/elevation';
-import {SET_DETAILS, CLEAR_DETAILS} from './reducers/details';
+import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS} from './reducers/details';
 
 @Component({
     selector: 'my-app',
@@ -40,7 +40,7 @@ import {SET_DETAILS, CLEAR_DETAILS} from './reducers/details';
 export class AppComponent implements OnInit {
     
     public osmap: OsMap;
-    private route: Route;
+    public route: Route;
     
     constructor(
         private gpxService: GpxService,
@@ -69,6 +69,15 @@ export class AppComponent implements OnInit {
             }, function(value) {
                 console.error('Script not found:', value)
             });
+            
+        // Set centre and zoom when route changes ===TODO: may want to move this into osmap
+        this.route.track$.subscribe((t) => {
+            let b = boundingRectangle(t);
+            this.store.dispatch({
+                type: UPDATE_DETAILS,
+                payload: { lat: b.lat, lon: b.lon, zoom: b.zoom }
+            });
+        });
     }
 
     fileChange($event) {

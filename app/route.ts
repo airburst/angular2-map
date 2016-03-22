@@ -1,8 +1,6 @@
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
-// import {ADD_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from './reducers/elevation';
-// import {UPDATE_SEGMENT} from './reducers/track';
-// import {UPDATE_DETAILS} from './reducers/details';
+import {UPDATE_DETAILS} from './reducers/details';
 
 export interface Point {
     lat: number;
@@ -39,6 +37,8 @@ export interface RouteDetails {
     descent: number;
     easting?: number;
     northing?: number;
+    lat?: number;
+    lon?: number;
     zoom?: number;
     followsRoads: boolean;
     isImported: boolean;
@@ -49,52 +49,68 @@ export interface AppStore {
     track: Segment[];
     elevation: any[];
     markers: Marker[];
-}  
+}
 
 export class Route {
     public details$: Observable<RouteDetails>;
     public track$: Observable<Array<Segment>>;
     public elevation$: Observable<Array<any>>;
-    
+
     constructor(store: Store<AppStore>) {
         this.details$ = store.select('details');
         this.track$ = store.select('track');
         this.elevation$ = store.select('elevation');
     }
-    
-    // private setBounds(point: Point): void {
-    //     this.minLat = Math.min(this.minLat, point.lat);
-    //     this.maxLat = Math.max(this.maxLat, point.lat);
-    //     this.minLon = Math.min(this.minLon, point.lon);
-    //     this.maxLon = Math.max(this.maxLon, point.lon);
-    //     this.diagonal = this.distanceBetween(this.minLat, this.minLon, this.maxLat, this.maxLon);
-    // }
+}
 
-    // public centre(): Point {
-    //     return {
-    //         lat: this.minLat + ((this.maxLat - this.minLat) / 2),
-    //         lon: this.minLon + ((this.maxLon - this.minLon) / 2)
-    //     }
-    // }
-    
-    // Return distance (km) between two points
-    // private distanceBetween(lat1: number, lon1: number, lat2: number, lon2: number): number {
-    //     let p = 0.017453292519943295;    // Math.PI / 180
-    //     let c = Math.cos;
-    //     let a = 0.5 - c((lat2 - lat1) * p) / 2 +
-    //         c(lat1 * p) * c(lat2 * p) *
-    //         (1 - c((lon2 - lon1) * p)) / 2;
-    //     return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
-    // }
+export const boundingRectangle = (tracks: Array<Segment>) => {
+    let b = initialBounds;
+    tracks.forEach(<Segment>(s) => {
+        s.track.forEach((t) => {
+            b.minLat = Math.min(b.minLat, t.lat);
+            b.maxLat = Math.max(b.maxLat, t.lat);
+            b.minLon = Math.min(b.minLon, t.lon);
+            b.maxLon = Math.max(b.maxLon, t.lon);
+        });
+    });
 
-    // public getZoomLevel(): number {
-    //     let distance = this.diagonal;
-    //     if (distance <= 0) { return 10; }
-    //     let z = 10;
-    //     distance = distance / 1.5;
-    //     while (((distance / Math.pow(2, 10 - z)) > 1) && (z > 0)) {
-    //         z -= 1;
-    //     }
-    //     return z + 1;
-    // }
+    let mapCentre = centre(b.minLat, b.minLon, b.maxLat, b.maxLon),
+        diagonal = distanceBetween(b.minLat, b.minLon, b.maxLat, b.maxLon),
+        zoom = getZoomLevel(diagonal);
+
+    return { lat: mapCentre.lat, lon: mapCentre.lon, zoom: zoom };
+}
+
+const initialBounds = {
+    minLat: 1000000,
+    minLon: 1000000,
+    maxLat: -1000000,
+    maxLon: -1000000
+}
+
+const centre = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    return {
+        lat: lat1 + ((lat2 - lat1) / 2),
+        lon: lon1 + ((lon2 - lon1) / 2)
+    }
+}
+
+// Return distance (km) between two points
+const distanceBetween = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    let p = 0.017453292519943295;    // Math.PI / 180
+    let c = Math.cos;
+    let a = 0.5 - c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) *
+        (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+}
+
+const getZoomLevel = (distance: number) => {
+    if (distance <= 0) { return 10; }
+    let z = 10;
+    distance = distance / 1.5;
+    while (((distance / Math.pow(2, 10 - z)) > 1) && (z > 0)) {
+        z -= 1;
+    }
+    return z + 1;
 }
