@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../route', '../utils/utils', '../google/directions.service', '../config/config', 'rxjs/add/operator/map', '@ngrx/store', '../reducers/track'], function(exports_1, context_1) {
+System.register(['angular2/core', '../utils/utils', '../google/directions.service', '../config/config', 'rxjs/add/operator/map', '@ngrx/store', '../reducers/track'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,15 +10,12 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, route_1, utils_1, directions_service_1, config_1, store_1, track_1;
+    var core_1, utils_1, directions_service_1, config_1, store_1, track_1;
     var OsMap;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
-            },
-            function (route_1_1) {
-                route_1 = route_1_1;
             },
             function (utils_1_1) {
                 utils_1 = utils_1_1;
@@ -53,7 +50,6 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     this.gridProjection = {};
                     this.isMoving = false;
                     this.followsRoads = true;
-                    this.route = new route_1.Route();
                     this.track = store.select('track');
                 }
                 OsMap.prototype.init = function () {
@@ -119,12 +115,12 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     var p = this.convertToLatLng(pt), uid = utils_1.uuid();
                     this.store.dispatch({
                         type: track_1.ADD_SEGMENT,
-                        payload: { id: uid, point: { lat: p.lat, lon: p.lon, ele: 0 }, track: [] }
+                        payload: { id: uid, waypoint: { lat: p.lat, lon: p.lon, ele: 0 }, track: [] }
                     });
                     // Get value from Observable
                     var track = this.track.destination.value.track;
                     if ((this.followsRoads) && (track.length > 1)) {
-                        var fp = track[track.length - 2].point, from = this.directionsService.convertToGoogleMapPoint(fp), tp = track[track.length - 1].point, to = this.directionsService.convertToGoogleMapPoint(tp);
+                        var fp = track[track.length - 2].waypoint, from = this.directionsService.convertToGoogleMapPoint(fp), tp = track[track.length - 1].waypoint, to = this.directionsService.convertToGoogleMapPoint(tp);
                         this.directionsService.getRouteBetween(from, to)
                             .then(function (response) {
                             _this.store.dispatch({
@@ -143,12 +139,11 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     return { lat: ll.lat, lon: ll.lon };
                 };
                 ;
-                OsMap.prototype.drawWholeRoute = function () {
-                    var centre = this.convertToOsMapPoint(this.route.centre());
-                    this.centreMap(centre.x, centre.y, this.route.getZoomLevel());
-                    //this.draw();
-                };
-                ;
+                // drawWholeRoute() {
+                //     let centre = this.convertToOsMapPoint(this.route.centre());
+                //     this.centreMap(centre.x, centre.y, this.route.getZoomLevel());
+                //     //this.draw();
+                // };
                 OsMap.prototype.centreMap = function (easting, northing, zoom) {
                     if (easting !== undefined) {
                         this.easting = easting;
@@ -169,8 +164,8 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(path), null, config_1.settings.routeStyle);
                     // Plot waypoints layer
                     var waypointsFeature = [];
-                    track.forEach(function (w) {
-                        waypointsFeature.push(new _this.ol.Feature.Vector(_this.convertToOsMapPoint(w.point)));
+                    track.forEach(function (s) {
+                        waypointsFeature.push(new _this.ol.Feature.Vector(_this.convertToOsMapPoint(s.waypoint)));
                     });
                     // Plot route markers layer
                     // let markersFeature: Marker[] = [];
@@ -185,7 +180,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     // this.markerVectorLayer.destroyFeatures();
                     // this.markerVectorLayer.addFeatures(markersFeature);
                     // Update distance
-                    this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
+                    //this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
                 };
                 ;
                 OsMap.prototype.convertRouteToOsFormat = function (track) {
@@ -220,10 +215,6 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     });
                 };
                 ;
-                OsMap.prototype.calculateDistanceInKm = function () {
-                    var distString = new this.ol.Geometry.Curve(this.convertRouteToOsFormat());
-                    return (distString.getLength() / 1000);
-                };
                 OsMap = __decorate([
                     core_1.Component({
                         selector: 'map',

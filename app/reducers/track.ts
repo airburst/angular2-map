@@ -6,7 +6,7 @@ export const ADD_SEGMENT = 'ADD_SEGMENT';
 export const UPDATE_SEGMENT = 'UPDATE_SEGMENT';
 export const REMOVE_LAST_SEGMENT = 'REMOVE_LAST_SEGMENT';
 
-export const track = (state: any = [], action: Action) => {
+export const track = (state: Array<Segment> = [], action: Action) => {
 
     switch (action.type) {
         case SET_TRACK:

@@ -64,7 +64,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                     this.directionsService = directionsService;
                     this.gazetteerService = gazetteerService;
                     this.store = store;
-                    //this.route = new Route();
                     this.track = store.select('track');
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas

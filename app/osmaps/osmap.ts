@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point, MapPoint, WayPoint, Marker, Segment, Route, AppStore} from '../route';
+import {Point, MapPoint, WayPoint, Marker, Segment, AppStore} from '../route';
 import {uuid} from '../utils/utils';
 import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
@@ -26,7 +26,6 @@ export class OsMap {
     markerVectorLayer: any = {};
     gridProjection: any = {};
     isMoving: boolean = false;
-    route: Route;
     followsRoads: boolean = true;
     track: Observable<Array<Segment>>;
     
@@ -34,7 +33,6 @@ export class OsMap {
         private directionsService: DirectionsService,
         public store: Store<AppStore>
     ) {
-        this.route = new Route();
         this.track = store.select('track');
     }
     
@@ -115,16 +113,16 @@ export class OsMap {
 
         this.store.dispatch({
             type: ADD_SEGMENT, 
-            payload: { id: uid, point: { lat: p.lat, lon: p.lon, ele: 0 }, track: [] }
+            payload: { id: uid, waypoint: { lat: p.lat, lon: p.lon, ele: 0 }, track: [] }
         });
             
         // Get value from Observable
         let track = this.track.destination.value.track;
         
         if ((this.followsRoads) && (track.length > 1)) {
-            let fp = track[track.length - 2].point,
+            let fp = track[track.length - 2].waypoint,
                 from = this.directionsService.convertToGoogleMapPoint(fp),
-                tp = track[track.length - 1].point,
+                tp = track[track.length - 1].waypoint,
                 to = this.directionsService.convertToGoogleMapPoint(tp);
  
             this.directionsService.getRouteBetween(from, to)
@@ -147,11 +145,11 @@ export class OsMap {
         return {lat: ll.lat, lon: ll.lon};
     };
     
-    drawWholeRoute() {
-        let centre = this.convertToOsMapPoint(this.route.centre());
-        this.centreMap(centre.x, centre.y, this.route.getZoomLevel());
-        //this.draw();
-    };
+    // drawWholeRoute() {
+    //     let centre = this.convertToOsMapPoint(this.route.centre());
+    //     this.centreMap(centre.x, centre.y, this.route.getZoomLevel());
+    //     //this.draw();
+    // };
     
     centreMap(easting?: number, northing?: number, zoom?: number): void {
         if (easting !== undefined) { this.easting = easting; }
@@ -169,10 +167,10 @@ export class OsMap {
         );
 
         // Plot waypoints layer
-        let waypointsFeature: WayPoint[] = [];
-        track.forEach((w: WayPoint) => {
+        let waypointsFeature: Point[] = [];
+        track.forEach((s: Segment) => {
             waypointsFeature.push(
-                new this.ol.Feature.Vector(this.convertToOsMapPoint(w.point))
+                new this.ol.Feature.Vector(this.convertToOsMapPoint(s.waypoint))
             );
         });
         
@@ -191,7 +189,7 @@ export class OsMap {
         // this.markerVectorLayer.addFeatures(markersFeature);
         
         // Update distance
-        this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
+        //this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
     };
       
     convertRouteToOsFormat(track: Segment[]): MapPoint[] {
@@ -231,8 +229,8 @@ export class OsMap {
         );
     };
     
-    calculateDistanceInKm(): number {
-        let distString = new this.ol.Geometry.Curve(this.convertRouteToOsFormat());
-        return (distString.getLength() / 1000);
-    }
+    // calculateDistanceInKm(): number {
+    //     let distString = new this.ol.Geometry.Curve(this.convertRouteToOsFormat());
+    //     return (distString.getLength() / 1000);
+    // }
 }
