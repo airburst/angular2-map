@@ -1,6 +1,6 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 import {Injectable} from 'angular2/core';
-import {chunk} from '../utils/utils';
+import {chunk, flatten, elevationData} from '../utils/utils';
 import {Point, MapPoint, Segment, AppStore} from '../route';
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
@@ -14,12 +14,15 @@ export class ElevationService {
     private elevator: any;
     private sampleSize: number;
     private track: Observable<Array<Segment>>;
+    private ele: Observable<Array<any>>;
 
     constructor(public store: Store<AppStore>) {
         this.results = [];
         this.elevator = {};
         this.sampleSize = 240;
         this.track = store.select('track');
+        
+        this.ele = store.select('elevation');
     };
 
     init(): any {
@@ -29,11 +32,15 @@ export class ElevationService {
         // Subscribe to changes in the track and get elevation for 
         // the latest segment, if it hasn't already been processed
         this.track.subscribe((v) => {
-            this.getElevation(v[v.length - 1]);
+            this.getElevationData(v[v.length - 1]);
+        });
+        
+        this.ele.subscribe((v) => {
+            console.log('Elevation:', v)
         });
     };
 
-    getElevation(segment: Segment): void {
+    getElevationData(segment: Segment): void {
         let i,
             pathArray,
             path: Point[] = [],
@@ -45,8 +52,12 @@ export class ElevationService {
             elevationPromises = pathArray.map(this.elevation.bind(this));
             Promise.all(elevationPromises)
                 .then(function(response) {
-                    console.log([].concat.apply([], response));
-                }, function(error) {
+                    // Add array to the elevation store
+                    this.store.dispatch({
+                        type: ADD_ELEVATION,
+                        payload: elevationData(flatten(response))
+                    });
+                }.bind(this), function(error) {
                     console.log(error);
                 });
         }
@@ -61,7 +72,6 @@ export class ElevationService {
     elevation(path: any): Promise<any> {
         let self = this;
         return new Promise(function(resolve, reject) {
-            console.log('path', path.length);//
             if (path.length <= 1) {
                 reject('No elevation requested: too few points in path');
             }

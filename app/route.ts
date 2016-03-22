@@ -28,9 +28,8 @@ export interface Segment {
 export interface AppStore {
     name: string;
     track: Segment[];
-    waypoints: WayPoint[];
+    elevation: any[];
     markers: Marker[];
-    points: Point[];
 }  
 
 export class Route {

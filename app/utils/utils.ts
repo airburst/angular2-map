@@ -15,3 +15,13 @@ export const chunk = (collection, chunkSize) => {
     };
     return chunked;
 };
+
+export const flatten = (array: Array<any>): Array<any> => {
+    return [].concat.apply([], array);
+};
+
+export const elevationData = (array: Array<any>): Array<any> => {
+    return array.map((point) => {
+        return point.elevation;
+    });
+};

@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../utils/utils', '@ngrx/store'], function(exports_1, context_1) {
+System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/elevation'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store'], function(exp
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, utils_1, store_1;
+    var core_1, utils_1, store_1, elevation_1;
     var ElevationService;
     return {
         setters:[
@@ -22,6 +22,9 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store'], function(exp
             },
             function (store_1_1) {
                 store_1 = store_1_1;
+            },
+            function (elevation_1_1) {
+                elevation_1 = elevation_1_1;
             }],
         execute: function() {
             ElevationService = (function () {
@@ -53,6 +56,7 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store'], function(exp
                     this.elevator = {};
                     this.sampleSize = 240;
                     this.track = store.select('track');
+                    this.ele = store.select('elevation');
                 }
                 ;
                 ElevationService.prototype.init = function () {
@@ -62,11 +66,14 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store'], function(exp
                     // Subscribe to changes in the track and get elevation for 
                     // the latest segment, if it hasn't already been processed
                     this.track.subscribe(function (v) {
-                        _this.getElevation(v[v.length - 1]);
+                        _this.getElevationData(v[v.length - 1]);
+                    });
+                    this.ele.subscribe(function (v) {
+                        console.log('Elevation:', v);
                     });
                 };
                 ;
-                ElevationService.prototype.getElevation = function (segment) {
+                ElevationService.prototype.getElevationData = function (segment) {
                     var i, pathArray, path = [], elevationPromises;
                     if ((segment !== undefined) && (segment.track.length > 0)) {
                         path = this.convertToGoogleRoute(segment.track);
@@ -74,8 +81,12 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store'], function(exp
                         elevationPromises = pathArray.map(this.elevation.bind(this));
                         Promise.all(elevationPromises)
                             .then(function (response) {
-                            console.log([].concat.apply([], response));
-                        }, function (error) {
+                            // Add array to the elevation store
+                            this.store.dispatch({
+                                type: elevation_1.ADD_ELEVATION,
+                                payload: utils_1.elevationData(utils_1.flatten(response))
+                            });
+                        }.bind(this), function (error) {
                             console.log(error);
                         });
                     }
@@ -90,7 +101,6 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store'], function(exp
                 ElevationService.prototype.elevation = function (path) {
                     var self = this;
                     return new Promise(function (resolve, reject) {
-                        console.log('path', path.length); //
                         if (path.length <= 1) {
                             reject('No elevation requested: too few points in path');
                         }

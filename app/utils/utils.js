@@ -1,7 +1,7 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var uuid, chunk;
+    var uuid, chunk, flatten, elevationData;
     return {
         setters:[],
         execute: function() {
@@ -21,6 +21,14 @@ System.register([], function(exports_1, context_1) {
                 }
                 ;
                 return chunked;
+            });
+            exports_1("flatten", flatten = function (array) {
+                return [].concat.apply([], array);
+            });
+            exports_1("elevationData", elevationData = function (array) {
+                return array.map(function (point) {
+                    return point.elevation;
+                });
             });
         }
     }
