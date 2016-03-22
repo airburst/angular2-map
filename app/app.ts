@@ -1,7 +1,5 @@
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES, Control} from 'angular2/common';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {ElevationService} from './google/elevation.service';
@@ -10,7 +8,7 @@ import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {AppHeader} from './header.component';
 import {GazetteerService} from './osmaps/gazetteer';
-import {RouteDetails, AppStore} from './route';
+import {Route, RouteDetails, AppStore} from './route';
 import {settings} from './config/config';
 import {Store} from '@ngrx/store';
 import {SET_TRACK, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
@@ -20,7 +18,7 @@ import {SET_DETAILS, CLEAR_DETAILS} from './reducers/details';
 @Component({
     selector: 'my-app',
     template: `
-        <app-header [route]="routeProps | async"
+        <app-header [route]="route.details$ | async"
             (clear)="clearRoute()"
             (remove)="removeLast()"
             (load)="fileChange($event)"
@@ -40,6 +38,10 @@ import {SET_DETAILS, CLEAR_DETAILS} from './reducers/details';
 })
 
 export class AppComponent implements OnInit {
+    
+    public osmap: OsMap;
+    private route: Route;
+    
     constructor(
         private gpxService: GpxService,
         private fileService: FileService,
@@ -49,14 +51,8 @@ export class AppComponent implements OnInit {
         private gazetteerService: GazetteerService,
         public store: Store<AppStore>
     ) {
-        this.routeProps = store.select('details');
-        // this.routeProps.subscribe((v) => {
-        //     console.log('details:', v)
-        // });
+        this.route = new Route(store);
     }
-
-    osmap: OsMap;
-    routeProps: Observable<RouteDetails>;
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {

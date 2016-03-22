@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../utils/utils', '../google/directions.service', '../config/config', 'rxjs/add/operator/map', '@ngrx/store', '../reducers/track'], function(exports_1, context_1) {
+System.register(['angular2/core', '../route', '../utils/utils', '../google/directions.service', '../config/config', '@ngrx/store', '../reducers/track'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,12 +10,15 @@ System.register(['angular2/core', '../utils/utils', '../google/directions.servic
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, utils_1, directions_service_1, config_1, store_1, track_1;
+    var core_1, route_1, utils_1, directions_service_1, config_1, store_1, track_1;
     var OsMap;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (route_1_1) {
+                route_1 = route_1_1;
             },
             function (utils_1_1) {
                 utils_1 = utils_1_1;
@@ -26,7 +29,6 @@ System.register(['angular2/core', '../utils/utils', '../google/directions.servic
             function (config_1_1) {
                 config_1 = config_1_1;
             },
-            function (_1) {},
             function (store_1_1) {
                 store_1 = store_1_1;
             },
@@ -50,7 +52,7 @@ System.register(['angular2/core', '../utils/utils', '../google/directions.servic
                     this.gridProjection = {};
                     this.isMoving = false;
                     this.followsRoads = true;
-                    this.track = store.select('track');
+                    this.route = new route_1.Route(store);
                 }
                 OsMap.prototype.init = function () {
                     var _this = this;
@@ -87,8 +89,7 @@ System.register(['angular2/core', '../utils/utils', '../google/directions.servic
                     this.osMap.events.register('touchmove', this.osMap, function () { this.isMoving = true; });
                     this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
                     this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
-                    this.track.subscribe(function (v) {
-                        //console.log(v); 
+                    this.route.track$.subscribe(function (v) {
                         _this.draw(v);
                     });
                 };
@@ -118,7 +119,7 @@ System.register(['angular2/core', '../utils/utils', '../google/directions.servic
                         payload: { id: uid, waypoint: { lat: p.lat, lon: p.lon, ele: 0 }, track: [], hasElevationData: false }
                     });
                     // Get value from Observable
-                    var track = this.track.destination.value.track;
+                    var track = this.route.track$.destination.value.track;
                     if ((this.followsRoads) && (track.length > 1)) {
                         var fp = track[track.length - 2].waypoint, from = this.directionsService.convertToGoogleMapPoint(fp), tp = track[track.length - 1].waypoint, to = this.directionsService.convertToGoogleMapPoint(tp);
                         this.directionsService.getRouteBetween(from, to)

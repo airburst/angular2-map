@@ -1,11 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point, MapPoint, WayPoint, Marker, Segment, AppStore} from '../route';
+import {Point, MapPoint, WayPoint, Marker, Segment, AppStore, Route} from '../route';
 import {uuid} from '../utils/utils';
 import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 import {Store} from '@ngrx/store';
 import {ADD_SEGMENT, UPDATE_SEGMENT, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from '../reducers/track';
 
@@ -27,14 +25,14 @@ export class OsMap {
     gridProjection: any = {};
     isMoving: boolean = false;
     followsRoads: boolean = true;
-    track: Observable<Array<Segment>>;
+    route: Route;
     
     constructor(
         private directionsService: DirectionsService,
         public store: Store<AppStore>
     ) {
-        this.track = store.select('track');
-    }
+        this.route = new Route(store);
+     }
     
     init() {
         this.ol = window.OpenLayers;
@@ -82,8 +80,7 @@ export class OsMap {
         this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
         this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
         
-        this.track.subscribe((v) => {
-            //console.log(v); 
+        this.route.track$.subscribe((v) => {
             this.draw(v);
         });
     };
@@ -117,7 +114,7 @@ export class OsMap {
         });
             
         // Get value from Observable
-        let track = this.track.destination.value.track;
+        let track = this.route.track$.destination.value.track;
         
         if ((this.followsRoads) && (track.length > 1)) {
             let fp = track[track.length - 2].waypoint,

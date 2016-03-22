@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, config_1, store_1, track_1, elevation_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1, track_1, elevation_1;
     var AppComponent;
     return {
         setters:[
@@ -20,7 +20,6 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
             function (common_1_1) {
                 common_1 = common_1_1;
             },
-            function (_1) {},
             function (file_service_1_1) {
                 file_service_1 = file_service_1_1;
             },
@@ -45,6 +44,9 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
             function (gazetteer_1_1) {
                 gazetteer_1 = gazetteer_1_1;
             },
+            function (route_1_1) {
+                route_1 = route_1_1;
+            },
             function (config_1_1) {
                 config_1 = config_1_1;
             },
@@ -67,10 +69,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                     this.directionsService = directionsService;
                     this.gazetteerService = gazetteerService;
                     this.store = store;
-                    this.routeProps = store.select('details');
-                    // this.routeProps.subscribe((v) => {
-                    //     console.log('details:', v)
-                    // });
+                    this.route = new route_1.Route(store);
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
@@ -120,7 +119,7 @@ System.register(['angular2/core', 'angular2/common', 'rxjs/add/operator/map', '.
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <app-header [route]=\"routeProps | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (load)=\"fileChange($event)\"\n        >\n        </app-header>\n        <map></map>\n        ",
+                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (load)=\"fileChange($event)\"\n        >\n        </app-header>\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader],
                         providers: [
                             gpx_service_1.GpxService,

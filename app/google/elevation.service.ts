@@ -1,8 +1,7 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 import {Injectable} from 'angular2/core';
 import {chunk, flatten, elevationData} from '../utils/utils';
-import {Point, MapPoint, Segment, AppStore} from '../route';
-import {Observable} from 'rxjs/Observable';
+import {Point, MapPoint, Segment, AppStore, Route} from '../route';
 import {Store} from '@ngrx/store';
 import {ADD_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from '../reducers/elevation';
 import {UPDATE_SEGMENT} from '../reducers/track';
@@ -15,15 +14,13 @@ export class ElevationService {
     public results: any;
     private elevator: any;
     private sampleSize: number;
-    private track: Observable<Array<Segment>>;
-    private ele: Observable<Array<any>>;
+    private route: Route;
 
     constructor(public store: Store<AppStore>) {
         this.results = [];
         this.elevator = {};
         this.sampleSize = 240;
-        this.track = store.select('track');
-        this.ele = store.select('elevation');
+        this.route = new Route(store);
     };
 
     init(): any {
@@ -32,11 +29,11 @@ export class ElevationService {
 
         // Subscribe to changes in the track and get elevation for 
         // the latest segment, if it hasn't already been processed
-        this.track.subscribe((v) => {
+        this.route.track$.subscribe((v) => {
             this.getElevationData(v[v.length - 1]);
         });
 
-        this.ele.subscribe((v) => {
+        this.route.elevation$.subscribe((v) => {
             this.store.dispatch({
                 type: UPDATE_DETAILS,
                 payload: this.calculateElevation(flatten(v))
