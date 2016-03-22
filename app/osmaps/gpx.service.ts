@@ -93,7 +93,7 @@ export class GpxService {
                 lon: parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent)
             };
             track.push(point);
-            elevation.push(parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent), 10);
+            elevation.push(parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent));
         }
         this.appStore.track.push(<Segment>{ id: 'imported', track: track, waypoint: null, hasElevationData: true });
         this.appStore.elevation.push(elevation);
@@ -107,10 +107,7 @@ export class GpxService {
         this.updateStore();
     }
 
-    updateStore() {
-        
-        console.log(this.appStore)
-        
+    updateStore() {       
         this.store.dispatch({
             type: SET_DETAILS,
             payload: this.appStore.details

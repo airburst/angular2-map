@@ -104,7 +104,7 @@ System.register(['angular2/core', '@ngrx/store', '../reducers/track', '../reduce
                             lon: parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent)
                         };
                         track.push(point);
-                        elevation.push(parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent), 10);
+                        elevation.push(parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent));
                     }
                     this.appStore.track.push({ id: 'imported', track: track, waypoint: null, hasElevationData: true });
                     this.appStore.elevation.push(elevation);
@@ -116,7 +116,6 @@ System.register(['angular2/core', '@ngrx/store', '../reducers/track', '../reduce
                     this.updateStore();
                 };
                 GpxService.prototype.updateStore = function () {
-                    console.log(this.appStore);
                     this.store.dispatch({
                         type: details_1.SET_DETAILS,
                         payload: this.appStore.details
