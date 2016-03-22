@@ -1,7 +1,7 @@
 export interface Point {
     lat: number;
     lon: number;
-    ele?: number;
+    ele?: number;   //TODO - remove from POint
 }
 
 export interface WayPoint {
@@ -26,83 +26,36 @@ export interface Segment {
     hasElevationData: boolean;
 }
 
-export interface AppStore {
+export interface RouteDetails {
     name: string;
+    ascent: number;
+    descent: number;
+    centre?: Point;
+    zoom?: number;
+    followsRoads: boolean;
+    isImported: boolean;
+}
+
+export interface AppStore {
+    details: RouteDetails;
     track: Segment[];
     elevation: any[];
     markers: Marker[];
 }  
 
 export class Route {
-    constructor() {
-        this.name = '';
-        this.isImported = false;
-        this.clear();
-    }
     public name: string;
     public distance: number;
     public ascent: number;
     public descent: number;
-    public wayPoints: WayPoint[];
     public points: Point[];
-    public markers: Marker[];
     public minLat: number;
     public minLon: number;
     public maxLat: number;
     public maxLon: number;
     public diagonal: number;
     public isImported: boolean;
-    
-    public clear() {
-        this.distance = 0;
-        this.ascent = 0;
-        this.descent = 0;
-        this.wayPoints = [];
-        this.points = [];
-        this.markers = [];
-        this.minLat = 1000000;
-        this.minLon = 1000000;
-        this.maxLat = -1000000;
-        this.maxLon = -1000000;
-        this.diagonal = 0;
-    }
         
-    public addWayPoint(wayPoint: WayPoint) {
-        this.wayPoints.push(wayPoint);
-    }
-    
-    public addPoints(points: Point[]) {
-        points.forEach((p) => {
-            this.addPoint(p);
-        });
-    }
-    
-    public addPoint(point: Point) {
-        this.points.push(point);
-    }
-    
-    private removePoints(number: number) {
-        this.points.splice(this.points.length - number);
-    }
-    
-    public addMarker(marker: Marker) {
-        this.markers.push(marker);
-    }
-    
-    public lastWayPoint() {
-        return this.wayPoints[this.wayPoints.length - 1];
-    }
-    
-    public penultimateWayPoint() {
-        return this.wayPoints[this.wayPoints.length - 2];
-    }
-    
-    public removelastWayPoint() {
-        let n = this.lastWayPoint().trackPointsCount;
-        this.removePoints(n);
-        this.wayPoints.pop();
-    }
-
     public calculateElevation(): void {
         let totalAscent: number = 0,
             totalDescent: number = 0,
@@ -120,7 +73,6 @@ export class Route {
                     lastElevation = e;
                 }
             }
-
             this.setBounds(this.points[i]);
         }
     }
@@ -161,16 +113,4 @@ export class Route {
         return z + 1;
     }
 
-    public json(): any {
-        return {
-            'name': this.name,
-            'ascent': this.ascent,
-            'descent': this.descent,
-            'waypoints': this.wayPoints,
-            'points': this.points,
-            'markers': this.markers,
-            'centre': this.centre(),
-            'zoom': this.getZoomLevel()
-        };
-    }
 }
