@@ -11,6 +11,10 @@ export class GpxService {
     public appStore: AppStore;
 
     constructor(public store: Store<AppStore>) {
+        //this.init();
+    }
+    
+    init() {
         this.appStore = <AppStore>{
             details: initialState,
             track: [],
@@ -24,6 +28,8 @@ export class GpxService {
             name: string = gpxData[1],
             ext: string = gpxData[2];
 
+        this.init();
+        
         try {
             let parser: DOMParser = new DOMParser();
             let xmlDoc: Document = parser.parseFromString(route, 'text/xml');

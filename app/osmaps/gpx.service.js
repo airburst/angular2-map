@@ -33,15 +33,19 @@ System.register(['angular2/core', '@ngrx/store', '../reducers/track', '../reduce
             GpxService = (function () {
                 function GpxService(store) {
                     this.store = store;
+                    //this.init();
+                }
+                GpxService.prototype.init = function () {
                     this.appStore = {
                         details: details_1.initialState,
                         track: [],
                         elevation: [],
                         markers: []
                     };
-                }
+                };
                 GpxService.prototype.read = function (gpxData) {
                     var route = gpxData[0], name = gpxData[1], ext = gpxData[2];
+                    this.init();
                     try {
                         var parser = new DOMParser();
                         var xmlDoc = parser.parseFromString(route, 'text/xml');
