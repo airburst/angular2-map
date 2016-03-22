@@ -6,6 +6,7 @@ import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
 import {Store} from '@ngrx/store';
 import {ADD_SEGMENT, UPDATE_SEGMENT, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from '../reducers/track';
+import {UPDATE_DETAILS} from '../reducers/details';
 
 @Component({
     selector: 'map',
@@ -26,18 +27,18 @@ export class OsMap {
     isMoving: boolean = false;
     followsRoads: boolean = true;
     route: Route;
-    
+
     constructor(
         private directionsService: DirectionsService,
         public store: Store<AppStore>
     ) {
         this.route = new Route(store);
-     }
-    
+    }
+
     init() {
         this.ol = window.OpenLayers;
-        this.os = window.OpenSpace;        
-        
+        this.os = window.OpenSpace;
+
         // Instantiate the map canvas
         let options = {
             controls: [
@@ -52,10 +53,10 @@ export class OsMap {
         };
         this.osMap = new this.os.Map('map', options);
         this.centreMap();
-        
+
         // Set the projection - needed for converting between northing-easting and latlng
         this.gridProjection = new this.os.GridProjection();
-        
+
         // Initialise the vector layers
         this.lineVectorLayer = new this.ol.Layer.Vector('Line Vector Layer');
         this.osMap.addLayer(this.lineVectorLayer);
@@ -63,7 +64,7 @@ export class OsMap {
         this.osMap.addLayer(this.pointVectorLayer);
         this.markerVectorLayer = new this.ol.Layer.Vector('Point Vector Layer');
         this.osMap.addLayer(this.markerVectorLayer);
-        
+
         // Add controls
         let position = new this.os.Control.ControlPosition(
             this.os.Control.ControlAnchor.ANCHOR_TOP_LEFT,
@@ -73,18 +74,18 @@ export class OsMap {
             new this.os.Control.LargeMapControl(),
             position
         );
-        
+
         // Add map event handlers for touch and click
         this.osMap.events.remove('dblclick');
         this.osMap.events.register('touchmove', this.osMap, function() { this.isMoving = true; });
         this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
         this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
-        
+
         this.route.track$.subscribe((v) => {
             this.draw(v);
         });
     };
-    
+
     touchPoint(e) {
         if (this.isMoving) {
             this.isMoving = false;
@@ -103,30 +104,30 @@ export class OsMap {
         var pt = this.osMap.getLonLatFromViewPortPx(e.xy);
         this.addWayPointToMap(e, pt);
     };
-    
+
     addWayPointToMap(e, pt) {
         let p: Point = this.convertToLatLng(pt),
             uid = uuid();
 
         this.store.dispatch({
-            type: ADD_SEGMENT, 
+            type: ADD_SEGMENT,
             payload: { id: uid, waypoint: { lat: p.lat, lon: p.lon, ele: 0 }, track: [], hasElevationData: false }
         });
-            
+
         // Get value from Observable
         let track = this.route.track$.destination.value.track;
-        
+
         if ((this.followsRoads) && (track.length > 1)) {
             let fp = track[track.length - 2].waypoint,
                 from = this.directionsService.convertToGoogleMapPoint(fp),
                 tp = track[track.length - 1].waypoint,
                 to = this.directionsService.convertToGoogleMapPoint(tp);
- 
+
             this.directionsService.getRouteBetween(from, to)
                 .then((response) => {
                     this.store.dispatch({
                         type: UPDATE_SEGMENT,
-                        payload: {id: uid, track: response}
+                        payload: { id: uid, track: response }
                     });
                 }, function(response) {
                     console.error('Problem with directions service:', response)
@@ -135,25 +136,25 @@ export class OsMap {
         }
         this.ol.Event.stop(e);
     };
-    
+
     convertToLatLng(point): Point {
         let ll = this.gridProjection.getLonLatFromMapPoint(point);
-        return {lat: ll.lat, lon: ll.lon};
+        return { lat: ll.lat, lon: ll.lon };
     };
-    
+
     // drawWholeRoute() {
     //     let centre = this.convertToOsMapPoint(this.route.centre());
     //     this.centreMap(centre.x, centre.y, this.route.getZoomLevel());
     //     //this.draw();
     // };
-    
+
     centreMap(easting?: number, northing?: number, zoom?: number): void {
         if (easting !== undefined) { this.easting = easting; }
         if (northing !== undefined) { this.northing = northing; }
         if (zoom !== undefined) { this.zoom = zoom; }
         this.osMap.setCenter(new this.os.MapPoint(this.easting, this.northing), this.zoom);
     };
-    
+
     draw(track: Segment[]): void {
         let path = this.convertRouteToOsFormat(track);
 
@@ -169,7 +170,7 @@ export class OsMap {
                 new this.ol.Feature.Vector(this.convertToOsMapPoint(s.waypoint))
             );
         });
-        
+
         // Plot route markers layer
         // let markersFeature: Marker[] = [];
         // this.route.markers.forEach((m: Marker) => {
@@ -183,11 +184,14 @@ export class OsMap {
         this.lineVectorLayer.addFeatures([routeFeature]);
         // this.markerVectorLayer.destroyFeatures();
         // this.markerVectorLayer.addFeatures(markersFeature);
-        
+
         // Update distance
-        //this.route.distance = new this.ol.Geometry.Curve(path).getLength() / 1000;
+        this.store.dispatch({
+            type: UPDATE_DETAILS,
+            payload: { distance: new this.ol.Geometry.Curve(path).getLength() / 1000 }
+        });
     };
-      
+
     convertRouteToOsFormat(track: Segment[]): MapPoint[] {
         let path: MapPoint[] = [];
         track.forEach((segment) => {
@@ -197,34 +201,34 @@ export class OsMap {
         });
         return path;
     }
-    
+
     convertToOsMapPoint(point: Point) {
         let mp = new this.ol.LonLat(point.lon, point.lat),
             mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
         return new this.ol.Geometry.Point(mapPoint.lon, mapPoint.lat);
     };
-    
+
     addMarker(marker: Marker, image: string): any {
         return new this.ol.Feature.Vector(
             this.convertToOsMapPoint(marker.point),   /* Geometry */
             { description: marker.name },             /* Attributes */
             {                                         /* Style */
-                label:              marker.name,
-                labelAlign:         'l',
-                labelXOffset:       16,
-                labelYOffset:       32,
-                fontFamily:         'Arial',
-                fontColor:          'black',
-                fontSize:           '0.7em',
-                externalGraphic:    image,
-                graphicHeight:      32,
-                graphicWidth:       32,
-                graphicXOffset:     -16,
-                graphicYOffset:     -32
+                label: marker.name,
+                labelAlign: 'l',
+                labelXOffset: 16,
+                labelYOffset: 32,
+                fontFamily: 'Arial',
+                fontColor: 'black',
+                fontSize: '0.7em',
+                externalGraphic: image,
+                graphicHeight: 32,
+                graphicWidth: 32,
+                graphicXOffset: -16,
+                graphicYOffset: -32
             }
         );
     };
-    
+
     // calculateDistanceInKm(): number {
     //     let distString = new this.ol.Geometry.Curve(this.convertRouteToOsFormat());
     //     return (distString.getLength() / 1000);
