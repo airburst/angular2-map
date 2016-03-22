@@ -8,8 +8,6 @@ export const REMOVE_LAST_SEGMENT = 'REMOVE_LAST_SEGMENT';
 
 export const track = (state: any = [], action: Action) => {
 
-    console.log(action.type);
-
     switch (action.type) {
         case SET_TRACK:
             return action.payload;

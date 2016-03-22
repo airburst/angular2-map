@@ -10,10 +10,11 @@ import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {AppHeader} from './header.component';
 import {GazetteerService} from './osmaps/gazetteer';
-import {Point, Route, WayPoint, Segment, AppStore} from './route';
+import {Segment, AppStore} from './route';
 import {settings} from './config/config';
 import {Store} from '@ngrx/store';
-import {ADD_SEGMENT, UPDATE_SEGMENT, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
+import {SET_TRACK, ADD_SEGMENT, UPDATE_SEGMENT, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
+import {SET_ELEVATION, ADD_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from './reducers/elevation';
 
 @Component({
     selector: 'my-app',
@@ -47,12 +48,10 @@ export class AppComponent implements OnInit {
         private gazetteerService: GazetteerService,
         public store: Store<AppStore>
     ) {
-        this.route = new Route();
         this.track = store.select('track');
     }
 
     osmap: OsMap;
-    route: Route; 
     track: Observable<Array<Segment>>;
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
@@ -83,14 +82,10 @@ export class AppComponent implements OnInit {
     }
 
     clearRoute() {
-        // this.osmap.route.clear();
-        // this.osmap.draw();
         this.store.dispatch({ type: CLEAR_TRACK });        
     }
 
     removeLast() {
-        // this.osmap.route.removelastWayPoint();
-        // this.osmap.draw();
         this.store.dispatch({ type: REMOVE_LAST_SEGMENT });        
     }
 

@@ -12,7 +12,6 @@ System.register([], function(exports_1, context_1) {
             exports_1("REMOVE_LAST_SEGMENT", REMOVE_LAST_SEGMENT = 'REMOVE_LAST_SEGMENT');
             exports_1("track", track = function (state, action) {
                 if (state === void 0) { state = []; }
-                console.log(action.type);
                 switch (action.type) {
                     case SET_TRACK:
                         return action.payload;
