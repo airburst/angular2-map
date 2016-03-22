@@ -30,7 +30,8 @@ export interface RouteDetails {
     name: string;
     ascent: number;
     descent: number;
-    centre?: Point;
+    easting?: number;
+    northing?: number;
     zoom?: number;
     followsRoads: boolean;
     isImported: boolean;
