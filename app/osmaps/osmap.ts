@@ -83,7 +83,7 @@ export class OsMap {
         this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
         
         this.track.subscribe((v) => {
-            console.log(v); 
+            //console.log(v); 
             this.draw(v);
         });
     };

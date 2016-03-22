@@ -88,7 +88,7 @@ System.register(['angular2/core', '../utils/utils', '../google/directions.servic
                     this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
                     this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
                     this.track.subscribe(function (v) {
-                        console.log(v);
+                        //console.log(v); 
                         _this.draw(v);
                     });
                 };
