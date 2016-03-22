@@ -28,6 +28,7 @@ export interface Segment {
 
 export interface RouteDetails {
     name: string;
+    distance: number;
     ascent: number;
     descent: number;
     easting?: number;
@@ -56,27 +57,6 @@ export class Route {
     public maxLon: number;
     public diagonal: number;
     public isImported: boolean;
-        
-    public calculateElevation(): void {
-        let totalAscent: number = 0,
-            totalDescent: number = 0,
-            lastElevation: number = 0;
-
-        for (let i: number = 0; i < this.points.length - 1; i++) {
-            let e = this.points[i].ele;
-            if (e !== null) {
-                if (e > lastElevation) {
-                    this.ascent += (e - lastElevation);
-                    lastElevation = e;
-                }
-                if (e < lastElevation) {
-                    this.descent += (lastElevation - e);
-                    lastElevation = e;
-                }
-            }
-            this.setBounds(this.points[i]);
-        }
-    }
 
     private setBounds(point: Point): void {
         this.minLat = Math.min(this.minLat, point.lat);

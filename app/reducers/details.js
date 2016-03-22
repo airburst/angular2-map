@@ -10,6 +10,7 @@ System.register([], function(exports_1, context_1) {
             exports_1("UPDATE_DETAILS", UPDATE_DETAILS = 'UPDATE_DETAILS');
             initialState = {
                 name: '',
+                distance: 0,
                 ascent: 0,
                 descent: 0,
                 easting: 386210,

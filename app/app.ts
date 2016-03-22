@@ -10,16 +10,17 @@ import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {AppHeader} from './header.component';
 import {GazetteerService} from './osmaps/gazetteer';
-import {Segment, AppStore} from './route';
+import {RouteDetails, AppStore} from './route';
 import {settings} from './config/config';
 import {Store} from '@ngrx/store';
-import {SET_TRACK, ADD_SEGMENT, UPDATE_SEGMENT, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
-import {SET_ELEVATION, ADD_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from './reducers/elevation';
+import {SET_TRACK, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
+import {SET_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from './reducers/elevation';
+import {SET_DETAILS, CLEAR_DETAILS} from './reducers/details';
 
 @Component({
     selector: 'my-app',
     template: `
-        <app-header [route]="track | async"
+        <app-header [route]="routeProps | async"
             (clear)="clearRoute()"
             (remove)="removeLast()"
             (load)="fileChange($event)"
@@ -48,11 +49,14 @@ export class AppComponent implements OnInit {
         private gazetteerService: GazetteerService,
         public store: Store<AppStore>
     ) {
-        this.track = store.select('track');
+        this.routeProps = store.select('details');
+        // this.routeProps.subscribe((v) => {
+        //     console.log('details:', v)
+        // });
     }
 
     osmap: OsMap;
-    track: Observable<Array<Segment>>;
+    routeProps: Observable<RouteDetails>;
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {

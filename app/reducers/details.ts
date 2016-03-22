@@ -6,6 +6,7 @@ export const UPDATE_DETAILS = 'UPDATE_DETAILS';
 
 const initialState: RouteDetails = {
     name: '',
+    distance: 0,
     ascent: 0,
     descent: 0,
     easting: 386210,

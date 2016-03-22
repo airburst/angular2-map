@@ -6,6 +6,7 @@ import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
 import {ADD_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from '../reducers/elevation';
 import {UPDATE_SEGMENT} from '../reducers/track';
+import {UPDATE_DETAILS} from '../reducers/details';
 
 @Injectable()
 export class ElevationService {
@@ -22,7 +23,6 @@ export class ElevationService {
         this.elevator = {};
         this.sampleSize = 240;
         this.track = store.select('track');
-        
         this.ele = store.select('elevation');
     };
 
@@ -33,12 +33,14 @@ export class ElevationService {
         // Subscribe to changes in the track and get elevation for 
         // the latest segment, if it hasn't already been processed
         this.track.subscribe((v) => {
-            console.log('Track:', v)
             this.getElevationData(v[v.length - 1]);
         });
-        
+
         this.ele.subscribe((v) => {
-            console.log('Elevation:', v)
+            this.store.dispatch({
+                type: UPDATE_DETAILS,
+                payload: this.calculateElevation(flatten(v))
+            });
         });
     };
 
@@ -46,7 +48,8 @@ export class ElevationService {
         let i,
             pathArray,
             path: Point[] = [],
-            elevationPromises;
+            elevationPromises,
+            segmentElevation = [];
 
         if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
             path = this.convertToGoogleRoute(segment.track);
@@ -54,14 +57,13 @@ export class ElevationService {
             elevationPromises = pathArray.map(this.elevation.bind(this));
             Promise.all(elevationPromises)
                 .then(function(response) {
-                    // Add array to the elevation store and set route segment.hasElevationData
                     this.store.dispatch({
                         type: ADD_ELEVATION,
                         payload: elevationData(flatten(response))
                     });
                     this.store.dispatch({
                         type: UPDATE_SEGMENT,
-                        payload: {id: segment.id, hasElevationData: true}
+                        payload: { id: segment.id, hasElevationData: true }
                     });
                 }.bind(this), function(error) {
                     console.log(error);
@@ -97,6 +99,19 @@ export class ElevationService {
             });
         });
     };
+
+    calculateElevation(elevations: Array<number>): any {
+        let ascent: number = 0,
+            descent: number = 0,
+            lastElevation: number = elevations[0];
+
+        elevations.forEach((e) => {
+            ascent += (e > lastElevation) ? (e - lastElevation) : 0;
+            descent += (e < lastElevation) ? (lastElevation - e) : 0;
+            lastElevation = e;
+        });
+        return { ascent: ascent, descent: descent };
+    }
 
     // Reduce a path to <= maximum sample size
     private reducePath = function(points: Point[]): Point[] {

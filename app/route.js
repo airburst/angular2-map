@@ -8,23 +8,6 @@ System.register([], function(exports_1, context_1) {
             Route = (function () {
                 function Route() {
                 }
-                Route.prototype.calculateElevation = function () {
-                    var totalAscent = 0, totalDescent = 0, lastElevation = 0;
-                    for (var i = 0; i < this.points.length - 1; i++) {
-                        var e = this.points[i].ele;
-                        if (e !== null) {
-                            if (e > lastElevation) {
-                                this.ascent += (e - lastElevation);
-                                lastElevation = e;
-                            }
-                            if (e < lastElevation) {
-                                this.descent += (lastElevation - e);
-                                lastElevation = e;
-                            }
-                        }
-                        this.setBounds(this.points[i]);
-                    }
-                };
                 Route.prototype.setBounds = function (point) {
                     this.minLat = Math.min(this.minLat, point.lat);
                     this.maxLat = Math.max(this.maxLat, point.lat);

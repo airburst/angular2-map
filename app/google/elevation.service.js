@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/elevation', '../reducers/track'], function(exports_1, context_1) {
+System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/elevation', '../reducers/track', '../reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, utils_1, store_1, elevation_1, track_1;
+    var core_1, utils_1, store_1, elevation_1, track_1, details_1;
     var ElevationService;
     return {
         setters:[
@@ -28,6 +28,9 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/
             },
             function (track_1_1) {
                 track_1 = track_1_1;
+            },
+            function (details_1_1) {
+                details_1 = details_1_1;
             }],
         execute: function() {
             ElevationService = (function () {
@@ -69,23 +72,24 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/
                     // Subscribe to changes in the track and get elevation for 
                     // the latest segment, if it hasn't already been processed
                     this.track.subscribe(function (v) {
-                        console.log('Track:', v);
                         _this.getElevationData(v[v.length - 1]);
                     });
                     this.ele.subscribe(function (v) {
-                        console.log('Elevation:', v);
+                        _this.store.dispatch({
+                            type: details_1.UPDATE_DETAILS,
+                            payload: _this.calculateElevation(utils_1.flatten(v))
+                        });
                     });
                 };
                 ;
                 ElevationService.prototype.getElevationData = function (segment) {
-                    var i, pathArray, path = [], elevationPromises;
+                    var i, pathArray, path = [], elevationPromises, segmentElevation = [];
                     if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
                         path = this.convertToGoogleRoute(segment.track);
                         pathArray = utils_1.chunk(path, this.sampleSize);
                         elevationPromises = pathArray.map(this.elevation.bind(this));
                         Promise.all(elevationPromises)
                             .then(function (response) {
-                            // Add array to the elevation store and set route segment.hasElevationData
                             this.store.dispatch({
                                 type: elevation_1.ADD_ELEVATION,
                                 payload: utils_1.elevationData(utils_1.flatten(response))
@@ -129,6 +133,15 @@ System.register(['angular2/core', '../utils/utils', '@ngrx/store', '../reducers/
                     });
                 };
                 ;
+                ElevationService.prototype.calculateElevation = function (elevations) {
+                    var ascent = 0, descent = 0, lastElevation = elevations[0];
+                    elevations.forEach(function (e) {
+                        ascent += (e > lastElevation) ? (e - lastElevation) : 0;
+                        descent += (e < lastElevation) ? (lastElevation - e) : 0;
+                        lastElevation = e;
+                    });
+                    return { ascent: ascent, descent: descent };
+                };
                 ElevationService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [store_1.Store])
