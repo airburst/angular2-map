@@ -6,7 +6,7 @@
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "lite": "lite-server",
-    "test": "concurrent \"npm run tsc:w\" \"lite-server --open tests\" ",
+    "test": "concurrently \"npm run tsc:w\" \"lite-server --open tests\" ",
     "typings": "typings",
     "postinstall": "typings install"
   },
