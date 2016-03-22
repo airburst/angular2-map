@@ -4,3 +4,14 @@ export const uuid = () => {
             return (0 | Math.random() * 16).toString(16);
         });
 };
+
+export const chunk = (collection, chunkSize) => {
+    let i, chunked = [];
+    if (!collection || isNaN(parseInt(chunkSize, 10))) {
+        return [];
+    }
+    for(i = 0; i < collection.length; i += chunkSize) {
+        chunked.push(collection.slice(i, i + chunkSize));
+    };
+    return chunked;
+};

@@ -1,5 +1,6 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 import {Injectable} from 'angular2/core';
+import {chunk} from '../utils/utils';
 import {Point, MapPoint, Segment, AppStore} from '../route';
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
@@ -25,7 +26,8 @@ export class ElevationService {
         this.elevator = new window.google.maps.ElevationService();
         this.status = window.google.maps.ElevationStatus;
 
-        // Subscribe to changes in the track and get elevation for latest segment
+        // Subscribe to changes in the track and get elevation for 
+        // the latest segment, if it hasn't already been processed
         this.track.subscribe((v) => {
             this.getElevation(v[v.length - 1]);
         });
@@ -33,41 +35,30 @@ export class ElevationService {
 
     getElevation(segment: Segment): void {
         let i,
-            j,
-            index = 0,
             pathArray,
-            path = [],
-            self = this;
+            path: Point[] = [],
+            elevationPromises;
 
         if ((segment !== undefined) && (segment.track.length > 0)) {
             path = this.convertToGoogleRoute(segment.track);
-            for (i = 0, j = path.length; i < j; i += this.sampleSize) {
-                pathArray = path.slice(i, i + this.sampleSize);
-                this.elevation(pathArray).then(function(response) {
-                    console.log(response);
-                }, function(Errortxt) {
-                    console.log(Errortxt);
+            pathArray = chunk(path, this.sampleSize);
+            elevationPromises = pathArray.map(this.elevation.bind(this));
+            Promise.all(elevationPromises)
+                .then(function(response) {
+                    console.log([].concat.apply([], response));
+                }, function(error) {
+                    console.log(error);
                 });
-            }
         }
     };
 
     convertToGoogleRoute(points: Point[]): any {
-        let gPath = [];
-        points.forEach((point) => {
-            gPath.push(this.toLatLng(point));
-        })
-        return gPath;
-        // return points.map((point) => {
-        //     this.toLatLng(point);
-        // })
+        return points.map((point) => {
+            return new window.google.maps.LatLng(point.lat, point.lon);
+        });
     };
 
-    toLatLng(point: Point): any {
-        return new window.google.maps.LatLng(point.lat, point.lon)
-    };
-
-    elevation(path: any): any {
+    elevation(path: any): Promise<any> {
         let self = this;
         return new Promise(function(resolve, reject) {
             console.log('path', path.length);//
@@ -89,16 +80,6 @@ export class ElevationService {
                     reject('Google Elevation service was not available. Please try again');
             });
         });
-    };
-
-    // Combine several requests into single response
-    multiPathHandler(results, status, index): void {
-        if (status !== this.status.OK) {
-            console.log(status);
-        } else {
-            this.results = { index: index, results: results };
-            console.log(this.results);
-        }
     };
 
     // Reduce a path to <= maximum sample size

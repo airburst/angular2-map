@@ -1,4 +1,4 @@
-System.register(['angular2/core', '@ngrx/store'], function(exports_1, context_1) {
+System.register(['angular2/core', '../utils/utils', '@ngrx/store'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,12 +10,15 @@ System.register(['angular2/core', '@ngrx/store'], function(exports_1, context_1)
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, store_1;
+    var core_1, utils_1, store_1;
     var ElevationService;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (utils_1_1) {
+                utils_1 = utils_1_1;
             },
             function (store_1_1) {
                 store_1 = store_1_1;
@@ -56,41 +59,32 @@ System.register(['angular2/core', '@ngrx/store'], function(exports_1, context_1)
                     var _this = this;
                     this.elevator = new window.google.maps.ElevationService();
                     this.status = window.google.maps.ElevationStatus;
-                    // Subscribe to changes in the track and get elevation for latest segment
+                    // Subscribe to changes in the track and get elevation for 
+                    // the latest segment, if it hasn't already been processed
                     this.track.subscribe(function (v) {
                         _this.getElevation(v[v.length - 1]);
                     });
                 };
                 ;
                 ElevationService.prototype.getElevation = function (segment) {
-                    var i, j, index = 0, pathArray, path = [], self = this;
+                    var i, pathArray, path = [], elevationPromises;
                     if ((segment !== undefined) && (segment.track.length > 0)) {
                         path = this.convertToGoogleRoute(segment.track);
-                        for (i = 0, j = path.length; i < j; i += this.sampleSize) {
-                            pathArray = path.slice(i, i + this.sampleSize);
-                            this.elevation(pathArray).then(function (response) {
-                                console.log(response);
-                            }, function (Errortxt) {
-                                console.log(Errortxt);
-                            });
-                        }
+                        pathArray = utils_1.chunk(path, this.sampleSize);
+                        elevationPromises = pathArray.map(this.elevation.bind(this));
+                        Promise.all(elevationPromises)
+                            .then(function (response) {
+                            console.log([].concat.apply([], response));
+                        }, function (error) {
+                            console.log(error);
+                        });
                     }
                 };
                 ;
                 ElevationService.prototype.convertToGoogleRoute = function (points) {
-                    var _this = this;
-                    var gPath = [];
-                    points.forEach(function (point) {
-                        gPath.push(_this.toLatLng(point));
+                    return points.map(function (point) {
+                        return new window.google.maps.LatLng(point.lat, point.lon);
                     });
-                    return gPath;
-                    // return points.map((point) => {
-                    //     this.toLatLng(point);
-                    // })
-                };
-                ;
-                ElevationService.prototype.toLatLng = function (point) {
-                    return new window.google.maps.LatLng(point.lat, point.lon);
                 };
                 ;
                 ElevationService.prototype.elevation = function (path) {
@@ -115,17 +109,6 @@ System.register(['angular2/core', '@ngrx/store'], function(exports_1, context_1)
                                 reject('Google Elevation service was not available. Please try again');
                         });
                     });
-                };
-                ;
-                // Combine several requests into single response
-                ElevationService.prototype.multiPathHandler = function (results, status, index) {
-                    if (status !== this.status.OK) {
-                        console.log(status);
-                    }
-                    else {
-                        this.results = { index: index, results: results };
-                        console.log(this.results);
-                    }
                 };
                 ;
                 ElevationService = __decorate([
