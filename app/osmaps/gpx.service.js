@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../route'], function(exports_1, context_1) {
+System.register(['angular2/core', '@ngrx/store', '../reducers/track', '../reducers/elevation', '../reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,27 +10,34 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, route_1;
+    var core_1, store_1, track_1, elevation_1, details_1;
     var GpxService;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (route_1_1) {
-                route_1 = route_1_1;
+            function (store_1_1) {
+                store_1 = store_1_1;
+            },
+            function (track_1_1) {
+                track_1 = track_1_1;
+            },
+            function (elevation_1_1) {
+                elevation_1 = elevation_1_1;
+            },
+            function (details_1_1) {
+                details_1 = details_1_1;
             }],
         execute: function() {
             GpxService = (function () {
-                function GpxService() {
-                    this.template = {
-                        header: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="maps.fairhursts.net">',
-                        title: '<metadata><name>{name}</name></metadata><rte><name>{name}</name>',
-                        point: '<rtept lon="{lon}" lat="{lat}">' +
-                            '<ele>0.0</ele>' +
-                            '<name></name>' +
-                            '</rtept>',
-                        end: '</rte></gpx>'
+                function GpxService(store) {
+                    this.store = store;
+                    this.appStore = {
+                        details: details_1.initialState,
+                        track: [],
+                        elevation: [],
+                        markers: []
                     };
                 }
                 GpxService.prototype.read = function (gpxData) {
@@ -40,10 +47,10 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                         var xmlDoc = parser.parseFromString(route, 'text/xml');
                         // Parse the file dependent on type
                         if (ext === 'gpx') {
-                            return this.gpxToRoute(xmlDoc);
+                            this.gpxToRoute(xmlDoc);
                         }
                         if (ext === 'tcx') {
-                            return this.tcxToRoute(xmlDoc);
+                            this.tcxToRoute(xmlDoc);
                         }
                     }
                     catch (err) {
@@ -52,11 +59,10 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                     }
                 };
                 GpxService.prototype.gpxToRoute = function (xml) {
-                    var route = new route_1.Route();
                     // Route Name (gpx/metadata/name)
                     var meta = xml.getElementsByTagName('metadata')[0];
-                    route.name = ((meta.getElementsByTagName('name')[0]) !== undefined) ? meta.getElementsByTagName('name')[0].textContent : '';
-                    // Waypoints (gpx/wpt[@lat, @lon, name])
+                    this.appStore.details.name = ((meta.getElementsByTagName('name')[0]) !== undefined) ? meta.getElementsByTagName('name')[0].textContent : '';
+                    // Waypoints (gpx/wpt[@lat, @lon, name]) -> Markers
                     var wayPoints = xml.getElementsByTagName('wpt');
                     for (var i = 0; i < wayPoints.length; i++) {
                         var marker = {
@@ -66,70 +72,68 @@ System.register(['angular2/core', '../route'], function(exports_1, context_1) {
                                 lon: parseFloat(wayPoints[i].getAttribute('lon').valueOf())
                             }
                         };
-                        route.addMarker(marker);
+                        this.appStore.markers.push(marker);
                     }
                     // Track Points (gpx/trk/trkseg/trkpt[@lat, @lon, ele])
-                    var trackPoints = xml.getElementsByTagName('trkpt');
+                    var trackPoints = xml.getElementsByTagName('trkpt'), track = [], elevation = [];
                     for (var i = 0; i < trackPoints.length; i++) {
                         var point = {
                             lat: parseFloat(trackPoints[i].getAttribute('lat').valueOf()),
                             lon: parseFloat(trackPoints[i].getAttribute('lon').valueOf()),
-                            ele: parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent)
                         };
-                        route.addPoint(point);
+                        track.push(point);
+                        elevation.push(parseFloat(trackPoints[i].getElementsByTagName('ele')[0].textContent));
                     }
-                    // Add calculated total ascent and descent
-                    route.calculateElevation();
-                    route.isImported = true;
-                    return route;
+                    this.appStore.track.push({ id: 'imported', track: track, waypoint: null, hasElevationData: true });
+                    this.appStore.elevation.push(elevation);
+                    this.appStore.details.isImported = true;
+                    this.updateStore();
                 };
                 // TODO: understand the full schema:
                 // http://www8.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd
                 // This function only handles course[0], not activities or multiple courses
                 GpxService.prototype.tcxToRoute = function (xml) {
-                    var route = new route_1.Route();
                     // Course Name (Course/Name)
                     var course = xml.getElementsByTagName('Course')[0];
-                    route.name = ((course.getElementsByTagName('Name')[0]) !== undefined) ? course.getElementsByTagName('Name')[0].textContent : '';
+                    this.appStore.details.name = ((course.getElementsByTagName('Name')[0]) !== undefined) ? course.getElementsByTagName('Name')[0].textContent : '';
                     // Track Points (Track/Trackpoint[Position/LatitudeDegrees, Position/LongitudeDegrees, AltitudeMeters])
-                    var trackPoints = xml.getElementsByTagName('Trackpoint');
+                    var trackPoints = xml.getElementsByTagName('Trackpoint'), track = [], elevation = [];
                     for (var i = 0; i < trackPoints.length; i++) {
                         var point = {
                             lat: parseFloat(trackPoints[i].getElementsByTagName('LatitudeDegrees')[0].textContent),
-                            lon: parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent),
-                            ele: parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent)
+                            lon: parseFloat(trackPoints[i].getElementsByTagName('LongitudeDegrees')[0].textContent)
                         };
-                        route.addPoint(point);
+                        track.push(point);
+                        elevation.push(parseFloat(trackPoints[i].getElementsByTagName('AltitudeMeters')[0].textContent), 10);
                     }
+                    this.appStore.track.push({ id: 'imported', track: track, waypoint: null, hasElevationData: true });
+                    this.appStore.elevation.push(elevation);
                     // Markers - add start and finish points
                     // TODO: find out whether courses support waypoints
-                    route.addMarker({ name: 'Start', point: route.points[0] });
-                    route.addMarker({ name: 'Finish', point: route.points[route.points.length - 1] });
-                    // Add calculated total ascent and descent
-                    route.calculateElevation();
-                    route.isImported = true;
-                    return route;
+                    this.appStore.markers.push({ name: 'Start', point: track[0] });
+                    this.appStore.markers.push({ name: 'Finish', point: track[track.length - 1] });
+                    this.appStore.details.isImported = true;
+                    this.updateStore();
                 };
-                GpxService.prototype.replaceAll = function (find, replace, str) {
-                    return str.replace(new RegExp(find, 'g'), replace);
+                GpxService.prototype.updateStore = function () {
+                    console.log(this.appStore);
+                    this.store.dispatch({
+                        type: details_1.SET_DETAILS,
+                        payload: this.appStore.details
+                    });
+                    this.store.dispatch({
+                        type: track_1.SET_TRACK,
+                        payload: this.appStore.track
+                    });
+                    this.store.dispatch({
+                        type: elevation_1.SET_ELEVATION,
+                        payload: this.appStore.elevation
+                    });
                 };
-                GpxService.prototype.write = function (route, name) {
-                    if (name === undefined) {
-                        name = 'Route';
-                    }
-                    var gpxContent = this.template.header + this.replaceAll('{name}', name, this.template.title);
-                    for (var i = 0; i < route.points.length; i++) {
-                        gpxContent += this.template.point
-                            .replace('{lat}', route[i][0])
-                            .replace('{lon}', route[i][1]);
-                    }
-                    ;
-                    gpxContent += this.template.end;
-                    return gpxContent;
-                };
+                ;
                 GpxService = __decorate([
                     core_1.Injectable(), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [store_1.Store])
                 ], GpxService);
                 return GpxService;
             }());

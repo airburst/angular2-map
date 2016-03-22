@@ -166,9 +166,11 @@ export class OsMap {
         // Plot waypoints layer
         let waypointsFeature: Point[] = [];
         track.forEach((s: Segment) => {
-            waypointsFeature.push(
-                new this.ol.Feature.Vector(this.convertToOsMapPoint(s.waypoint))
-            );
+            if (s.waypoint !== null) {
+                waypointsFeature.push(
+                    new this.ol.Feature.Vector(this.convertToOsMapPoint(s.waypoint))
+                );
+            }
         });
 
         // Plot route markers layer

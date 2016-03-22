@@ -169,7 +169,9 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     // Plot waypoints layer
                     var waypointsFeature = [];
                     track.forEach(function (s) {
-                        waypointsFeature.push(new _this.ol.Feature.Vector(_this.convertToOsMapPoint(s.waypoint)));
+                        if (s.waypoint !== null) {
+                            waypointsFeature.push(new _this.ol.Feature.Vector(_this.convertToOsMapPoint(s.waypoint)));
+                        }
                     });
                     // Plot route markers layer
                     // let markersFeature: Marker[] = [];

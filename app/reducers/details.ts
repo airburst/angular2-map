@@ -4,7 +4,7 @@ export const CLEAR_DETAILS = 'CLEAR_DETAILS';
 export const SET_DETAILS = 'SET_DETAILS';
 export const UPDATE_DETAILS = 'UPDATE_DETAILS';
 
-const initialState: RouteDetails = {
+export const initialState: RouteDetails = {
     name: '',
     distance: 0,
     ascent: 0,

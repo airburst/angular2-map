@@ -87,15 +87,14 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     });
                 };
                 AppComponent.prototype.fileChange = function ($event) {
+                    var _this = this;
                     if (this.fileService.supports($event.target)) {
                         this.fileService.readTextFile($event.target, function () {
                             var data = [];
                             for (var _i = 0; _i < arguments.length; _i++) {
                                 data[_i - 0] = arguments[_i];
                             }
-                            //this.osmap.route = this.gpxService.read(data);
-                            //this.store.dispatch({ type: SET, payload: this.osmap.route });
-                            //this.osmap.drawWholeRoute();
+                            _this.gpxService.read(data);
                         });
                     }
                 };

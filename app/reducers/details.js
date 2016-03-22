@@ -8,7 +8,7 @@ System.register([], function(exports_1, context_1) {
             exports_1("CLEAR_DETAILS", CLEAR_DETAILS = 'CLEAR_DETAILS');
             exports_1("SET_DETAILS", SET_DETAILS = 'SET_DETAILS');
             exports_1("UPDATE_DETAILS", UPDATE_DETAILS = 'UPDATE_DETAILS');
-            initialState = {
+            exports_1("initialState", initialState = {
                 name: '',
                 distance: 0,
                 ascent: 0,
@@ -18,7 +18,7 @@ System.register([], function(exports_1, context_1) {
                 zoom: 7,
                 followsRoads: true,
                 isImported: false
-            };
+            });
             exports_1("details", details = function (state, action) {
                 if (state === void 0) { state = initialState; }
                 switch (action.type) {
