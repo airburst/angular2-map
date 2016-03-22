@@ -136,7 +136,6 @@ export class OsMap {
                 });
 
         }
-
         this.ol.Event.stop(e);
     };
     
