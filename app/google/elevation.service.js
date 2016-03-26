@@ -136,13 +136,12 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                 };
                 ;
                 ElevationService.prototype.calculateElevation = function (elevations) {
-                    var ascent = 0, descent = 0, lastElevation = elevations[0];
+                    var ascent = 0, lastElevation = elevations[0];
                     elevations.forEach(function (e) {
                         ascent += (e > lastElevation) ? (e - lastElevation) : 0;
-                        descent += (e < lastElevation) ? (lastElevation - e) : 0;
                         lastElevation = e;
                     });
-                    return { ascent: ascent, descent: descent };
+                    return { ascent: Math.floor(ascent) };
                 };
                 ElevationService = __decorate([
                     core_1.Injectable(), 

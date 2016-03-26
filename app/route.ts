@@ -34,7 +34,6 @@ export interface RouteDetails {
     name: string;
     distance: number;
     ascent: number;
-    descent: number;
     easting?: number;
     northing?: number;
     lat?: number;

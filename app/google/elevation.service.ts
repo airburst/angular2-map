@@ -99,15 +99,13 @@ export class ElevationService {
 
     calculateElevation(elevations: Array<number>): any {
         let ascent: number = 0,
-            descent: number = 0,
             lastElevation: number = elevations[0];
 
         elevations.forEach((e) => {
             ascent += (e > lastElevation) ? (e - lastElevation) : 0;
-            descent += (e < lastElevation) ? (lastElevation - e) : 0;
             lastElevation = e;
         });
-        return { ascent: ascent, descent: descent };
+        return { ascent: Math.floor(ascent) };
     }
 
     // Reduce a path to <= maximum sample size

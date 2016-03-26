@@ -8,7 +8,6 @@ export const initialState: RouteDetails = {
     name: '',
     distance: 0,
     ascent: 0,
-    descent: 0,
     easting: 386210,
     northing: 168060,
     lat: 0,

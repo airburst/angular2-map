@@ -6,9 +6,8 @@ import {Segment} from './route';
     template: `
         <div class="stats">
             <div class="text">
-                {{route.name}} &nbsp;&nbsp;&nbsp; Ascent: {{route.ascent | number:'1.1-2'}} m &nbsp;&nbsp;&nbsp;
-                Descent: {{route.descent | number:'1.1-2'}} m &nbsp;&nbsp;&nbsp; Distance: {{route.distance | number:'1.1-2'}}
-                km
+                {{route.name}} &nbsp;&nbsp;&nbsp; Distance: {{route.distance | number:'1.1-2'}} km&nbsp;&nbsp;&nbsp;
+                Ascent: {{route.ascent}} m
             </div>
             <div class="form">
                 <button id="clear" (click)="clear.emit()">Clear Route</button>
