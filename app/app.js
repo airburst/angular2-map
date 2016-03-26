@@ -117,6 +117,12 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.store.dispatch({ type: track_1.REMOVE_LAST_SEGMENT });
                     this.store.dispatch({ type: elevation_1.REMOVE_ELEVATION });
                 };
+                AppComponent.prototype.recalculateElevation = function () {
+                    this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
+                    var segment = this.route.track$.destination.value.track[0];
+                    segment.hasElevationData = false;
+                    this.elevationService.getElevationData(segment);
+                };
                 AppComponent.prototype.search = function ($event) {
                     var place = $event.target.value;
                     if (place !== '') {
@@ -129,7 +135,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (load)=\"fileChange($event)\"\n        >\n        </app-header>\n        <map></map>\n        ",
+                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (load)=\"fileChange($event)\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </app-header>\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader],
                         providers: [
                             gpx_service_1.GpxService,

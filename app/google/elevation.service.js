@@ -63,7 +63,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     };
                     this.results = [];
                     this.elevator = {};
-                    this.sampleSize = 240;
+                    this.sampleSize = 200;
                     this.route = new route_1.Route(store);
                 }
                 ;
@@ -130,7 +130,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                                     reject('No valid result was determined from the Google Elevation service. Please try again');
                             }
                             else
-                                reject('Google Elevation service was not available. Please try again');
+                                reject('Google Elevation service was not available. Please try again. ' + status);
                         });
                     });
                 };

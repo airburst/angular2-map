@@ -22,6 +22,7 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS} from './reducers/details';
             (clear)="clearRoute()"
             (remove)="removeLast()"
             (load)="fileChange($event)"
+            (recalc)="recalculateElevation()"
         >
         </app-header>
         <map></map>
@@ -96,6 +97,13 @@ export class AppComponent implements OnInit {
     removeLast() {
         this.store.dispatch({ type: REMOVE_LAST_SEGMENT });
         this.store.dispatch({ type: REMOVE_ELEVATION });  
+    }
+    
+    recalculateElevation() {
+        this.store.dispatch({ type: CLEAR_ELEVATION });
+        let segment = this.route.track$.destination.value.track[0];
+        segment.hasElevationData = false;
+        this.elevationService.getElevationData(segment);
     }
 
     search($event) {

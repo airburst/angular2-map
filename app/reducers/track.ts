@@ -21,13 +21,11 @@ export const track = (state: Array<Segment> = [], action: Action) => {
             });
 
         case REMOVE_LAST_SEGMENT:
-            // Need to get trackPointsCount and 
-            // slice that number of points..
             return state.slice(0, state.length - 1);
 
         case CLEAR_TRACK:
             return [];
-
+            
         default:
             return state;
     }

@@ -7,7 +7,8 @@ import {Segment} from './route';
         <div class="stats">
             <div class="text">
                 {{route.name}} &nbsp;&nbsp;&nbsp; Distance: {{route.distance | number:'1.1-2'}} km&nbsp;&nbsp;&nbsp;
-                Ascent: {{route.ascent}} m
+                Ascent: {{route.ascent}} m&nbsp;
+                <a href="#" title="recalculate elevation" (click)="recalc.emit()">Recalculate</a>
             </div>
             <div class="form">
                 <button id="clear" (click)="clear.emit()">Clear Route</button>
@@ -25,4 +26,5 @@ export class AppHeader {
     @Output() clear = new EventEmitter();
     @Output() remove = new EventEmitter();
     @Output() load = new EventEmitter();
+    @Output() recalc = new EventEmitter();
 }

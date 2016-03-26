@@ -22,8 +22,6 @@ System.register([], function(exports_1, context_1) {
                             return segment.id === action.payload.id ? Object.assign({}, segment, action.payload) : segment;
                         });
                     case REMOVE_LAST_SEGMENT:
-                        // Need to get trackPointsCount and 
-                        // slice that number of points..
                         return state.slice(0, state.length - 1);
                     case CLEAR_TRACK:
                         return [];

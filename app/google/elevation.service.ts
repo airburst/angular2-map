@@ -19,7 +19,7 @@ export class ElevationService {
     constructor(public store: Store<AppStore>) {
         this.results = [];
         this.elevator = {};
-        this.sampleSize = 240;
+        this.sampleSize = 200;
         this.route = new Route(store);
     };
 
@@ -92,7 +92,7 @@ export class ElevationService {
                         reject('No valid result was determined from the Google Elevation service. Please try again');
                 }
                 else
-                    reject('Google Elevation service was not available. Please try again');
+                    reject('Google Elevation service was not available. Please try again. ' + status);
             });
         });
     };
