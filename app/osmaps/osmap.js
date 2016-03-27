@@ -143,11 +143,6 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     return { lat: ll.lat, lon: ll.lon };
                 };
                 ;
-                // drawWholeRoute() {
-                //     let centre = this.convertToOsMapPoint(this.route.centre());
-                //     this.centreMap(centre.x, centre.y, this.route.getZoomLevel());
-                //     //this.draw();
-                // };
                 OsMap.prototype.centreMap = function (easting, northing, zoom) {
                     if (easting !== undefined) {
                         this.easting = easting;

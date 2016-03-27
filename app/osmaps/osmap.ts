@@ -142,12 +142,6 @@ export class OsMap {
         return { lat: ll.lat, lon: ll.lon };
     };
 
-    // drawWholeRoute() {
-    //     let centre = this.convertToOsMapPoint(this.route.centre());
-    //     this.centreMap(centre.x, centre.y, this.route.getZoomLevel());
-    //     //this.draw();
-    // };
-
     centreMap(easting?: number, northing?: number, zoom?: number): void {
         if (easting !== undefined) { this.easting = easting; }
         if (northing !== undefined) { this.northing = northing; }

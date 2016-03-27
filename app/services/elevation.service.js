@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'rxjs/add/operator/map', 'rxjs/operator/do', 'rxjs/operator/catch', 'angular2/http', '../utils/utils', '../route', '@ngrx/store', '../reducers/elevation', '../reducers/track', '../reducers/details'], function(exports_1, context_1) {
+System.register(['angular2/core', 'rxjs/add/operator/map', 'angular2/http', '../utils/utils', '../route', '@ngrx/store', '../reducers/elevation', '../reducers/track', '../reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -18,8 +18,6 @@ System.register(['angular2/core', 'rxjs/add/operator/map', 'rxjs/operator/do', '
                 core_1 = core_1_1;
             },
             function (_1) {},
-            function (_2) {},
-            function (_3) {},
             function (http_1_1) {
                 http_1 = http_1_1;
             },
@@ -46,7 +44,7 @@ System.register(['angular2/core', 'rxjs/add/operator/map', 'rxjs/operator/do', '
                 function ElevationService(store, http) {
                     this.store = store;
                     this.http = http;
-                    this.SRTPUrl = 'http://localhost/getSRTMElevations.php';
+                    this.elevationUrl = 'http://localhost/getOSElevation.php';
                     this.results = [];
                     this.sampleSize = 200;
                     this.route = new route_1.Route(store);
@@ -54,6 +52,7 @@ System.register(['angular2/core', 'rxjs/add/operator/map', 'rxjs/operator/do', '
                 ;
                 ElevationService.prototype.init = function () {
                     var _this = this;
+                    this.gridProjection = new window.OpenSpace.GridProjection();
                     // Subscribe to changes in the track and get elevation for 
                     // the latest segment, if it hasn't already been processed
                     this.route.track$.subscribe(function (v) {
@@ -68,36 +67,42 @@ System.register(['angular2/core', 'rxjs/add/operator/map', 'rxjs/operator/do', '
                 };
                 ;
                 ElevationService.prototype.getElevationData = function (segment) {
-                    var i, pathArray, path = [], 
-                    //elevationPromises,
-                    segmentElevation = [];
                     if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
-                        path = this.flattenRoute(segment.track);
-                        this.getSRTPElevations(path, segment);
+                        this.getElevationFromApi(segment);
                     }
                 };
                 ;
-                ElevationService.prototype.flattenRoute = function (points) {
-                    return points.map(function (point) {
-                        return ([point.lat, point.lon]);
-                    });
-                };
-                ;
-                ElevationService.prototype.getSRTPElevations = function (points, segment) {
+                ElevationService.prototype.getElevationFromApi = function (segment) {
                     var _this = this;
-                    if (points.length <= 1) {
+                    var path = this.flattenRoute(segment.track);
+                    console.log(path); //
+                    if (path.length <= 1) {
                         throw ('No elevation requested: too few points in path');
                     }
                     else {
                         var headers = new http_1.Headers();
                         headers.append('Content-Type', 'application/x-www-form-urlencoded');
-                        return this.http.post(this.SRTPUrl, 'points=' + JSON.stringify(points), { headers: headers })
+                        return this.http.post(this.elevationUrl, 'points=' + JSON.stringify(path), { headers: headers })
                             .map(function (res) { return res.json(); })
                             .subscribe(function (data) { return _this.updateStore(data, segment); }, function (err) { return console.log(err); }, function () { return console.log('Elevation fetch Complete'); });
                     }
                 };
+                // Flatten into an array of [easting, northing]
+                ElevationService.prototype.flattenRoute = function (points) {
+                    var _this = this;
+                    return points.map(function (point) {
+                        var mp = _this.convertToOsMapPoint(point);
+                        return ([mp.x, mp.y]);
+                    });
+                };
+                ;
+                ElevationService.prototype.convertToOsMapPoint = function (point) {
+                    var mp = new window.OpenLayers.LonLat(point.lon, point.lat), mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
+                    return new window.OpenLayers.Geometry.Point(mapPoint.lon, mapPoint.lat);
+                };
+                ;
                 ElevationService.prototype.updateStore = function (data, segment) {
-                    console.log(data);
+                    console.log(data); //
                     this.store.dispatch({
                         type: elevation_1.ADD_ELEVATION,
                         payload: utils_1.flatten(data)

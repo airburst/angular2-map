@@ -2,8 +2,6 @@
 import {Injectable} from 'angular2/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import 'rxjs/operator/do';
-import 'rxjs/operator/catch';
 import {Http, Response, Headers} from 'angular2/http';
 import {chunk, flatten} from '../utils/utils';
 import {Point, MapPoint, Segment, AppStore, Route} from '../route';
@@ -17,9 +15,10 @@ export class ElevationService {
 
     public status: any;
     public results: any;
+    private gridProjection: any;
     private sampleSize: number;
     private route: Route;
-    private SRTPUrl: string = 'http://localhost/getSRTMElevations.php';
+    private elevationUrl: string = 'http://localhost/getOSElevation.php';
 
     constructor(
         public store: Store<AppStore>,
@@ -31,6 +30,7 @@ export class ElevationService {
     };
 
     init(): any {
+        this.gridProjection = new window.OpenSpace.GridProjection();
         // Subscribe to changes in the track and get elevation for 
         // the latest segment, if it hasn't already been processed
         this.route.track$.subscribe((v) => {
@@ -46,46 +46,20 @@ export class ElevationService {
     };
 
     getElevationData(segment: Segment): void {
-        let i,
-            pathArray,
-            path: Point[] = [],
-            //elevationPromises,
-            segmentElevation = [];
-
         if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
-            path = this.flattenRoute(segment.track);
-            this.getSRTPElevations(path, segment);
-            // pathArray = chunk(path, this.sampleSize);
-            // elevationPromises = pathArray.map(this.getSRTPElevations.bind(this));
-            // Promise.all(elevationPromises)
-            //     .then(function(response) {
-            //         this.store.dispatch({
-            //             type: ADD_ELEVATION,
-            //             payload: flatten(response)
-            //         });
-            //         this.store.dispatch({
-            //             type: UPDATE_SEGMENT,
-            //             payload: { id: segment.id, hasElevationData: true }
-            //         });
-            //     }.bind(this), function(error) {
-            //         console.log(error);
-            //     });
+            this.getElevationFromApi(segment);
         }
     };
-
-    flattenRoute(points: Point[]): any {
-        return points.map((point) => {
-            return ([point.lat, point.lon]);
-        });
-    };
-
-    getSRTPElevations(points: Array<any>, segment: Segment) {
-        if (points.length <= 1) {
+    
+    getElevationFromApi(segment: Segment) {
+        let path = this.flattenRoute(segment.track);
+        console.log(path)//
+        if (path.length <= 1) {
             throw ('No elevation requested: too few points in path');
         } else {
             let headers = new Headers();
             headers.append('Content-Type', 'application/x-www-form-urlencoded');
-            return this.http.post(this.SRTPUrl, 'points=' + JSON.stringify(points), { headers: headers })
+            return this.http.post(this.elevationUrl, 'points=' + JSON.stringify(path), { headers: headers })
                 .map(res => res.json())
                 .subscribe(
                     data => this.updateStore(data, segment),
@@ -94,9 +68,23 @@ export class ElevationService {
                 );
         }
     }
+
+    // Flatten into an array of [easting, northing]
+    flattenRoute(points: Point[]): Array<any> {
+        return points.map((point) => {
+            let mp = this.convertToOsMapPoint(point);
+            return ([mp.x, mp.y]);
+        });
+    };
     
+    convertToOsMapPoint(point: Point) {
+        let mp = new window.OpenLayers.LonLat(point.lon, point.lat),
+            mapPoint = this.gridProjection.getMapPointFromLonLat(mp);
+        return new window.OpenLayers.Geometry.Point(mapPoint.lon, mapPoint.lat);
+    };
+
     updateStore(data, segment) {
-        console.log(data)
+        console.log(data)//
         this.store.dispatch({
             type: ADD_ELEVATION,
             payload: flatten(data)
