@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation', './reducers/details'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './services/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation', './reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {

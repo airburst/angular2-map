@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES, Control} from 'angular2/common';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
-import {ElevationService} from './google/elevation.service';
+import {ElevationService} from './services/elevation.service';
 import {DirectionsService} from './google/directions.service';
 import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
