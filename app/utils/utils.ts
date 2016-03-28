@@ -25,13 +25,3 @@ export const elevationData = (array: Array<any>): Array<any> => {
         return point.elevation;
     });
 };
-
-export const delayPromise = (duration) => {
-    return function() {
-        return new Promise(function(resolve, reject) {
-            setTimeout(function() {
-                resolve();
-            }, duration)
-        });
-    };
-};
