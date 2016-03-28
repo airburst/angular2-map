@@ -39,6 +39,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
             ElevationService = (function () {
                 function ElevationService(store) {
                     this.store = store;
+                    this.throttle = 1000;
                     this.results = [];
                     this.elevator = {};
                     this.sampleSize = 200;
@@ -63,11 +64,15 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                 };
                 ;
                 ElevationService.prototype.getElevationData = function (segment) {
-                    var i, pathArray, path = [], elevationPromises, segmentElevation = [];
+                    var _this = this;
+                    var i = 0, pathArray, path = [], elevationPromises, segmentElevation = [];
                     if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
                         path = this.convertToGoogleRoute(segment.track);
                         pathArray = utils_1.chunk(path, this.sampleSize);
-                        elevationPromises = pathArray.map(this.elevation.bind(this));
+                        elevationPromises = [];
+                        pathArray.forEach(function (p, i) {
+                            elevationPromises.push(_this.elevation(i * _this.throttle, p));
+                        });
                         Promise.all(elevationPromises)
                             .then(function (response) {
                             this.store.dispatch({
@@ -90,26 +95,28 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     });
                 };
                 ;
-                ElevationService.prototype.elevation = function (path) {
+                ElevationService.prototype.elevation = function (delay, path) {
                     var self = this;
                     return new Promise(function (resolve, reject) {
                         if (path.length <= 1) {
                             reject('No elevation requested: too few points in path');
                         }
-                        self.elevator.getElevationAlongPath({
-                            'path': path,
-                            'samples': (path.length < self.sampleSize) ? path.length : self.sampleSize
-                        }, function (results, status) {
-                            if (status === self.status.OK) {
-                                if (results[0]) {
-                                    resolve(results);
+                        setTimeout(function () {
+                            self.elevator.getElevationAlongPath({
+                                'path': path,
+                                'samples': (path.length < self.sampleSize) ? path.length : self.sampleSize
+                            }, function (results, status) {
+                                if (status === self.status.OK) {
+                                    if (results[0]) {
+                                        resolve(results);
+                                    }
+                                    else
+                                        reject('No valid result was determined from the Google Elevation service. Please try again');
                                 }
                                 else
-                                    reject('No valid result was determined from the Google Elevation service. Please try again');
-                            }
-                            else
-                                reject('Google Elevation service was not available. Please try again. ' + status);
-                        });
+                                    reject('Google Elevation service was not available. Please try again. ' + status);
+                            });
+                        }, delay);
                     });
                 };
                 ;

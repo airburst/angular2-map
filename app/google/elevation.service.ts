@@ -15,6 +15,7 @@ export class ElevationService {
     private elevator: any;
     private sampleSize: number;
     private route: Route;
+    private throttle: number = 1000;
 
     constructor(public store: Store<AppStore>) {
         this.results = [];
@@ -42,7 +43,7 @@ export class ElevationService {
     };
 
     getElevationData(segment: Segment): void {
-        let i,
+        let i: number = 0,
             pathArray,
             path: Point[] = [],
             elevationPromises,
@@ -51,7 +52,12 @@ export class ElevationService {
         if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
             path = this.convertToGoogleRoute(segment.track);
             pathArray = chunk(path, this.sampleSize);
-            elevationPromises = pathArray.map(this.elevation.bind(this));
+            
+            elevationPromises = [];
+            pathArray.forEach((p, i) => {
+                elevationPromises.push(this.elevation(i * this.throttle, p))
+            })
+ 
             Promise.all(elevationPromises)
                 .then(function(response) {
                     this.store.dispatch({
@@ -74,26 +80,28 @@ export class ElevationService {
         });
     };
 
-    elevation(path: any): Promise<any> {
+    elevation(delay: number, path: any): Promise<any> {
         let self = this;
         return new Promise(function(resolve, reject) {
             if (path.length <= 1) {
                 reject('No elevation requested: too few points in path');
             }
-            self.elevator.getElevationAlongPath({
-                'path': path,
-                'samples': (path.length < self.sampleSize) ? path.length : self.sampleSize
-            }, function(results, status) {
-                if (status === self.status.OK) {
-                    if (results[0]) {
-                        resolve(results);
+            setTimeout(() => { self.elevator.getElevationAlongPath({
+                    'path': path,
+                    'samples': (path.length < self.sampleSize) ? path.length : self.sampleSize
+                }, function(results, status) {
+                    if (status === self.status.OK) {
+                        if (results[0]) {
+                            resolve(results);
+                        }
+                        else
+                            reject('No valid result was determined from the Google Elevation service. Please try again');
                     }
                     else
-                        reject('No valid result was determined from the Google Elevation service. Please try again');
-                }
-                else
-                    reject('Google Elevation service was not available. Please try again. ' + status);
-            });
+                        reject('Google Elevation service was not available. Please try again. ' + status);
+                });
+            }, delay);
+            
         });
     };
 

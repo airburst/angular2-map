@@ -10,7 +10,7 @@ export const chunk = (collection, chunkSize) => {
     if (!collection || isNaN(parseInt(chunkSize, 10))) {
         return [];
     }
-    for(i = 0; i < collection.length; i += chunkSize) {
+    for (i = 0; i < collection.length; i += chunkSize) {
         chunked.push(collection.slice(i, i + chunkSize));
     };
     return chunked;
@@ -24,4 +24,14 @@ export const elevationData = (array: Array<any>): Array<any> => {
     return array.map((point) => {
         return point.elevation;
     });
+};
+
+export const delayPromise = (duration) => {
+    return function() {
+        return new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                resolve();
+            }, duration)
+        });
+    };
 };

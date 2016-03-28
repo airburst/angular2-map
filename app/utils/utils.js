@@ -1,7 +1,7 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var uuid, chunk, flatten, elevationData;
+    var uuid, chunk, flatten, elevationData, delayPromise;
     return {
         setters:[],
         execute: function() {
@@ -29,6 +29,15 @@ System.register([], function(exports_1, context_1) {
                 return array.map(function (point) {
                     return point.elevation;
                 });
+            });
+            exports_1("delayPromise", delayPromise = function (duration) {
+                return function () {
+                    return new Promise(function (resolve, reject) {
+                        setTimeout(function () {
+                            resolve();
+                        }, duration);
+                    });
+                };
             });
         }
     }
