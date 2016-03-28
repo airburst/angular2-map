@@ -43,9 +43,6 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                 function OsMap(directionsService, store) {
                     this.directionsService = directionsService;
                     this.store = store;
-                    this.easting = 386210;
-                    this.northing = 168060;
-                    this.zoom = 7;
                     this.os = {};
                     this.ol = {};
                     this.osMap = {};
@@ -74,7 +71,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                         ]
                     };
                     this.osMap = new this.os.Map('map', options);
-                    this.centreMap();
+                    this.centreMap(this.store.getState().details);
                     this.gridProjection = new this.os.GridProjection();
                     // Initialise the vector layers
                     this.lineVectorLayer = new this.ol.Layer.Vector('Line Vector Layer');
@@ -93,6 +90,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     this.route.details$.subscribe(function (v) {
                         if (v.isImported) {
                             _this.unRegisterEvents();
+                            _this.centreMap(v);
                         }
                         else {
                             _this.unRegisterEvents();
@@ -136,7 +134,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                         payload: { id: uid, waypoint: { lat: p.lat, lon: p.lon, ele: 0 }, track: [], hasElevationData: false }
                     });
                     // Get value from Observable
-                    var track = this.route.track$.destination.value.track;
+                    var track = this.store.getState().track;
                     if ((this.followsRoads) && (track.length > 1)) {
                         var fp = track[track.length - 2].waypoint, from = this.directionsService.convertToGoogleMapPoint(fp), tp = track[track.length - 1].waypoint, to = this.directionsService.convertToGoogleMapPoint(tp);
                         this.directionsService.getRouteBetween(from, to)
@@ -157,17 +155,18 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     return { lat: ll.lat, lon: ll.lon };
                 };
                 ;
-                OsMap.prototype.centreMap = function (easting, northing, zoom) {
-                    if (easting !== undefined) {
-                        this.easting = easting;
+                OsMap.prototype.centreMap = function (options) {
+                    console.log('centre map: ', options); //
+                    if (options !== undefined) {
+                        var mp = void 0;
+                        if (options.lat !== 0) {
+                            mp = this.convertToOsMapPoint({ lat: options.lat, lon: options.lon });
+                        }
+                        else {
+                            mp = new this.os.MapPoint(options.easting, options.northing);
+                        }
+                        this.osMap.setCenter(mp, options.zoom);
                     }
-                    if (northing !== undefined) {
-                        this.northing = northing;
-                    }
-                    if (zoom !== undefined) {
-                        this.zoom = zoom;
-                    }
-                    this.osMap.setCenter(new this.os.MapPoint(this.easting, this.northing), this.zoom);
                 };
                 ;
                 OsMap.prototype.draw = function (track) {

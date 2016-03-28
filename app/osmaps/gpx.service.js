@@ -1,4 +1,4 @@
-System.register(['angular2/core', '@ngrx/store', '../reducers/track', '../reducers/elevation', '../reducers/details'], function(exports_1, context_1) {
+System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track', '../reducers/elevation', '../reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '@ngrx/store', '../reducers/track', '../reduce
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, store_1, track_1, elevation_1, details_1;
+    var core_1, store_1, route_1, track_1, elevation_1, details_1;
     var GpxService;
     return {
         setters:[
@@ -19,6 +19,9 @@ System.register(['angular2/core', '@ngrx/store', '../reducers/track', '../reduce
             },
             function (store_1_1) {
                 store_1 = store_1_1;
+            },
+            function (route_1_1) {
+                route_1 = route_1_1;
             },
             function (track_1_1) {
                 track_1 = track_1_1;
@@ -121,6 +124,10 @@ System.register(['angular2/core', '@ngrx/store', '../reducers/track', '../reduce
                     this.updateStore();
                 };
                 GpxService.prototype.updateStore = function () {
+                    var box = route_1.boundingRectangle(this.appStore.track);
+                    this.appStore.details.lat = box.lat;
+                    this.appStore.details.lon = box.lon;
+                    this.appStore.details.zoom = box.zoom;
                     this.store.dispatch({
                         type: details_1.SET_DETAILS,
                         payload: this.appStore.details

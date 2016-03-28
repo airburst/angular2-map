@@ -1,6 +1,6 @@
 import {Injectable} from 'angular2/core';
 import {Store} from '@ngrx/store';
-import {Point, WayPoint, Marker, Segment, AppStore} from '../route';
+import {Point, WayPoint, Marker, Segment, AppStore, boundingRectangle} from '../route';
 import {SET_TRACK} from '../reducers/track';
 import {SET_ELEVATION} from '../reducers/elevation';
 import {SET_DETAILS, initialState} from '../reducers/details';
@@ -113,6 +113,11 @@ export class GpxService {
     }
 
     updateStore() {
+        let box = boundingRectangle(this.appStore.track);
+        this.appStore.details.lat = box.lat;
+        this.appStore.details.lon = box.lon;
+        this.appStore.details.zoom = box.zoom;
+        
         this.store.dispatch({
             type: SET_DETAILS,
             payload: this.appStore.details

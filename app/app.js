@@ -88,14 +88,14 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     }, function (value) {
                         console.error('Script not found:', value);
                     });
-                    // Set centre and zoom when route changes ===TODO: may want to move this into osmap
-                    this.route.track$.subscribe(function (t) {
-                        var b = route_1.boundingRectangle(t);
-                        _this.store.dispatch({
-                            type: details_1.UPDATE_DETAILS,
-                            payload: { lat: b.lat, lon: b.lon, zoom: b.zoom }
-                        });
-                    });
+                    // Set centre and zoom when route changes
+                    // this.route.track$.subscribe((t) => {
+                    //     let b = boundingRectangle(t);
+                    //     this.store.dispatch({
+                    //         type: UPDATE_DETAILS,
+                    //         payload: { lat: b.lat, lon: b.lon, zoom: b.zoom }
+                    //     });
+                    // });
                 };
                 AppComponent.prototype.fileChange = function ($event) {
                     var _this = this;
@@ -122,7 +122,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.store.dispatch({ type: elevation_1.REMOVE_ELEVATION });
                 };
                 AppComponent.prototype.recalculateElevation = function () {
-                    var segment = this.route.track$.destination.value.track[0];
+                    var segment = this.store.getState().track[0];
                     segment.hasElevationData = false;
                     this.elevationService.getElevationData(segment);
                 };

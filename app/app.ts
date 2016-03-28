@@ -71,14 +71,14 @@ export class AppComponent implements OnInit {
                 console.error('Script not found:', value)
             });
 
-        // Set centre and zoom when route changes ===TODO: may want to move this into osmap
-        this.route.track$.subscribe((t) => {
-            let b = boundingRectangle(t);
-            this.store.dispatch({
-                type: UPDATE_DETAILS,
-                payload: { lat: b.lat, lon: b.lon, zoom: b.zoom }
-            });
-        });
+        // Set centre and zoom when route changes
+        // this.route.track$.subscribe((t) => {
+        //     let b = boundingRectangle(t);
+        //     this.store.dispatch({
+        //         type: UPDATE_DETAILS,
+        //         payload: { lat: b.lat, lon: b.lon, zoom: b.zoom }
+        //     });
+        // });
     }
 
     fileChange($event) {
@@ -104,7 +104,7 @@ export class AppComponent implements OnInit {
     }
 
     recalculateElevation() {
-        let segment = this.route.track$.destination.value.track[0];
+        let segment = this.store.getState().track[0];
         segment.hasElevationData = false;
         this.elevationService.getElevationData(segment);
     }

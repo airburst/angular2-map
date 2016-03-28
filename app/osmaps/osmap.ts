@@ -14,9 +14,6 @@ import {UPDATE_DETAILS} from '../reducers/details';
 })
 
 export class OsMap {
-    easting: number = 386210;
-    northing: number = 168060;
-    zoom: number = 7;
     os: any = {};
     ol: any = {};
     osMap: any = {};
@@ -52,7 +49,7 @@ export class OsMap {
             ]
         };
         this.osMap = new this.os.Map('map', options);
-        this.centreMap();
+        this.centreMap(this.store.getState().details);
         this.gridProjection = new this.os.GridProjection();
 
         // Initialise the vector layers
@@ -82,6 +79,7 @@ export class OsMap {
         this.route.details$.subscribe((v) => {
             if (v.isImported) {
                 this.unRegisterEvents();
+                this.centreMap(v);
             } else {
                 this.unRegisterEvents();
                 this.registerEvents();
@@ -130,7 +128,7 @@ export class OsMap {
         });
 
         // Get value from Observable
-        let track = this.route.track$.destination.value.track;
+        let track = this.store.getState().track;
 
         if ((this.followsRoads) && (track.length > 1)) {
             let fp = track[track.length - 2].waypoint,
@@ -157,11 +155,17 @@ export class OsMap {
         return { lat: ll.lat, lon: ll.lon };
     };
 
-    centreMap(easting?: number, northing?: number, zoom?: number): void {
-        if (easting !== undefined) { this.easting = easting; }
-        if (northing !== undefined) { this.northing = northing; }
-        if (zoom !== undefined) { this.zoom = zoom; }
-        this.osMap.setCenter(new this.os.MapPoint(this.easting, this.northing), this.zoom);
+    centreMap(options?: any): void {
+        console.log('centre map: ', options);//
+        if (options !== undefined) {
+            let mp;
+            if (options.lat !== 0) {
+                mp = this.convertToOsMapPoint({ lat: options.lat, lon: options.lon });
+            } else {
+                mp = new this.os.MapPoint(options.easting, options.northing);
+            }
+            this.osMap.setCenter(mp, options.zoom);
+        }
     };
 
     draw(track: Segment[]): void {
