@@ -8,7 +8,7 @@ import {UPDATE_SEGMENT} from '../reducers/track';
 import {UPDATE_DETAILS} from '../reducers/details';
 
 @Injectable()
-export class ElevationService {
+export class GoogleElevationService {
 
     public status: any;
     public results: any;

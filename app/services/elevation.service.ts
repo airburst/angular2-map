@@ -85,14 +85,14 @@ export class ElevationService {
 
     updateStore(data, segment) {
         console.log(data)//
-        this.store.dispatch({
-            type: ADD_ELEVATION,
-            payload: flatten(data)
-        });
-        this.store.dispatch({
-            type: UPDATE_SEGMENT,
-            payload: { id: segment.id, hasElevationData: true }
-        });
+        // this.store.dispatch({
+        //     type: ADD_ELEVATION,
+        //     payload: flatten(data)
+        // });
+        // this.store.dispatch({
+        //     type: UPDATE_SEGMENT,
+        //     payload: { id: segment.id, hasElevationData: true }
+        // });
     }
 
     calculateElevation(elevations: Array<number>): any {

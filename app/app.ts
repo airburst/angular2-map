@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES, Control} from 'angular2/common';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
+import {GoogleElevationService} from './google/elevation.service';
 import {ElevationService} from './services/elevation.service';
 import {DirectionsService} from './google/directions.service';
 import {GpxService} from './osmaps/gpx.service';
@@ -32,6 +33,7 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS} from './reducers/details';
         GpxService,
         FileService,
         ScriptLoadService,
+        GoogleElevationService,
         ElevationService,
         GazetteerService,
         DirectionsService
@@ -47,7 +49,7 @@ export class AppComponent implements OnInit {
         private gpxService: GpxService,
         private fileService: FileService,
         private scriptLoadService: ScriptLoadService,
-        private elevationService: ElevationService,
+        private googleElevationService: GoogleElevationService,
         private directionsService: DirectionsService,
         private gazetteerService: GazetteerService,
         public store: Store<AppStore>
@@ -64,7 +66,7 @@ export class AppComponent implements OnInit {
         Promise.all(loadPromises)
             .then((value) => {
                 this.directionsService.init();
-                this.elevationService.init();
+                this.googleElevationService.init();
                 this.osmap = new OsMap(this.directionsService, this.store);
                 this.osmap.init();
             }, function(value) {

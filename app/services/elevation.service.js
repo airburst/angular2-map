@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'rxjs/add/operator/map', 'angular2/http', '../utils/utils', '../route', '@ngrx/store', '../reducers/elevation', '../reducers/track', '../reducers/details'], function(exports_1, context_1) {
+System.register(['angular2/core', 'rxjs/add/operator/map', 'angular2/http', '../utils/utils', '../route', '@ngrx/store', '../reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'rxjs/add/operator/map', 'angular2/http', '../
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, utils_1, route_1, store_1, elevation_1, track_1, details_1;
+    var core_1, http_1, utils_1, route_1, store_1, details_1;
     var ElevationService;
     return {
         setters:[
@@ -29,12 +29,6 @@ System.register(['angular2/core', 'rxjs/add/operator/map', 'angular2/http', '../
             },
             function (store_1_1) {
                 store_1 = store_1_1;
-            },
-            function (elevation_1_1) {
-                elevation_1 = elevation_1_1;
-            },
-            function (track_1_1) {
-                track_1 = track_1_1;
             },
             function (details_1_1) {
                 details_1 = details_1_1;
@@ -103,14 +97,14 @@ System.register(['angular2/core', 'rxjs/add/operator/map', 'angular2/http', '../
                 ;
                 ElevationService.prototype.updateStore = function (data, segment) {
                     console.log(data); //
-                    this.store.dispatch({
-                        type: elevation_1.ADD_ELEVATION,
-                        payload: utils_1.flatten(data)
-                    });
-                    this.store.dispatch({
-                        type: track_1.UPDATE_SEGMENT,
-                        payload: { id: segment.id, hasElevationData: true }
-                    });
+                    // this.store.dispatch({
+                    //     type: ADD_ELEVATION,
+                    //     payload: flatten(data)
+                    // });
+                    // this.store.dispatch({
+                    //     type: UPDATE_SEGMENT,
+                    //     payload: { id: segment.id, hasElevationData: true }
+                    // });
                 };
                 ElevationService.prototype.calculateElevation = function (elevations) {
                     var ascent = 0, lastElevation = elevations[0];

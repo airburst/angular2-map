@@ -11,7 +11,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, utils_1, route_1, store_1, elevation_1, track_1, details_1;
-    var ElevationService;
+    var GoogleElevationService;
     return {
         setters:[
             function (core_1_1) {
@@ -36,8 +36,8 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                 details_1 = details_1_1;
             }],
         execute: function() {
-            ElevationService = (function () {
-                function ElevationService(store) {
+            GoogleElevationService = (function () {
+                function GoogleElevationService(store) {
                     this.store = store;
                     // Reduce a path to <= maximum sample size
                     this.reducePath = function (points) {
@@ -67,7 +67,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     this.route = new route_1.Route(store);
                 }
                 ;
-                ElevationService.prototype.init = function () {
+                GoogleElevationService.prototype.init = function () {
                     var _this = this;
                     this.elevator = new window.google.maps.ElevationService();
                     this.status = window.google.maps.ElevationStatus;
@@ -84,7 +84,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     });
                 };
                 ;
-                ElevationService.prototype.getElevationData = function (segment) {
+                GoogleElevationService.prototype.getElevationData = function (segment) {
                     var i, pathArray, path = [], elevationPromises, segmentElevation = [];
                     if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
                         path = this.convertToGoogleRoute(segment.track);
@@ -106,13 +106,13 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     }
                 };
                 ;
-                ElevationService.prototype.convertToGoogleRoute = function (points) {
+                GoogleElevationService.prototype.convertToGoogleRoute = function (points) {
                     return points.map(function (point) {
                         return new window.google.maps.LatLng(point.lat, point.lon);
                     });
                 };
                 ;
-                ElevationService.prototype.elevation = function (path) {
+                GoogleElevationService.prototype.elevation = function (path) {
                     var self = this;
                     return new Promise(function (resolve, reject) {
                         if (path.length <= 1) {
@@ -135,7 +135,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     });
                 };
                 ;
-                ElevationService.prototype.calculateElevation = function (elevations) {
+                GoogleElevationService.prototype.calculateElevation = function (elevations) {
                     var ascent = 0, lastElevation = elevations[0];
                     elevations.forEach(function (e) {
                         ascent += (e > lastElevation) ? (e - lastElevation) : 0;
@@ -143,13 +143,13 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     });
                     return { ascent: Math.floor(ascent) };
                 };
-                ElevationService = __decorate([
+                GoogleElevationService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [store_1.Store])
-                ], ElevationService);
-                return ElevationService;
+                ], GoogleElevationService);
+                return GoogleElevationService;
             }());
-            exports_1("ElevationService", ElevationService);
+            exports_1("GoogleElevationService", GoogleElevationService);
         }
     }
 });
