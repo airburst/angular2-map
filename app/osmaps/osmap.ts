@@ -53,8 +53,6 @@ export class OsMap {
         };
         this.osMap = new this.os.Map('map', options);
         this.centreMap();
-
-        // Set the projection - needed for converting between northing-easting and latlng
         this.gridProjection = new this.os.GridProjection();
 
         // Initialise the vector layers
@@ -75,16 +73,33 @@ export class OsMap {
             position
         );
 
-        // Add map event handlers for touch and click
         this.osMap.events.remove('dblclick');
-        this.osMap.events.register('touchmove', this.osMap, function() { this.isMoving = true; });
-        this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
-        this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
 
         this.route.track$.subscribe((v) => {
             this.draw(v);
         });
+
+        this.route.details$.subscribe((v) => {
+            if (v.isImported) {
+                this.unRegisterEvents();
+            } else {
+                this.unRegisterEvents();
+                this.registerEvents();
+            }
+        }); 
     };
+
+    registerEvents() {
+        this.osMap.events.register('touchmove', this.osMap, function() { this.isMoving = true; });
+        this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
+        this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
+    }
+
+    unRegisterEvents() {
+        this.osMap.events.remove('touchmove');
+        this.osMap.events.remove('touchend');
+        this.osMap.events.remove('click');
+    }
 
     touchPoint(e) {
         if (this.isMoving) {

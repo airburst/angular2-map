@@ -114,7 +114,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
                     this.store.dispatch({
                         type: details_1.UPDATE_DETAILS,
-                        payload: { isImported: false, hasNewElevation: true }
+                        payload: { isImported: false, hasElevationData: true }
                     });
                 };
                 AppComponent.prototype.removeLast = function () {

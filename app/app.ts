@@ -39,10 +39,10 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS} from './reducers/details';
 })
 
 export class AppComponent implements OnInit {
-    
+
     public osmap: OsMap;
     public route: Route;
-    
+
     constructor(
         private gpxService: GpxService,
         private fileService: FileService,
@@ -70,7 +70,7 @@ export class AppComponent implements OnInit {
             }, function(value) {
                 console.error('Script not found:', value)
             });
-            
+
         // Set centre and zoom when route changes ===TODO: may want to move this into osmap
         this.route.track$.subscribe((t) => {
             let b = boundingRectangle(t);
@@ -83,7 +83,7 @@ export class AppComponent implements OnInit {
 
     fileChange($event) {
         if (this.fileService.supports($event.target)) {
-            this.fileService.readTextFile($event.target, (...data) => {    
+            this.fileService.readTextFile($event.target, (...data) => {
                 this.gpxService.read(data);
             });
         }
@@ -91,14 +91,18 @@ export class AppComponent implements OnInit {
 
     clearRoute() {
         this.store.dispatch({ type: CLEAR_TRACK });
-        this.store.dispatch({ type: CLEAR_ELEVATION });       
+        this.store.dispatch({ type: CLEAR_ELEVATION });
+        this.store.dispatch({
+            type: UPDATE_DETAILS,
+            payload: { isImported: false, hasNewElevation: true }
+        });
     }
 
     removeLast() {
         this.store.dispatch({ type: REMOVE_LAST_SEGMENT });
-        this.store.dispatch({ type: REMOVE_ELEVATION });  
+        this.store.dispatch({ type: REMOVE_ELEVATION });
     }
-    
+
     recalculateElevation() {
         let segment = this.route.track$.destination.value.track[0];
         segment.hasElevationData = false;

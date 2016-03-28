@@ -75,7 +75,6 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     };
                     this.osMap = new this.os.Map('map', options);
                     this.centreMap();
-                    // Set the projection - needed for converting between northing-easting and latlng
                     this.gridProjection = new this.os.GridProjection();
                     // Initialise the vector layers
                     this.lineVectorLayer = new this.ol.Layer.Vector('Line Vector Layer');
@@ -87,16 +86,31 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     // Add controls
                     var position = new this.os.Control.ControlPosition(this.os.Control.ControlAnchor.ANCHOR_TOP_LEFT, new this.ol.Size(0, 100));
                     this.osMap.addControl(new this.os.Control.LargeMapControl(), position);
-                    // Add map event handlers for touch and click
                     this.osMap.events.remove('dblclick');
-                    this.osMap.events.register('touchmove', this.osMap, function () { this.isMoving = true; });
-                    this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
-                    this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
                     this.route.track$.subscribe(function (v) {
                         _this.draw(v);
                     });
+                    this.route.details$.subscribe(function (v) {
+                        if (v.isImported) {
+                            _this.unRegisterEvents();
+                        }
+                        else {
+                            _this.unRegisterEvents();
+                            _this.registerEvents();
+                        }
+                    });
                 };
                 ;
+                OsMap.prototype.registerEvents = function () {
+                    this.osMap.events.register('touchmove', this.osMap, function () { this.isMoving = true; });
+                    this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
+                    this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
+                };
+                OsMap.prototype.unRegisterEvents = function () {
+                    this.osMap.events.remove('touchmove');
+                    this.osMap.events.remove('touchend');
+                    this.osMap.events.remove('click');
+                };
                 OsMap.prototype.touchPoint = function (e) {
                     if (this.isMoving) {
                         this.isMoving = false;

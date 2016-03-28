@@ -83,6 +83,10 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                                 type: track_1.UPDATE_SEGMENT,
                                 payload: { id: segment.id, hasElevationData: true }
                             });
+                            this.store.dispatch({
+                                type: details_1.UPDATE_DETAILS,
+                                payload: { hasNewElevation: true }
+                            });
                         }.bind(this), function (error) {
                             console.log(error);
                         });

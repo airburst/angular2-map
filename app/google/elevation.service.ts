@@ -68,6 +68,10 @@ export class ElevationService {
                         type: UPDATE_SEGMENT,
                         payload: { id: segment.id, hasElevationData: true }
                     });
+                    this.store.dispatch({
+                        type: UPDATE_DETAILS,
+                        payload: { hasNewElevation: true }
+                    });
                 }.bind(this), function(error) {
                     console.log(error);
                 });
