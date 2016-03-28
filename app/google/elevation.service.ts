@@ -8,7 +8,7 @@ import {UPDATE_SEGMENT} from '../reducers/track';
 import {UPDATE_DETAILS} from '../reducers/details';
 
 @Injectable()
-export class GoogleElevationService {
+export class ElevationService {
 
     public status: any;
     public results: any;
@@ -107,30 +107,5 @@ export class GoogleElevationService {
         });
         return { ascent: Math.floor(ascent) };
     }
-
-    // Reduce a path to <= maximum sample size
-    private reducePath = function(points: Point[]): Point[] {
-        let path = [];
-
-        // If elevation path is below max size, use it
-        let eLen = points.length;
-        if (eLen < this.sampleSize) { return points; }
-
-        // Otherwise, reduce to no more than the max number of point
-        let eDiv = Math.floor(eLen / this.sampleSize) + 1;      // Reduction factor
-        let eMod = eLen - (Math.floor(eLen / eDiv) * eDiv);     // Remainder of single points
-        let eLast = eLen - eMod;                                // Last factorised sample point
-
-        // Resample at interval of (eDiv) points
-        for (let i = 0; i < eLast; i += eDiv) {
-            path.push(points[i]);
-        }
-
-        // Then add the last individual points at frequency = 1
-        for (let i = eLast; i < eLen; i++) {
-            path.push(points[i]);
-        }
-        return path;
-    };
 
 }

@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './google/elevation.service', './services/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation', './reducers/details'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './osmaps/gazetteer', './route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation', './reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, elevation_service_2, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1, track_1, elevation_1, details_1;
+    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, gazetteer_1, route_1, config_1, store_1, track_1, elevation_1, details_1;
     var AppComponent;
     return {
         setters:[
@@ -28,9 +28,6 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             },
             function (elevation_service_1_1) {
                 elevation_service_1 = elevation_service_1_1;
-            },
-            function (elevation_service_2_1) {
-                elevation_service_2 = elevation_service_2_1;
             },
             function (directions_service_1_1) {
                 directions_service_1 = directions_service_1_1;
@@ -67,11 +64,11 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(gpxService, fileService, scriptLoadService, googleElevationService, directionsService, gazetteerService, store) {
+                function AppComponent(gpxService, fileService, scriptLoadService, elevationService, directionsService, gazetteerService, store) {
                     this.gpxService = gpxService;
                     this.fileService = fileService;
                     this.scriptLoadService = scriptLoadService;
-                    this.googleElevationService = googleElevationService;
+                    this.elevationService = elevationService;
                     this.directionsService = directionsService;
                     this.gazetteerService = gazetteerService;
                     this.store = store;
@@ -85,7 +82,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     Promise.all(loadPromises)
                         .then(function (value) {
                         _this.directionsService.init();
-                        _this.googleElevationService.init();
+                        _this.elevationService.init();
                         _this.osmap = new osmap_1.OsMap(_this.directionsService, _this.store);
                         _this.osmap.init();
                     }, function (value) {
@@ -144,13 +141,12 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                             gpx_service_1.GpxService,
                             file_service_1.FileService,
                             scriptload_service_1.ScriptLoadService,
-                            elevation_service_1.GoogleElevationService,
-                            elevation_service_2.ElevationService,
+                            elevation_service_1.ElevationService,
                             gazetteer_1.GazetteerService,
                             directions_service_1.DirectionsService
                         ]
                     }), 
-                    __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.GoogleElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService, store_1.Store])
+                    __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService, store_1.Store])
                 ], AppComponent);
                 return AppComponent;
             }());

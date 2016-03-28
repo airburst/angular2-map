@@ -11,7 +11,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, utils_1, route_1, store_1, elevation_1, track_1, details_1;
-    var GoogleElevationService;
+    var ElevationService;
     return {
         setters:[
             function (core_1_1) {
@@ -36,38 +36,16 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                 details_1 = details_1_1;
             }],
         execute: function() {
-            GoogleElevationService = (function () {
-                function GoogleElevationService(store) {
+            ElevationService = (function () {
+                function ElevationService(store) {
                     this.store = store;
-                    // Reduce a path to <= maximum sample size
-                    this.reducePath = function (points) {
-                        var path = [];
-                        // If elevation path is below max size, use it
-                        var eLen = points.length;
-                        if (eLen < this.sampleSize) {
-                            return points;
-                        }
-                        // Otherwise, reduce to no more than the max number of point
-                        var eDiv = Math.floor(eLen / this.sampleSize) + 1; // Reduction factor
-                        var eMod = eLen - (Math.floor(eLen / eDiv) * eDiv); // Remainder of single points
-                        var eLast = eLen - eMod; // Last factorised sample point
-                        // Resample at interval of (eDiv) points
-                        for (var i = 0; i < eLast; i += eDiv) {
-                            path.push(points[i]);
-                        }
-                        // Then add the last individual points at frequency = 1
-                        for (var i = eLast; i < eLen; i++) {
-                            path.push(points[i]);
-                        }
-                        return path;
-                    };
                     this.results = [];
                     this.elevator = {};
                     this.sampleSize = 200;
                     this.route = new route_1.Route(store);
                 }
                 ;
-                GoogleElevationService.prototype.init = function () {
+                ElevationService.prototype.init = function () {
                     var _this = this;
                     this.elevator = new window.google.maps.ElevationService();
                     this.status = window.google.maps.ElevationStatus;
@@ -84,7 +62,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     });
                 };
                 ;
-                GoogleElevationService.prototype.getElevationData = function (segment) {
+                ElevationService.prototype.getElevationData = function (segment) {
                     var i, pathArray, path = [], elevationPromises, segmentElevation = [];
                     if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
                         path = this.convertToGoogleRoute(segment.track);
@@ -106,13 +84,13 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     }
                 };
                 ;
-                GoogleElevationService.prototype.convertToGoogleRoute = function (points) {
+                ElevationService.prototype.convertToGoogleRoute = function (points) {
                     return points.map(function (point) {
                         return new window.google.maps.LatLng(point.lat, point.lon);
                     });
                 };
                 ;
-                GoogleElevationService.prototype.elevation = function (path) {
+                ElevationService.prototype.elevation = function (path) {
                     var self = this;
                     return new Promise(function (resolve, reject) {
                         if (path.length <= 1) {
@@ -135,7 +113,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     });
                 };
                 ;
-                GoogleElevationService.prototype.calculateElevation = function (elevations) {
+                ElevationService.prototype.calculateElevation = function (elevations) {
                     var ascent = 0, lastElevation = elevations[0];
                     elevations.forEach(function (e) {
                         ascent += (e > lastElevation) ? (e - lastElevation) : 0;
@@ -143,13 +121,13 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     });
                     return { ascent: Math.floor(ascent) };
                 };
-                GoogleElevationService = __decorate([
+                ElevationService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [store_1.Store])
-                ], GoogleElevationService);
-                return GoogleElevationService;
+                ], ElevationService);
+                return ElevationService;
             }());
-            exports_1("GoogleElevationService", GoogleElevationService);
+            exports_1("ElevationService", ElevationService);
         }
     }
 });
