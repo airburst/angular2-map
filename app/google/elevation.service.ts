@@ -15,7 +15,7 @@ export class ElevationService {
     private elevator: any;
     private sampleSize: number;
     private route: Route;
-    private throttle: number = 1000;
+    private throttle: number = 2000;
 
     constructor(public store: Store<AppStore>) {
         this.results = [];
@@ -57,7 +57,7 @@ export class ElevationService {
             pathArray.forEach((p, i) => {
                 elevationPromises.push(this.elevation(i * this.throttle, p))
             })
- 
+
             Promise.all(elevationPromises)
                 .then(function(response) {
                     this.store.dispatch({

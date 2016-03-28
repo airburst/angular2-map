@@ -90,6 +90,7 @@ System.register(['angular2/core', '@ngrx/store', '../reducers/track', '../reduce
                     this.appStore.track.push({ id: 'imported', track: track, waypoint: null, hasElevationData: true });
                     this.appStore.elevation.push(elevation);
                     this.appStore.details.isImported = true;
+                    this.appStore.details.hasNewElevation = false;
                     this.updateStore();
                 };
                 // TODO: understand the full schema:
@@ -116,6 +117,7 @@ System.register(['angular2/core', '@ngrx/store', '../reducers/track', '../reduce
                     this.appStore.markers.push({ name: 'Start', point: track[0] });
                     this.appStore.markers.push({ name: 'Finish', point: track[track.length - 1] });
                     this.appStore.details.isImported = true;
+                    this.appStore.details.hasNewElevation = false;
                     this.updateStore();
                 };
                 GpxService.prototype.updateStore = function () {

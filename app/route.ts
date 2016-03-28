@@ -41,6 +41,7 @@ export interface RouteDetails {
     zoom?: number;
     followsRoads: boolean;
     isImported: boolean;
+    hasNewElevation: boolean;
 }
 
 export interface AppStore {

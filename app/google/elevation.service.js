@@ -39,7 +39,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
             ElevationService = (function () {
                 function ElevationService(store) {
                     this.store = store;
-                    this.throttle = 1000;
+                    this.throttle = 2000;
                     this.results = [];
                     this.elevator = {};
                     this.sampleSize = 200;

@@ -8,7 +8,7 @@ import {Segment} from './route';
             <div class="text">
                 {{route.name}} &nbsp;&nbsp;&nbsp; Distance: {{route.distance | number:'1.1-2'}} km&nbsp;&nbsp;&nbsp;
                 Ascent: {{route.ascent}} m&nbsp;
-                <a href="#" title="recalculate elevation" (click)="recalc.emit()">Recalculate</a>
+                <a *ngIf="!route.hasNewElevation" class="header-link" href="#" title="recalculate elevation" (click)="recalc.emit()">Recalculate</a>
             </div>
             <div class="form">
                 <button id="clear" (click)="clear.emit()">Clear Route</button>

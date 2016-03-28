@@ -18,7 +18,8 @@ System.register([], function(exports_1, context_1) {
                 lon: 0,
                 zoom: 7,
                 followsRoads: true,
-                isImported: false
+                isImported: false,
+                hasNewElevation: true
             });
             exports_1("details", details = function (state, action) {
                 if (state === void 0) { state = initialState; }
