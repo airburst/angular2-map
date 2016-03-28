@@ -118,7 +118,6 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.store.dispatch({ type: elevation_1.REMOVE_ELEVATION });
                 };
                 AppComponent.prototype.recalculateElevation = function () {
-                    this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
                     var segment = this.route.track$.destination.value.track[0];
                     segment.hasElevationData = false;
                     this.elevationService.getElevationData(segment);

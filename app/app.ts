@@ -100,7 +100,6 @@ export class AppComponent implements OnInit {
     }
     
     recalculateElevation() {
-        this.store.dispatch({ type: CLEAR_ELEVATION });
         let segment = this.route.track$.destination.value.track[0];
         segment.hasElevationData = false;
         this.elevationService.getElevationData(segment);
