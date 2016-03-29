@@ -86,6 +86,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     this.route.details$.subscribe(function (v) {
                         if (v.isImported) {
                             _this.unRegisterEvents();
+                            console.log('Calling centreMap from state change: ', v); //
                             _this.centreMap(v);
                         }
                         else {
@@ -152,15 +153,17 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                 };
                 ;
                 OsMap.prototype.centreMap = function (options) {
-                    console.log('centre map: ', options); //
+                    console.log('centreMap: ', options); //
                     if (options !== undefined) {
-                        var mp = void 0;
+                        var mp = void 0, p = void 0;
                         if (options.lat !== 0) {
-                            mp = this.convertToOsMapPoint({ lat: options.lat, lon: options.lon });
+                            p = this.convertToOsMapPoint({ lat: options.lat, lon: options.lon });
+                            mp = new this.os.MapPoint(p.x, p.y);
                         }
                         else {
                             mp = new this.os.MapPoint(options.easting, options.northing);
                         }
+                        console.log('Setting centre to: ', mp); //
                         this.osMap.setCenter(mp, options.zoom);
                     }
                 };

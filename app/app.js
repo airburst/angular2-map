@@ -88,14 +88,6 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     }, function (value) {
                         console.error('Script not found:', value);
                     });
-                    // Set centre and zoom when route changes
-                    // this.route.track$.subscribe((t) => {
-                    //     let b = boundingRectangle(t);
-                    //     this.store.dispatch({
-                    //         type: UPDATE_DETAILS,
-                    //         payload: { lat: b.lat, lon: b.lon, zoom: b.zoom }
-                    //     });
-                    // });
                 };
                 AppComponent.prototype.fileChange = function ($event) {
                     var _this = this;
@@ -110,12 +102,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     }
                 };
                 AppComponent.prototype.clearRoute = function () {
-                    this.store.dispatch({ type: track_1.CLEAR_TRACK });
-                    this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
-                    this.store.dispatch({
-                        type: details_1.UPDATE_DETAILS,
-                        payload: { isImported: false, hasNewElevation: true }
-                    });
+                    this.store.dispatch({ type: track_1.CLEAR_TRACK }); // causes side effects in osmap, ...
+                    this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION }); // causes side effects in elevation.service
+                    this.store.dispatch({ type: details_1.CLEAR_DETAILS }); // causes centreMap() in osmap
                 };
                 AppComponent.prototype.removeLast = function () {
                     this.store.dispatch({ type: track_1.REMOVE_LAST_SEGMENT });

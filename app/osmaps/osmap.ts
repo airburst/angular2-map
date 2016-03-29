@@ -78,6 +78,7 @@ export class OsMap {
         this.route.details$.subscribe((v) => {
             if (v.isImported) {
                 this.unRegisterEvents();
+                console.log('Calling centreMap from state change: ', v)//
                 this.centreMap(v);
             } else {
                 this.unRegisterEvents();
@@ -155,14 +156,16 @@ export class OsMap {
     };
 
     centreMap(options?: any): void {
-        console.log('centre map: ', options);//
+        console.log('centreMap: ', options)//
         if (options !== undefined) {
-            let mp;
+            let mp, p;
             if (options.lat !== 0) {
-                mp = this.convertToOsMapPoint({ lat: options.lat, lon: options.lon });
+                p = this.convertToOsMapPoint({ lat: options.lat, lon: options.lon });
+                mp = new this.os.MapPoint(p.x, p.y);
             } else {
                 mp = new this.os.MapPoint(options.easting, options.northing);
             }
+            console.log('Setting centre to: ', mp)//
             this.osMap.setCenter(mp, options.zoom);
         }
     };

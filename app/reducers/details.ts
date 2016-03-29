@@ -5,7 +5,7 @@ export const SET_DETAILS = 'SET_DETAILS';
 export const UPDATE_DETAILS = 'UPDATE_DETAILS';
 
 export const initialState: RouteDetails = {
-    name: '',
+    name: "",
     distance: 0,
     ascent: 0,
     easting: 386210,
@@ -29,7 +29,8 @@ export const details = (state: RouteDetails = initialState, action: Action) => {
             return Object.assign({}, state, action.payload);
 
         case CLEAR_DETAILS:
-            return initialState;
+            console.log('CLEAR_DETAILS', initialState)//
+            return Object.assign({}, state, initialState);
 
         default:
             return state;

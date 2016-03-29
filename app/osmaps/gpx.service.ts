@@ -19,6 +19,7 @@ export class GpxService {
             elevation: [],
             markers: []
         }
+        console.log('appStore: ', this.appStore)//
     }
 
     read(gpxData: any): void {
@@ -113,17 +114,20 @@ export class GpxService {
     }
 
     updateStore() {
-        let box = boundingRectangle(this.appStore.track);
-        this.appStore.details.lat = box.lat;
-        this.appStore.details.lon = box.lon;
-        this.appStore.details.zoom = box.zoom;
-        this.appStore.details.easting = 0;
-        this.appStore.details.northing = 0;
-        this.appStore.details.distance = box.distance;
+        let box = boundingRectangle(this.appStore.track),
+            payload = Object.assign({}, 
+                this.appStore.details, {
+                    lat: box.lat,
+                    lon: box.lon,
+                    zoom: box.zoom,
+                    distance: box.distance,
+                    easting: 0,
+                    northing: 0
+                });
         
         this.store.dispatch({
             type: SET_DETAILS,
-            payload: this.appStore.details
+            payload: payload
         });
 
         this.store.dispatch({

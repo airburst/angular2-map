@@ -70,15 +70,6 @@ export class AppComponent implements OnInit {
             }, function(value) {
                 console.error('Script not found:', value)
             });
-
-        // Set centre and zoom when route changes
-        // this.route.track$.subscribe((t) => {
-        //     let b = boundingRectangle(t);
-        //     this.store.dispatch({
-        //         type: UPDATE_DETAILS,
-        //         payload: { lat: b.lat, lon: b.lon, zoom: b.zoom }
-        //     });
-        // });
     }
 
     fileChange($event) {
@@ -90,12 +81,9 @@ export class AppComponent implements OnInit {
     }
 
     clearRoute() {
-        this.store.dispatch({ type: CLEAR_TRACK });
-        this.store.dispatch({ type: CLEAR_ELEVATION });
-        this.store.dispatch({
-            type: UPDATE_DETAILS,
-            payload: { isImported: false, hasNewElevation: true }
-        });
+        this.store.dispatch({ type: CLEAR_TRACK });     // causes side effects in osmap, ...
+        this.store.dispatch({ type: CLEAR_ELEVATION }); // causes side effects in elevation.service
+        this.store.dispatch({ type: CLEAR_DETAILS });   // causes centreMap() in osmap
     }
 
     removeLast() {

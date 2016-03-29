@@ -9,7 +9,7 @@ System.register([], function(exports_1, context_1) {
             exports_1("SET_DETAILS", SET_DETAILS = 'SET_DETAILS');
             exports_1("UPDATE_DETAILS", UPDATE_DETAILS = 'UPDATE_DETAILS');
             exports_1("initialState", initialState = {
-                name: '',
+                name: "",
                 distance: 0,
                 ascent: 0,
                 easting: 386210,
@@ -30,7 +30,8 @@ System.register([], function(exports_1, context_1) {
                     case UPDATE_DETAILS:
                         return Object.assign({}, state, action.payload);
                     case CLEAR_DETAILS:
-                        return initialState;
+                        console.log('CLEAR_DETAILS', initialState); //
+                        return Object.assign({}, state, initialState);
                     default:
                         return state;
                 }
