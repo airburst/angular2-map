@@ -22,7 +22,6 @@ export class OsMap {
     markerVectorLayer: any = {};
     gridProjection: any = {};
     isMoving: boolean = false;
-    followsRoads: boolean = true;
     route: Route;
 
     constructor(
@@ -130,7 +129,7 @@ export class OsMap {
         // Get value from Observable
         let track = this.store.getState().track;
 
-        if ((this.followsRoads) && (track.length > 1)) {
+        if ((this.store.getState().details.followsRoads) && (track.length > 1)) {
             let fp = track[track.length - 2].waypoint,
                 from = this.directionsService.convertToGoogleMapPoint(fp),
                 tp = track[track.length - 1].waypoint,
@@ -199,12 +198,6 @@ export class OsMap {
         this.lineVectorLayer.addFeatures([routeFeature]);
         // this.markerVectorLayer.destroyFeatures();
         // this.markerVectorLayer.addFeatures(markersFeature);
-
-        // Update distance
-        this.store.dispatch({
-            type: UPDATE_DETAILS,
-            payload: { distance: new this.ol.Geometry.Curve(path).getLength() / 1000 }
-        });
     };
 
     convertRouteToOsFormat(track: Segment[]): MapPoint[] {

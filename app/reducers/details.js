@@ -25,6 +25,7 @@ System.register([], function(exports_1, context_1) {
                 if (state === void 0) { state = initialState; }
                 switch (action.type) {
                     case SET_DETAILS:
+                        console.log('SET_DETAILS', action.payload); //
                         return action.payload;
                     case UPDATE_DETAILS:
                         return Object.assign({}, state, action.payload);

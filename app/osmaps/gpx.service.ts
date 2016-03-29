@@ -117,6 +117,9 @@ export class GpxService {
         this.appStore.details.lat = box.lat;
         this.appStore.details.lon = box.lon;
         this.appStore.details.zoom = box.zoom;
+        this.appStore.details.easting = 0;
+        this.appStore.details.northing = 0;
+        this.appStore.details.distance = box.distance;
         
         this.store.dispatch({
             type: SET_DETAILS,

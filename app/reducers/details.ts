@@ -22,6 +22,7 @@ export const details = (state: RouteDetails = initialState, action: Action) => {
 
     switch (action.type) {
         case SET_DETAILS:
+        console.log('SET_DETAILS', action.payload)//
             return action.payload;
 
         case UPDATE_DETAILS:

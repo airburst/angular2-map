@@ -128,6 +128,9 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
                     this.appStore.details.lat = box.lat;
                     this.appStore.details.lon = box.lon;
                     this.appStore.details.zoom = box.zoom;
+                    this.appStore.details.easting = 0;
+                    this.appStore.details.northing = 0;
+                    this.appStore.details.distance = box.distance;
                     this.store.dispatch({
                         type: details_1.SET_DETAILS,
                         payload: this.appStore.details

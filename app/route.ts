@@ -64,13 +64,19 @@ export class Route {
 }
 
 export const boundingRectangle = (tracks: Array<Segment>) => {
-    let b = initialBounds;
+    let b = initialBounds,
+        dist: number = 0,
+        lastPoint: Point = tracks[0].track[0],
+        self = this;
+        
     tracks.forEach(<Segment>(s) => {
         s.track.forEach((t) => {
             b.minLat = Math.min(b.minLat, t.lat);
             b.maxLat = Math.max(b.maxLat, t.lat);
             b.minLon = Math.min(b.minLon, t.lon);
             b.maxLon = Math.max(b.maxLon, t.lon);
+            dist += distanceBetween(lastPoint.lat, lastPoint.lon, t.lat, t.lon);
+            lastPoint = t;
         });
     });
 
@@ -78,7 +84,7 @@ export const boundingRectangle = (tracks: Array<Segment>) => {
         diagonal = distanceBetween(b.minLat, b.minLon, b.maxLat, b.maxLon),
         zoom = getZoomLevel(diagonal);
 
-    return { lat: mapCentre.lat, lon: mapCentre.lon, zoom: zoom };
+    return { lat: mapCentre.lat, lon: mapCentre.lon, zoom: zoom, distance: dist };
 }
 
 const initialBounds = {

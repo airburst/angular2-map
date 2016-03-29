@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../route', '../utils/utils', '../google/directions.service', '../config/config', '@ngrx/store', '../reducers/track', '../reducers/details'], function(exports_1, context_1) {
+System.register(['angular2/core', '../route', '../utils/utils', '../google/directions.service', '../config/config', '@ngrx/store', '../reducers/track'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, route_1, utils_1, directions_service_1, config_1, store_1, track_1, details_1;
+    var core_1, route_1, utils_1, directions_service_1, config_1, store_1, track_1;
     var OsMap;
     return {
         setters:[
@@ -34,9 +34,6 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
             },
             function (track_1_1) {
                 track_1 = track_1_1;
-            },
-            function (details_1_1) {
-                details_1 = details_1_1;
             }],
         execute: function() {
             OsMap = (function () {
@@ -51,7 +48,6 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     this.markerVectorLayer = {};
                     this.gridProjection = {};
                     this.isMoving = false;
-                    this.followsRoads = true;
                     this.route = new route_1.Route(store);
                 }
                 OsMap.prototype.init = function () {
@@ -135,7 +131,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     });
                     // Get value from Observable
                     var track = this.store.getState().track;
-                    if ((this.followsRoads) && (track.length > 1)) {
+                    if ((this.store.getState().details.followsRoads) && (track.length > 1)) {
                         var fp = track[track.length - 2].waypoint, from = this.directionsService.convertToGoogleMapPoint(fp), tp = track[track.length - 1].waypoint, to = this.directionsService.convertToGoogleMapPoint(tp);
                         this.directionsService.getRouteBetween(from, to)
                             .then(function (response) {
@@ -193,11 +189,6 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     this.lineVectorLayer.addFeatures([routeFeature]);
                     // this.markerVectorLayer.destroyFeatures();
                     // this.markerVectorLayer.addFeatures(markersFeature);
-                    // Update distance
-                    this.store.dispatch({
-                        type: details_1.UPDATE_DETAILS,
-                        payload: { distance: new this.ol.Geometry.Curve(path).getLength() / 1000 }
-                    });
                 };
                 ;
                 OsMap.prototype.convertRouteToOsFormat = function (track) {

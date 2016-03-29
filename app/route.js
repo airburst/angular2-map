@@ -1,6 +1,7 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
+    var _this = this;
     var Route, boundingRectangle, initialBounds, centre, distanceBetween, getZoomLevel;
     return {
         setters:[],
@@ -15,17 +16,19 @@ System.register([], function(exports_1, context_1) {
             }());
             exports_1("Route", Route);
             exports_1("boundingRectangle", boundingRectangle = function (tracks) {
-                var b = initialBounds;
+                var b = initialBounds, dist = 0, lastPoint = tracks[0].track[0], self = _this;
                 tracks.forEach(function (s) {
                     s.track.forEach(function (t) {
                         b.minLat = Math.min(b.minLat, t.lat);
                         b.maxLat = Math.max(b.maxLat, t.lat);
                         b.minLon = Math.min(b.minLon, t.lon);
                         b.maxLon = Math.max(b.maxLon, t.lon);
+                        dist += distanceBetween(lastPoint.lat, lastPoint.lon, t.lat, t.lon);
+                        lastPoint = t;
                     });
                 });
                 var mapCentre = centre(b.minLat, b.minLon, b.maxLat, b.maxLon), diagonal = distanceBetween(b.minLat, b.minLon, b.maxLat, b.maxLon), zoom = getZoomLevel(diagonal);
-                return { lat: mapCentre.lat, lon: mapCentre.lon, zoom: zoom };
+                return { lat: mapCentre.lat, lon: mapCentre.lon, zoom: zoom, distance: dist };
             });
             initialBounds = {
                 minLat: 1000000,
