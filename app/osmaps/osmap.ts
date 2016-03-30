@@ -178,18 +178,18 @@ export class OsMap {
         });
 
         // Plot route markers layer
-        // let markersFeature: Marker[] = [];
-        // this.route.markers.forEach((m: Marker) => {
-        //     markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'));
-        // });
+        let markersFeature: Marker[] = [];
+        this.store.getState().markers.forEach((m: Marker) => {
+            markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'));
+        });
 
         // Replace existing layers
         this.pointVectorLayer.destroyFeatures();
         this.pointVectorLayer.addFeatures(waypointsFeature);
         this.lineVectorLayer.destroyFeatures();
         this.lineVectorLayer.addFeatures([routeFeature]);
-        // this.markerVectorLayer.destroyFeatures();
-        // this.markerVectorLayer.addFeatures(markersFeature);
+        this.markerVectorLayer.destroyFeatures();
+        this.markerVectorLayer.addFeatures(markersFeature);
     };
 
     updateDistance(track: Segment[]): void {

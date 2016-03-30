@@ -173,17 +173,17 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                         }
                     });
                     // Plot route markers layer
-                    // let markersFeature: Marker[] = [];
-                    // this.route.markers.forEach((m: Marker) => {
-                    //     markersFeature.push(this.addMarker(m, 'dist/assets/images/map-marker.png'));
-                    // });
+                    var markersFeature = [];
+                    this.store.getState().markers.forEach(function (m) {
+                        markersFeature.push(_this.addMarker(m, 'dist/assets/images/map-marker.png'));
+                    });
                     // Replace existing layers
                     this.pointVectorLayer.destroyFeatures();
                     this.pointVectorLayer.addFeatures(waypointsFeature);
                     this.lineVectorLayer.destroyFeatures();
                     this.lineVectorLayer.addFeatures([routeFeature]);
-                    // this.markerVectorLayer.destroyFeatures();
-                    // this.markerVectorLayer.addFeatures(markersFeature);
+                    this.markerVectorLayer.destroyFeatures();
+                    this.markerVectorLayer.addFeatures(markersFeature);
                 };
                 ;
                 OsMap.prototype.updateDistance = function (track) {

@@ -2,6 +2,7 @@ import {Injectable} from 'angular2/core';
 import {Store} from '@ngrx/store';
 import {Point, WayPoint, Marker, Segment, AppStore, boundingRectangle} from '../route';
 import {SET_TRACK} from '../reducers/track';
+import {SET_MARKERS} from '../reducers/markers';
 import {SET_ELEVATION} from '../reducers/elevation';
 import {SET_DETAILS, initialState} from '../reducers/details';
 
@@ -128,7 +129,12 @@ export class GpxService {
             type: SET_DETAILS,
             payload: payload
         });
-
+        
+        this.store.dispatch({
+            type: SET_MARKERS,
+            payload: this.appStore.markers
+        });
+        
         this.store.dispatch({
             type: SET_TRACK,
             payload: this.appStore.track

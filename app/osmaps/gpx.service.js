@@ -1,4 +1,4 @@
-System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track', '../reducers/elevation', '../reducers/details'], function(exports_1, context_1) {
+System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track', '../reducers/markers', '../reducers/elevation', '../reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, store_1, route_1, track_1, elevation_1, details_1;
+    var core_1, store_1, route_1, track_1, markers_1, elevation_1, details_1;
     var GpxService;
     return {
         setters:[
@@ -25,6 +25,9 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
             },
             function (track_1_1) {
                 track_1 = track_1_1;
+            },
+            function (markers_1_1) {
+                markers_1 = markers_1_1;
             },
             function (elevation_1_1) {
                 elevation_1 = elevation_1_1;
@@ -135,6 +138,10 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
                     this.store.dispatch({
                         type: details_1.SET_DETAILS,
                         payload: payload
+                    });
+                    this.store.dispatch({
+                        type: markers_1.SET_MARKERS,
+                        payload: this.appStore.markers
                     });
                     this.store.dispatch({
                         type: track_1.SET_TRACK,
