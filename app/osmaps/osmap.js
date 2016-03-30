@@ -83,12 +83,6 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                         _this.draw(v);
                         console.log('Need to update distance..', v); //
                     });
-                    this.route.details$.subscribe(function (v) {
-                        if (v.isImported) {
-                            _this.unRegisterEvents();
-                            _this.centreMap(v);
-                        }
-                    });
                 };
                 ;
                 OsMap.prototype.reset = function () {
@@ -150,7 +144,6 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                 };
                 ;
                 OsMap.prototype.centreMap = function (options) {
-                    console.log('centreMap: ', options); //
                     if (options !== undefined) {
                         var mp = void 0, p = void 0;
                         if (options.lat !== 0) {

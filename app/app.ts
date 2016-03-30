@@ -76,6 +76,8 @@ export class AppComponent implements OnInit {
         if (this.fileService.supports($event.target)) {
             this.fileService.readTextFile($event.target, (...data) => {
                 this.gpxService.read(data);
+                this.osmap.reset();
+                this.osmap.unRegisterEvents();
             });
         }
     }

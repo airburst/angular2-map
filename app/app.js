@@ -98,6 +98,8 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                                 data[_i - 0] = arguments[_i];
                             }
                             _this.gpxService.read(data);
+                            _this.osmap.reset();
+                            _this.osmap.unRegisterEvents();
                         });
                     }
                 };

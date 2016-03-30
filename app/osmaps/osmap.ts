@@ -74,13 +74,6 @@ export class OsMap {
             this.draw(v);
             console.log('Need to update distance..', v)//
         });
-
-        this.route.details$.subscribe((v) => {
-            if (v.isImported) {
-                this.unRegisterEvents();
-                this.centreMap(v);
-            }
-        }); 
     };
 
     reset() {
@@ -154,7 +147,6 @@ export class OsMap {
     };
 
     centreMap(options?: any): void {
-        console.log('centreMap: ', options)//
         if (options !== undefined) {
             let mp, p;
             if (options.lat !== 0) {
