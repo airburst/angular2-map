@@ -73,12 +73,12 @@ export class OsMap {
 
         this.route.track$.subscribe((v) => {
             this.draw(v);
+            console.log('Need to update distance..', v)//
         });
 
         this.route.details$.subscribe((v) => {
             if (v.isImported) {
                 this.unRegisterEvents();
-                console.log('Calling centreMap from state change: ', v)//
                 this.centreMap(v);
             } else {
                 this.unRegisterEvents();

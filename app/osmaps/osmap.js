@@ -82,11 +82,11 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     this.osMap.events.remove('dblclick');
                     this.route.track$.subscribe(function (v) {
                         _this.draw(v);
+                        console.log('Need to update distance..', v); //
                     });
                     this.route.details$.subscribe(function (v) {
                         if (v.isImported) {
                             _this.unRegisterEvents();
-                            console.log('Calling centreMap from state change: ', v); //
                             _this.centreMap(v);
                         }
                         else {

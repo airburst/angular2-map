@@ -105,7 +105,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.store.dispatch({ type: track_1.CLEAR_TRACK }); // causes side effects in osmap, ...
                     this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION }); // causes side effects in elevation.service
                     this.store.dispatch({ type: details_1.CLEAR_DETAILS }); // causes centreMap() in osmap
-                    console.log('STATE: ', this.store.getState()); //
+                    this.osmap.centreMap(this.store.getState().details);
                 };
                 AppComponent.prototype.removeLast = function () {
                     this.store.dispatch({ type: track_1.REMOVE_LAST_SEGMENT });
