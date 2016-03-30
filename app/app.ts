@@ -83,8 +83,8 @@ export class AppComponent implements OnInit {
     clearRoute() {
         this.store.dispatch({ type: CLEAR_TRACK });     // causes side effects in osmap, ...
         this.store.dispatch({ type: CLEAR_ELEVATION }); // causes side effects in elevation.service
-        this.store.dispatch({ type: CLEAR_DETAILS });   // causes centreMap() in osmap
-        this.osmap.centreMap(this.store.getState().details);
+        this.store.dispatch({ type: CLEAR_DETAILS });
+        this.osmap.reset();
     }
 
     removeLast() {

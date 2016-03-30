@@ -67,7 +67,6 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                         ]
                     };
                     this.osMap = new this.os.Map('map', options);
-                    this.centreMap(this.store.getState().details);
                     this.gridProjection = new this.os.GridProjection();
                     // Initialise the vector layers
                     this.lineVectorLayer = new this.ol.Layer.Vector('Line Vector Layer');
@@ -79,7 +78,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     // Add controls
                     var position = new this.os.Control.ControlPosition(this.os.Control.ControlAnchor.ANCHOR_TOP_LEFT, new this.ol.Size(0, 100));
                     this.osMap.addControl(new this.os.Control.LargeMapControl(), position);
-                    this.osMap.events.remove('dblclick');
+                    this.reset();
                     this.route.track$.subscribe(function (v) {
                         _this.draw(v);
                         console.log('Need to update distance..', v); //
@@ -89,15 +88,13 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                             _this.unRegisterEvents();
                             _this.centreMap(v);
                         }
-                        else {
-                            _this.unRegisterEvents();
-                            _this.registerEvents();
-                        }
                     });
                 };
                 ;
-                OsMap.prototype.registerEvents = function () {
-                    this.osMap.events.register('touchmove', this.osMap, function () { this.isMoving = true; });
+                OsMap.prototype.reset = function () {
+                    this.centreMap(this.store.getState().details);
+                    this.osMap.events.remove('dblclick');
+                    this.osMap.events.register('touchmove', this.osMap, function () { console.log('setting isMoving to true'); this.isMoving = true; });
                     this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
                     this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
                 };

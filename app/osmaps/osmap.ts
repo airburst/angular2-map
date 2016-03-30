@@ -48,7 +48,6 @@ export class OsMap {
             ]
         };
         this.osMap = new this.os.Map('map', options);
-        this.centreMap(this.store.getState().details);
         this.gridProjection = new this.os.GridProjection();
 
         // Initialise the vector layers
@@ -69,7 +68,7 @@ export class OsMap {
             position
         );
 
-        this.osMap.events.remove('dblclick');
+        this.reset();
 
         this.route.track$.subscribe((v) => {
             this.draw(v);
@@ -80,19 +79,18 @@ export class OsMap {
             if (v.isImported) {
                 this.unRegisterEvents();
                 this.centreMap(v);
-            } else {
-                this.unRegisterEvents();
-                this.registerEvents();
             }
         }); 
     };
 
-    registerEvents() {
-        this.osMap.events.register('touchmove', this.osMap, function() { this.isMoving = true; });
+    reset() {
+        this.centreMap(this.store.getState().details);
+        this.osMap.events.remove('dblclick');
+        this.osMap.events.register('touchmove', this.osMap, function() { console.log('setting isMoving to true'); this.isMoving = true; });
         this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
         this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
     }
-
+    
     unRegisterEvents() {
         this.osMap.events.remove('touchmove');
         this.osMap.events.remove('touchend');

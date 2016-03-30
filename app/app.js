@@ -104,8 +104,8 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 AppComponent.prototype.clearRoute = function () {
                     this.store.dispatch({ type: track_1.CLEAR_TRACK }); // causes side effects in osmap, ...
                     this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION }); // causes side effects in elevation.service
-                    this.store.dispatch({ type: details_1.CLEAR_DETAILS }); // causes centreMap() in osmap
-                    this.osmap.centreMap(this.store.getState().details);
+                    this.store.dispatch({ type: details_1.CLEAR_DETAILS });
+                    this.osmap.reset();
                 };
                 AppComponent.prototype.removeLast = function () {
                     this.store.dispatch({ type: track_1.REMOVE_LAST_SEGMENT });
