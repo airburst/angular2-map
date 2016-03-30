@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point, MapPoint, WayPoint, Marker, Segment, AppStore, Route} from '../route';
+import {Point, MapPoint, WayPoint, Marker, Segment, AppStore, Route, distance} from '../route';
 import {uuid} from '../utils/utils';
 import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
@@ -68,23 +68,23 @@ export class OsMap {
             position
         );
 
-        this.reset();
+        this.centreAndSetMapEvents();
 
         this.route.track$.subscribe((v) => {
             this.draw(v);
-            console.log('Need to update distance..', v)//
+            this.updateDistance(v);
         });
     };
 
-    reset() {
+    centreAndSetMapEvents() {
         this.centreMap(this.store.getState().details);
         this.osMap.events.remove('dblclick');
         this.osMap.events.register('touchmove', this.osMap, function() { console.log('setting isMoving to true'); this.isMoving = true; });
         this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
         this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
     }
-    
-    unRegisterEvents() {
+
+    removeMapEvents() {
         this.osMap.events.remove('touchmove');
         this.osMap.events.remove('touchend');
         this.osMap.events.remove('click');
@@ -191,6 +191,14 @@ export class OsMap {
         // this.markerVectorLayer.destroyFeatures();
         // this.markerVectorLayer.addFeatures(markersFeature);
     };
+
+    updateDistance(track: Segment[]): void {
+        let dist = distance(track);
+        this.store.dispatch({
+            type: UPDATE_DETAILS,
+            payload: { distance: dist }
+        });
+    }
 
     convertRouteToOsFormat(track: Segment[]): MapPoint[] {
         let path: MapPoint[] = [];

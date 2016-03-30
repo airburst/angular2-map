@@ -2,7 +2,7 @@ System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var _this = this;
-    var Route, boundingRectangle, initialBounds, centre, distanceBetween, getZoomLevel;
+    var Route, boundingRectangle, distance, initialBounds, centre, distanceBetween, getZoomLevel;
     return {
         setters:[],
         execute: function() {
@@ -29,6 +29,19 @@ System.register([], function(exports_1, context_1) {
                 });
                 var mapCentre = centre(b.minLat, b.minLon, b.maxLat, b.maxLon), diagonal = distanceBetween(b.minLat, b.minLon, b.maxLat, b.maxLon), zoom = getZoomLevel(diagonal);
                 return { lat: mapCentre.lat, lon: mapCentre.lon, zoom: zoom, distance: dist };
+            });
+            exports_1("distance", distance = function (tracks) {
+                if (tracks.length === 0) {
+                    return 0;
+                }
+                var dist = 0, lastPoint = (tracks[0].waypoint !== null) ? tracks[0].waypoint : tracks[0].track[0];
+                tracks.forEach(function (s) {
+                    s.track.forEach(function (t) {
+                        dist += distanceBetween(lastPoint.lat, lastPoint.lon, t.lat, t.lon);
+                        lastPoint = t;
+                    });
+                });
+                return dist;
             });
             initialBounds = {
                 minLat: 1000000,

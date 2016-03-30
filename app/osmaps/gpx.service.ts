@@ -123,7 +123,7 @@ export class GpxService {
                     easting: 0,
                     northing: 0
                 });
-        
+      
         this.store.dispatch({
             type: SET_DETAILS,
             payload: payload
@@ -137,7 +137,7 @@ export class GpxService {
         this.store.dispatch({
             type: SET_ELEVATION,
             payload: this.appStore.elevation
-        });
+        });        
     };
 
     // private template: any = {

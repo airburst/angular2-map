@@ -76,17 +76,17 @@ export class AppComponent implements OnInit {
         if (this.fileService.supports($event.target)) {
             this.fileService.readTextFile($event.target, (...data) => {
                 this.gpxService.read(data);
-                this.osmap.reset();
-                this.osmap.unRegisterEvents();
+                this.osmap.centreAndSetMapEvents();
+                this.osmap.removeMapEvents();
             });
         }
     }
 
     clearRoute() {
-        this.store.dispatch({ type: CLEAR_TRACK });     // causes side effects in osmap, ...
-        this.store.dispatch({ type: CLEAR_ELEVATION }); // causes side effects in elevation.service
+        this.store.dispatch({ type: CLEAR_TRACK });
+        this.store.dispatch({ type: CLEAR_ELEVATION });
         this.store.dispatch({ type: CLEAR_DETAILS });
-        this.osmap.reset();
+        this.osmap.centreAndSetMapEvents();
     }
 
     removeLast() {

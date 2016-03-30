@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../route', '../utils/utils', '../google/directions.service', '../config/config', '@ngrx/store', '../reducers/track'], function(exports_1, context_1) {
+System.register(['angular2/core', '../route', '../utils/utils', '../google/directions.service', '../config/config', '@ngrx/store', '../reducers/track', '../reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, route_1, utils_1, directions_service_1, config_1, store_1, track_1;
+    var core_1, route_1, utils_1, directions_service_1, config_1, store_1, track_1, details_1;
     var OsMap;
     return {
         setters:[
@@ -34,6 +34,9 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
             },
             function (track_1_1) {
                 track_1 = track_1_1;
+            },
+            function (details_1_1) {
+                details_1 = details_1_1;
             }],
         execute: function() {
             OsMap = (function () {
@@ -78,21 +81,21 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     // Add controls
                     var position = new this.os.Control.ControlPosition(this.os.Control.ControlAnchor.ANCHOR_TOP_LEFT, new this.ol.Size(0, 100));
                     this.osMap.addControl(new this.os.Control.LargeMapControl(), position);
-                    this.reset();
+                    this.centreAndSetMapEvents();
                     this.route.track$.subscribe(function (v) {
                         _this.draw(v);
-                        console.log('Need to update distance..', v); //
+                        _this.updateDistance(v);
                     });
                 };
                 ;
-                OsMap.prototype.reset = function () {
+                OsMap.prototype.centreAndSetMapEvents = function () {
                     this.centreMap(this.store.getState().details);
                     this.osMap.events.remove('dblclick');
                     this.osMap.events.register('touchmove', this.osMap, function () { console.log('setting isMoving to true'); this.isMoving = true; });
                     this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
                     this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
                 };
-                OsMap.prototype.unRegisterEvents = function () {
+                OsMap.prototype.removeMapEvents = function () {
                     this.osMap.events.remove('touchmove');
                     this.osMap.events.remove('touchend');
                     this.osMap.events.remove('click');
@@ -183,6 +186,13 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     // this.markerVectorLayer.addFeatures(markersFeature);
                 };
                 ;
+                OsMap.prototype.updateDistance = function (track) {
+                    var dist = route_1.distance(track);
+                    this.store.dispatch({
+                        type: details_1.UPDATE_DETAILS,
+                        payload: { distance: dist }
+                    });
+                };
                 OsMap.prototype.convertRouteToOsFormat = function (track) {
                     var _this = this;
                     var path = [];

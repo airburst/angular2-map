@@ -87,6 +87,20 @@ export const boundingRectangle = (tracks: Array<Segment>) => {
     return { lat: mapCentre.lat, lon: mapCentre.lon, zoom: zoom, distance: dist };
 }
 
+export const distance = (tracks: Array<Segment>) => {
+    if (tracks.length === 0) { return 0; }
+    let dist: number = 0,
+        lastPoint: Point = (tracks[0].waypoint !== null) ? tracks[0].waypoint : tracks[0].track[0];
+
+    tracks.forEach(<Segment>(s) => {
+        s.track.forEach((t) => {
+            dist += distanceBetween(lastPoint.lat, lastPoint.lon, t.lat, t.lon);
+            lastPoint = t;
+        });
+    });
+    return dist;
+};
+
 const initialBounds = {
     minLat: 1000000,
     minLon: 1000000,
