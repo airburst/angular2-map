@@ -14,12 +14,11 @@ export class GpxService {
 
     init() {
         this.appStore = <AppStore>{
-            details: initialState,
+            details: Object.assign({}, initialState),
             track: [],
             elevation: [],
             markers: []
         }
-        console.log('appStore: ', this.appStore)//
     }
 
     read(gpxData: any): void {

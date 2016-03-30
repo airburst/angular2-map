@@ -64,7 +64,7 @@ export class Route {
 }
 
 export const boundingRectangle = (tracks: Array<Segment>) => {
-    let b = initialBounds,
+    let b = Object.assign({}, initialBounds),
         dist: number = 0,
         lastPoint: Point = tracks[0].track[0],
         self = this;

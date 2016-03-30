@@ -16,7 +16,7 @@ System.register([], function(exports_1, context_1) {
             }());
             exports_1("Route", Route);
             exports_1("boundingRectangle", boundingRectangle = function (tracks) {
-                var b = initialBounds, dist = 0, lastPoint = tracks[0].track[0], self = _this;
+                var b = Object.assign({}, initialBounds), dist = 0, lastPoint = tracks[0].track[0], self = _this;
                 tracks.forEach(function (s) {
                     s.track.forEach(function (t) {
                         b.minLat = Math.min(b.minLat, t.lat);

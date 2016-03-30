@@ -18,7 +18,7 @@ export const elevation = (state: any = [], action: Action) => {
             return state.slice(0, state.length -1);            
 
         case CLEAR_ELEVATION:
-            return [];
+            return (state = []);
 
         default:
             return state;

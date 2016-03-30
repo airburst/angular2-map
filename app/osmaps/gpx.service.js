@@ -39,12 +39,11 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
                 }
                 GpxService.prototype.init = function () {
                     this.appStore = {
-                        details: details_1.initialState,
+                        details: Object.assign({}, details_1.initialState),
                         track: [],
                         elevation: [],
                         markers: []
                     };
-                    console.log('appStore: ', this.appStore); //
                 };
                 GpxService.prototype.read = function (gpxData) {
                     var route = gpxData[0], name = gpxData[1], ext = gpxData[2];

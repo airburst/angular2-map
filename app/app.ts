@@ -84,6 +84,7 @@ export class AppComponent implements OnInit {
         this.store.dispatch({ type: CLEAR_TRACK });     // causes side effects in osmap, ...
         this.store.dispatch({ type: CLEAR_ELEVATION }); // causes side effects in elevation.service
         this.store.dispatch({ type: CLEAR_DETAILS });   // causes centreMap() in osmap
+        console.log('STATE: ', this.store.getState())//
     }
 
     removeLast() {

@@ -35,7 +35,6 @@ export class ElevationService {
         });
 
         this.route.elevation$.subscribe((v) => {
-            console.log('Elevation service calling UPDATE_DETAILS with payload:', this.calculateElevation(flatten(v)))//
             this.store.dispatch({
                 type: UPDATE_DETAILS,
                 payload: this.calculateElevation(flatten(v))

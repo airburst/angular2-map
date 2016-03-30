@@ -165,7 +165,6 @@ export class OsMap {
             } else {
                 mp = new this.os.MapPoint(options.easting, options.northing);
             }
-            console.log('Setting centre to: ', mp)//
             this.osMap.setCenter(mp, options.zoom);
         }
     };
@@ -240,8 +239,4 @@ export class OsMap {
         );
     };
 
-    // calculateDistanceInKm(): number {
-    //     let distString = new this.ol.Geometry.Curve(this.convertRouteToOsFormat());
-    //     return (distString.getLength() / 1000);
-    // }
 }

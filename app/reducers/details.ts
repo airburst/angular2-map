@@ -22,15 +22,13 @@ export const details = (state: RouteDetails = initialState, action: Action) => {
 
     switch (action.type) {
         case SET_DETAILS:
-        console.log('SET_DETAILS', action.payload)//
-            return action.payload;
+            return Object.assign({}, state, action.payload);
 
         case UPDATE_DETAILS:
             return Object.assign({}, state, action.payload);
 
         case CLEAR_DETAILS:
-            console.log('CLEAR_DETAILS', initialState)//
-            return Object.assign({}, state, initialState);
+            return (state = initialState);
 
         default:
             return state;

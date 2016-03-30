@@ -19,7 +19,7 @@ System.register([], function(exports_1, context_1) {
                     case REMOVE_ELEVATION:
                         return state.slice(0, state.length - 1);
                     case CLEAR_ELEVATION:
-                        return [];
+                        return (state = []);
                     default:
                         return state;
                 }

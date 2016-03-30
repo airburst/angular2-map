@@ -56,7 +56,6 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                         _this.getElevationData(v[v.length - 1]);
                     });
                     this.route.elevation$.subscribe(function (v) {
-                        console.log('Elevation service calling UPDATE_DETAILS with payload:', _this.calculateElevation(utils_1.flatten(v))); //
                         _this.store.dispatch({
                             type: details_1.UPDATE_DETAILS,
                             payload: _this.calculateElevation(utils_1.flatten(v))

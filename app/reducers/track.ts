@@ -24,7 +24,7 @@ export const track = (state: Array<Segment> = [], action: Action) => {
             return state.slice(0, state.length - 1);
 
         case CLEAR_TRACK:
-            return [];
+            return (state = []);
             
         default:
             return state;
