@@ -6,7 +6,7 @@ import {NgClass} from 'angular2/common';
     template: `
         <div class="elevation-chart" [ngClass]="{show: show}">
             <div class="elevation-header">
-                <button class="toggle-btn" (click)="togglePanel()">{{toggleText}}</button>
+                <a class="toggle" href="#" (click)="togglePanel()">{{toggleText}}</a>
             </div>
             <div class="elevation-graph"></div>
         </div>
@@ -27,9 +27,11 @@ import {NgClass} from 'angular2/common';
         }
         
         .elevation-header {
-            height: 50px;
+            height: 40px;
             background-color: #f1f1f1;
+            padding: 5px;
             text-align: right;
+            vertical-align: middle;
         }
 
         .elevation-chart.show {
@@ -52,6 +54,7 @@ export class Chart {
     
     togglePanel() {
         this.show = !this.show;
+        this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
     }
     
 }

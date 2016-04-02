@@ -28,13 +28,14 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1, contex
                 }
                 Chart.prototype.togglePanel = function () {
                     this.show = !this.show;
+                    this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
                 };
                 Chart = __decorate([
                     core_1.Component({
                         selector: 'chart',
-                        template: "\n        <div class=\"elevation-chart\" [ngClass]=\"{show: show}\">\n            <div class=\"elevation-header\">\n                <button class=\"toggle-btn\" (click)=\"togglePanel()\">{{toggleText}}</button>\n            </div>\n            <div class=\"elevation-graph\"></div>\n        </div>\n    ",
+                        template: "\n        <div class=\"elevation-chart\" [ngClass]=\"{show: show}\">\n            <div class=\"elevation-header\">\n                <a class=\"toggle\" href=\"#\" (click)=\"togglePanel()\">{{toggleText}}</a>\n            </div>\n            <div class=\"elevation-graph\"></div>\n        </div>\n    ",
                         directives: [common_1.NgClass],
-                        styles: ["\n        .elevation-chart {\n            position: absolute;\n            display: inline-block;\n            height: 300px;\n            width: 100%;\n            left: 0px;\n            bottom: -250px;\n            background-color: #fff;\n            color: #222;\n            z-index: 9999;\n            transition: all 0.25s ease-in-out;\n        }\n        \n        .elevation-header {\n            height: 50px;\n            background-color: #f1f1f1;\n            text-align: right;\n        }\n\n        .elevation-chart.show {\n            bottom: 0;\n        }\n    "],
+                        styles: ["\n        .elevation-chart {\n            position: absolute;\n            display: inline-block;\n            height: 300px;\n            width: 100%;\n            left: 0px;\n            bottom: -250px;\n            background-color: #fff;\n            color: #222;\n            z-index: 9999;\n            transition: all 0.25s ease-in-out;\n        }\n        \n        .elevation-header {\n            height: 40px;\n            background-color: #f1f1f1;\n            padding: 5px;\n            text-align: right;\n            vertical-align: middle;\n        }\n\n        .elevation-chart.show {\n            bottom: 0;\n        }\n    "],
                         changeDetection: core_1.ChangeDetectionStrategy.OnPush
                     }), 
                     __metadata('design:paramtypes', [])
