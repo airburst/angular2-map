@@ -89,10 +89,10 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         console.error('Script not found:', value);
                     });
                 };
-                AppComponent.prototype.importFile = function ($event) {
+                AppComponent.prototype.importFile = function (ev) {
                     var _this = this;
-                    if (this.fileService.supports($event.target)) {
-                        this.fileService.readTextFile($event.target, function () {
+                    if (this.fileService.supports(ev.target)) {
+                        this.fileService.readTextFile(ev.target, function () {
                             var data = [];
                             for (var _i = 0; _i < arguments.length; _i++) {
                                 data[_i - 0] = arguments[_i];
@@ -121,8 +121,8 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     segment.hasElevationData = false;
                     this.elevationService.getElevationData(segment);
                 };
-                AppComponent.prototype.search = function ($event) {
-                    var place = $event.target.value;
+                AppComponent.prototype.search = function (ev) {
+                    var place = ev.target.value;
                     if (place !== '') {
                         this.gazetteerService.searchPostcode(place, this.showSearchResults);
                     }

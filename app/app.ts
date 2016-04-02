@@ -73,9 +73,9 @@ export class AppComponent implements OnInit {
             });
     }
 
-    importFile($event) {
-        if (this.fileService.supports($event.target)) {
-            this.fileService.readTextFile($event.target, (...data) => {
+    importFile(ev) {
+        if (this.fileService.supports(ev.target)) {
+            this.fileService.readTextFile(ev.target, (...data) => {
                 this.gpxService.read(data);
                 this.osmap.centreAndSetMapEvents();
                 this.osmap.removeMapEvents();
@@ -105,8 +105,8 @@ export class AppComponent implements OnInit {
         this.elevationService.getElevationData(segment);
     }
 
-    search($event) {
-        let place: string = $event.target.value;
+    search(ev) {
+        let place: string = ev.target.value;
         if (place !== '') {
             this.gazetteerService.searchPostcode(place, this.showSearchResults);
         }
