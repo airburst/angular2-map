@@ -74,7 +74,7 @@ export class GpxService {
         }
         this.appStore.track.push(<Segment>{ id: 'imported', track: track, waypoint: null, hasElevationData: true });
         this.appStore.elevation.push(elevation);
-        this.appStore.details.isImported = true;
+        this.appStore.details.isEditable = true;
         this.appStore.details.hasNewElevation = false;
 
         this.updateStore();
@@ -107,7 +107,7 @@ export class GpxService {
         // TODO: find out whether courses support waypoints
         this.appStore.markers.push({ name: 'Start', point: track[0] });
         this.appStore.markers.push({ name: 'Finish', point: track[track.length - 1] });
-        this.appStore.details.isImported = true;
+        this.appStore.details.isEditable = true;
         this.appStore.details.hasNewElevation = false;
 
         this.updateStore();

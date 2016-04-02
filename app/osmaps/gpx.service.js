@@ -95,7 +95,7 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
                     }
                     this.appStore.track.push({ id: 'imported', track: track, waypoint: null, hasElevationData: true });
                     this.appStore.elevation.push(elevation);
-                    this.appStore.details.isImported = true;
+                    this.appStore.details.isEditable = true;
                     this.appStore.details.hasNewElevation = false;
                     this.updateStore();
                 };
@@ -122,7 +122,7 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
                     // TODO: find out whether courses support waypoints
                     this.appStore.markers.push({ name: 'Start', point: track[0] });
                     this.appStore.markers.push({ name: 'Finish', point: track[track.length - 1] });
-                    this.appStore.details.isImported = true;
+                    this.appStore.details.isEditable = true;
                     this.appStore.details.hasNewElevation = false;
                     this.updateStore();
                 };

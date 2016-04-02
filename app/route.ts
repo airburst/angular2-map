@@ -40,7 +40,7 @@ export interface RouteDetails {
     lon?: number;
     zoom?: number;
     followsRoads: boolean;
-    isImported: boolean;
+    isEditable: boolean;
     hasNewElevation: boolean;
 }
 

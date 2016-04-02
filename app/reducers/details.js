@@ -18,7 +18,7 @@ System.register([], function(exports_1, context_1) {
                 lon: 0,
                 zoom: 7,
                 followsRoads: true,
-                isImported: false,
+                isEditable: false,
                 hasNewElevation: true
             });
             exports_1("details", details = function (state, action) {
