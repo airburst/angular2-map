@@ -13,8 +13,9 @@ import {Segment} from './route';
             <div class="form">
                 <button id="clear" (click)="clear.emit()">Clear Route</button>
                 <button id="delete" (click)="remove.emit()">Remove WayPoint</button>
+                <button id="save" (click)="save.emit()">Save</button>
                 <label for="file">Load GPX or TCX File:</label>
-                <input id="file" type="file" (change)="load.emit($event)">
+                <input id="file" type="file" (change)="import.emit($event)">
             </div>
         </div>
     `,
@@ -25,6 +26,7 @@ export class AppHeader {
     @Input() route: Segment[];
     @Output() clear = new EventEmitter();
     @Output() remove = new EventEmitter();
-    @Output() load = new EventEmitter();
+    @Output() import = new EventEmitter();
     @Output() recalc = new EventEmitter();
+    @Output() save = new EventEmitter();
 }

@@ -21,7 +21,8 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS} from './reducers/details';
         <app-header [route]="route.details$ | async"
             (clear)="clearRoute()"
             (remove)="removeLast()"
-            (load)="fileChange($event)"
+            (save)="save()"
+            (import)="importFile($event)"
             (recalc)="recalculateElevation()"
         >
         </app-header>
@@ -72,7 +73,7 @@ export class AppComponent implements OnInit {
             });
     }
 
-    fileChange($event) {
+    importFile($event) {
         if (this.fileService.supports($event.target)) {
             this.fileService.readTextFile($event.target, (...data) => {
                 this.gpxService.read(data);
@@ -80,6 +81,10 @@ export class AppComponent implements OnInit {
                 this.osmap.removeMapEvents();
             });
         }
+    }
+    
+    save() {
+        console.log(JSON.stringify(this.store.getState()));
     }
 
     clearRoute() {

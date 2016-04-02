@@ -89,7 +89,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         console.error('Script not found:', value);
                     });
                 };
-                AppComponent.prototype.fileChange = function ($event) {
+                AppComponent.prototype.importFile = function ($event) {
                     var _this = this;
                     if (this.fileService.supports($event.target)) {
                         this.fileService.readTextFile($event.target, function () {
@@ -102,6 +102,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                             _this.osmap.removeMapEvents();
                         });
                     }
+                };
+                AppComponent.prototype.save = function () {
+                    console.log(JSON.stringify(this.store.getState()));
                 };
                 AppComponent.prototype.clearRoute = function () {
                     this.store.dispatch({ type: track_1.CLEAR_TRACK });
@@ -130,7 +133,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (load)=\"fileChange($event)\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </app-header>\n        <map></map>\n        ",
+                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (import)=\"importFile($event)\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </app-header>\n        <map></map>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader],
                         providers: [
                             gpx_service_1.GpxService,

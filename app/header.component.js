@@ -22,8 +22,9 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                 function AppHeader() {
                     this.clear = new core_1.EventEmitter();
                     this.remove = new core_1.EventEmitter();
-                    this.load = new core_1.EventEmitter();
+                    this.import = new core_1.EventEmitter();
                     this.recalc = new core_1.EventEmitter();
+                    this.save = new core_1.EventEmitter();
                 }
                 __decorate([
                     core_1.Input(), 
@@ -40,15 +41,19 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                 __decorate([
                     core_1.Output(), 
                     __metadata('design:type', Object)
-                ], AppHeader.prototype, "load", void 0);
+                ], AppHeader.prototype, "import", void 0);
                 __decorate([
                     core_1.Output(), 
                     __metadata('design:type', Object)
                 ], AppHeader.prototype, "recalc", void 0);
+                __decorate([
+                    core_1.Output(), 
+                    __metadata('design:type', Object)
+                ], AppHeader.prototype, "save", void 0);
                 AppHeader = __decorate([
                     core_1.Component({
                         selector: 'app-header',
-                        template: "\n        <div class=\"stats\">\n            <div class=\"text\">\n                {{route.name}} &nbsp;&nbsp;&nbsp; Distance: {{route.distance | number:'1.1-2'}} km&nbsp;&nbsp;&nbsp;\n                Ascent: {{route.ascent}} m&nbsp;\n                <a *ngIf=\"!route.hasNewElevation\" class=\"header-link\" href=\"#\" title=\"recalculate elevation\" (click)=\"recalc.emit()\">Recalculate</a>\n            </div>\n            <div class=\"form\">\n                <button id=\"clear\" (click)=\"clear.emit()\">Clear Route</button>\n                <button id=\"delete\" (click)=\"remove.emit()\">Remove WayPoint</button>\n                <label for=\"file\">Load GPX or TCX File:</label>\n                <input id=\"file\" type=\"file\" (change)=\"load.emit($event)\">\n            </div>\n        </div>\n    ",
+                        template: "\n        <div class=\"stats\">\n            <div class=\"text\">\n                {{route.name}} &nbsp;&nbsp;&nbsp; Distance: {{route.distance | number:'1.1-2'}} km&nbsp;&nbsp;&nbsp;\n                Ascent: {{route.ascent}} m&nbsp;\n                <a *ngIf=\"!route.hasNewElevation\" class=\"header-link\" href=\"#\" title=\"recalculate elevation\" (click)=\"recalc.emit()\">Recalculate</a>\n            </div>\n            <div class=\"form\">\n                <button id=\"clear\" (click)=\"clear.emit()\">Clear Route</button>\n                <button id=\"delete\" (click)=\"remove.emit()\">Remove WayPoint</button>\n                <button id=\"save\" (click)=\"save.emit()\">Save</button>\n                <label for=\"file\">Load GPX or TCX File:</label>\n                <input id=\"file\" type=\"file\" (change)=\"import.emit($event)\">\n            </div>\n        </div>\n    ",
                         changeDetection: core_1.ChangeDetectionStrategy.OnPush
                     }), 
                     __metadata('design:paramtypes', [])
