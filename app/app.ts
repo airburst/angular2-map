@@ -7,6 +7,7 @@ import {DirectionsService} from './google/directions.service';
 import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {AppHeader} from './header.component';
+import {Chart} from './chart.component';
 import {GazetteerService} from './osmaps/gazetteer';
 import {Route, RouteDetails, AppStore, boundingRectangle} from './route';
 import {settings} from './config/config';
@@ -27,8 +28,9 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS} from './reducers/details';
         >
         </app-header>
         <map></map>
+        <chart></chart>
         `,
-    directives: [FORM_DIRECTIVES, OsMap, AppHeader],
+    directives: [FORM_DIRECTIVES, OsMap, AppHeader, Chart],
     providers: [
         GpxService,
         FileService,
