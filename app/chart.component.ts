@@ -1,11 +1,12 @@
-import {Component, EventEmitter, Input} from 'angular2/core';
+import {Component, EventEmitter, Input, OnInit, ChangeDetectionStrategy} from 'angular2/core';
 import {CHART_DIRECTIVES} from 'ng2-charts';
+import {flatten} from './utils/utils';
 
 @Component({
     selector: 'elevation-chart',
     template: `
         <base-chart class="chart"
-            [data]="lineChartData"
+            [data]="elevation"
             [labels]="lineChartLabels"
             [options]="lineChartOptions"
             [series]="lineChartSeries"
@@ -23,17 +24,19 @@ import {CHART_DIRECTIVES} from 'ng2-charts';
             padding: 5px 10px;
         }
     `],
-    directives: [CHART_DIRECTIVES]
+    directives: [CHART_DIRECTIVES],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ElevationChart {
 
+    @Input() elevation;
+    
     constructor() { }
 
-    private lineChartData: Array<any> = [
-        [65, 59, 80, 81, 56, 55, 40]
-    ];
-    private lineChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    private route;
+    private lineChartData: Array<any> = [[]];
+    private lineChartLabels: Array<any> = [];
     private lineChartSeries: Array<any> = ['Test'];
     private lineChartOptions: any = {
         maintainAspectRatio: false,

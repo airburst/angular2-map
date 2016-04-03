@@ -23,10 +23,8 @@ System.register(['angular2/core', 'ng2-charts'], function(exports_1, context_1) 
         execute: function() {
             ElevationChart = (function () {
                 function ElevationChart() {
-                    this.lineChartData = [
-                        [65, 59, 80, 81, 56, 55, 40]
-                    ];
-                    this.lineChartLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+                    this.lineChartData = [[]];
+                    this.lineChartLabels = [];
                     this.lineChartSeries = ['Test'];
                     this.lineChartOptions = {
                         maintainAspectRatio: false,
@@ -48,12 +46,17 @@ System.register(['angular2/core', 'ng2-charts'], function(exports_1, context_1) 
                 ElevationChart.prototype.chartHovered = function (ev) {
                     //console.log('hover: ', ev);
                 };
+                __decorate([
+                    core_1.Input(), 
+                    __metadata('design:type', Object)
+                ], ElevationChart.prototype, "elevation", void 0);
                 ElevationChart = __decorate([
                     core_1.Component({
                         selector: 'elevation-chart',
-                        template: "\n        <base-chart class=\"chart\"\n            [data]=\"lineChartData\"\n            [labels]=\"lineChartLabels\"\n            [options]=\"lineChartOptions\"\n            [series]=\"lineChartSeries\"\n            [colours]=\"lineChartColours\"\n            [legend]=\"lineChartLegend\"\n            [chartType]=\"lineChartType\"\n            (chartHover)=\"chartHovered($event)\"\n            (chartClick)=\"chartClicked($event)\"\n            ></base-chart>\n    ",
+                        template: "\n        <base-chart class=\"chart\"\n            [data]=\"elevation\"\n            [labels]=\"lineChartLabels\"\n            [options]=\"lineChartOptions\"\n            [series]=\"lineChartSeries\"\n            [colours]=\"lineChartColours\"\n            [legend]=\"lineChartLegend\"\n            [chartType]=\"lineChartType\"\n            (chartHover)=\"chartHovered($event)\"\n            (chartClick)=\"chartClicked($event)\"\n            ></base-chart>\n    ",
                         styles: ["\n        .chart {\n            display: flex;\n            height: 234px;\n            padding: 5px 10px;\n        }\n    "],
-                        directives: [ng2_charts_1.CHART_DIRECTIVES]
+                        directives: [ng2_charts_1.CHART_DIRECTIVES],
+                        changeDetection: core_1.ChangeDetectionStrategy.OnPush
                     }), 
                     __metadata('design:paramtypes', [])
                 ], ElevationChart);

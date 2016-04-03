@@ -28,6 +28,7 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS} from './reducers/details';
         </app-header>
         <map></map>
         <infopanel [route]="route.details$ | async"
+            [elevation]="route.elevation$ | async"
             (recalc)="recalculateElevation()"
         >
         </infopanel>
