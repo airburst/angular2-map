@@ -13,19 +13,16 @@ body {
 .chart {
     display: flex;
     height: 234px;
-    /*padding: 5px 10px;*/
+    font-family: 'Open Sans', 'Arial', 'Helvetica';
+    font-size: 0.6em;
 }
 
 .axis path,
 .axis line {
     fill: none;
-    stroke: #000;
+    stroke: #666;
 }
 
 .area {
-    fill: steelblue;
-}
-        
-.area {
-    fill: steelblue;
+    fill: #e2e2e2;
 }
