@@ -15,7 +15,7 @@
     <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
     <script src="node_modules/angular2/bundles/http.dev.js"></script>
     
-    <script src="node_modules/chart.js/Chart.min.js"></script>
+    <!--<script src="node_modules/chart.js/Chart.min.js"></script>-->
     <script>
         System.config({
             packages: {        
@@ -26,13 +26,13 @@
                     main: 'index.js',
                     format: 'cjs'           
                 },
-                'ng2-charts': {
-                    main: 'charts.js'         
+                'd3': {
+                    main: 'd3.js'         
                 }  
             },
             map: {
                 '@ngrx/store': 'node_modules/@ngrx/store/dist',
-                'ng2-charts': 'node_modules/ng2-charts/components/charts'
+                'd3': 'node_modules/d3'
             }  
         });     
         System.import('app/boot')
@@ -50,6 +50,8 @@
 
 <body>
     <my-app>loading...</my-app>
+    
+    <script src="http://d3js.org/d3.v3.min.js"></script>
 </body>
 
 </html>

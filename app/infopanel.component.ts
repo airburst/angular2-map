@@ -22,7 +22,9 @@ import {Segment} from './route';
                     <a class="toggle-link" href="#" (click)="togglePanel()">{{toggleText}}</a>
                 </div>
             </div>
-            <elevation-chart></elevation-chart>
+            <div class="chart">
+                <elevation-chart></elevation-chart>
+            </div>
         </div>
     `,
     directives: [NgClass, ElevationChart],
