@@ -30,16 +30,15 @@ System.register(['angular2/core', 'ng2-charts'], function(exports_1, context_1) 
                     this.lineChartSeries = ['Test'];
                     this.lineChartOptions = {
                         maintainAspectRatio: false,
+                        showTooltips: false,
                         animation: false,
                         responsive: true,
-                        multiTooltipTemplate: '<%if (datasetLabel){%><%=datasetLabel %>: <%}%><%= value %>'
+                        pointDot: false
                     };
-                    this.lineChartColours = [
-                        {
-                            fillColor: 'rgba(148,159,177,0.2)',
-                            strokeColor: 'rgba(148,159,177,1)',
-                        }
-                    ];
+                    this.lineChartColours = [{
+                            fillColor: 'rgba(148,159,177,0.3)',
+                            strokeColor: 'rgba(148,159,177,0.3)'
+                        }];
                     this.lineChartLegend = false;
                     this.lineChartType = 'Line';
                 }
@@ -53,7 +52,7 @@ System.register(['angular2/core', 'ng2-charts'], function(exports_1, context_1) 
                     core_1.Component({
                         selector: 'elevation-chart',
                         template: "\n        <base-chart class=\"chart\"\n            [data]=\"lineChartData\"\n            [labels]=\"lineChartLabels\"\n            [options]=\"lineChartOptions\"\n            [series]=\"lineChartSeries\"\n            [colours]=\"lineChartColours\"\n            [legend]=\"lineChartLegend\"\n            [chartType]=\"lineChartType\"\n            (chartHover)=\"chartHovered($event)\"\n            (chartClick)=\"chartClicked($event)\"\n            ></base-chart>\n    ",
-                        styles: ["\n        .chart {\n            display: flex;\n            height: 244px;\n        }\n    "],
+                        styles: ["\n        .chart {\n            display: flex;\n            height: 234px;\n            padding: 5px 10px;\n        }\n    "],
                         directives: [ng2_charts_1.CHART_DIRECTIVES]
                     }), 
                     __metadata('design:paramtypes', [])

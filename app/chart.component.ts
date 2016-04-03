@@ -19,7 +19,8 @@ import {CHART_DIRECTIVES} from 'ng2-charts';
     styles: [`
         .chart {
             display: flex;
-            height: 244px;
+            height: 234px;
+            padding: 5px 10px;
         }
     `],
     directives: [CHART_DIRECTIVES]
@@ -36,20 +37,15 @@ export class ElevationChart {
     private lineChartSeries: Array<any> = ['Test'];
     private lineChartOptions: any = {
         maintainAspectRatio: false,
+        showTooltips: false,
         animation: false,
         responsive: true,
-        multiTooltipTemplate: '<%if (datasetLabel){%><%=datasetLabel %>: <%}%><%= value %>'
+        pointDot : false
     };
-    private lineChartColours: Array<any> = [
-        { // grey
-            fillColor: 'rgba(148,159,177,0.2)',
-            strokeColor: 'rgba(148,159,177,1)',
-            // pointColor: 'rgba(148,159,177,1)',
-            // pointStrokeColor: '#fff',
-            // pointHighlightFill: '#fff',
-            // pointHighlightStroke: 'rgba(148,159,177,0.8)'
-        }
-    ];
+    private lineChartColours: Array<any> = [{
+        fillColor: 'rgba(148,159,177,0.3)',
+        strokeColor: 'rgba(148,159,177,0.3)'
+    }];
     private lineChartLegend: boolean = false;
     private lineChartType: string = 'Line';
 
