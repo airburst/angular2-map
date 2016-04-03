@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'd3', '@ngrx/store'], function(exports_1, context_1) {
+System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'd3', '@ngrx/store'], function(exports_1, cont
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, d3, store_1;
+    var core_1, d3, store_1, route_1, utils_1;
     var ElevationChart;
     return {
         setters:[
@@ -22,25 +22,25 @@ System.register(['angular2/core', 'd3', '@ngrx/store'], function(exports_1, cont
             },
             function (store_1_1) {
                 store_1 = store_1_1;
+            },
+            function (route_1_1) {
+                route_1 = route_1_1;
+            },
+            function (utils_1_1) {
+                utils_1 = utils_1_1;
             }],
         execute: function() {
             ElevationChart = (function () {
                 function ElevationChart(elementRef, store) {
+                    var _this = this;
                     this.elementRef = elementRef;
                     this.store = store;
                     this.transitionTime = 250;
-                    this.init([
-                        [0, 95],
-                        [0.2, 100],
-                        [0.4, 102],
-                        [0.6, 107],
-                        [0.8, 110],
-                        [1, 98]
-                    ]);
-                    // this.route = new Route(store);
-                    // this.route.elevation$.subscribe((v) => {
-                    //     this.updateData(this.addDistanceToData(flatten(v)));
-                    // });
+                    this.init([]);
+                    this.route = new route_1.Route(store);
+                    this.route.elevation$.subscribe(function (v) {
+                        _this.updateData(_this.addDistanceToData(utils_1.flatten(v)));
+                    });
                 }
                 ElevationChart.prototype.addDistanceToData = function (elevation) {
                     var averageDistance = this.store.getState().details.distance / elevation.length, chartData = [];
@@ -51,14 +51,14 @@ System.register(['angular2/core', 'd3', '@ngrx/store'], function(exports_1, cont
                 };
                 ElevationChart.prototype.init = function (data) {
                     var margin = { top: 10, right: 10, bottom: 20, left: 40 }, width = 1920 - margin.left - margin.right, height = 234 - margin.top - margin.bottom;
-                    var x = d3.scale.linear().range([0, width]);
-                    var y = d3.scale.linear().range([height, 0]);
-                    var xAxis = d3.svg.axis().scale(x).orient("bottom");
-                    var yAxis = d3.svg.axis().scale(y).orient("left");
-                    var area = d3.svg.area()
-                        .x(function (d) { return x(d[0]); })
+                    this.x = d3.scale.linear().range([0, width]);
+                    this.y = d3.scale.linear().range([height, 0]);
+                    this.xAxis = d3.svg.axis().scale(this.x).orient("bottom");
+                    this.yAxis = d3.svg.axis().scale(this.y).orient("left");
+                    this.area = d3.svg.area()
+                        .x(function (d) { return this.x(d[0]); })
                         .y0(height)
-                        .y1(function (d) { return y(d[1]); })
+                        .y1(function (d) { return this.y(d[1]); })
                         .interpolate('basis');
                     var el = this.elementRef.nativeElement;
                     var graph = d3.select(el);
@@ -67,25 +67,37 @@ System.register(['angular2/core', 'd3', '@ngrx/store'], function(exports_1, cont
                         .attr("height", height + margin.top + margin.bottom)
                         .append("g")
                         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                    x.domain(d3.extent(data, function (d) { return d[0]; }));
-                    y.domain([0, d3.max(data, function (d) { return +d[1]; })]);
+                    this.setAxes(data);
                     svg.append("path")
                         .datum(data)
                         .attr("class", "area")
-                        .attr("d", area);
+                        .attr("d", this.area);
                     svg.append("g")
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + height + ")")
-                        .call(xAxis);
+                        .call(this.xAxis);
                     svg.append("g")
                         .attr("class", "y axis")
-                        .call(yAxis)
+                        .call(this.yAxis)
                         .append("text")
                         .attr("transform", "rotate(-90)")
                         .attr("y", 6)
                         .attr("dy", ".71em")
                         .style("text-anchor", "end")
                         .text("Elevation (m)");
+                };
+                ElevationChart.prototype.setAxes = function (data) {
+                    this.x.domain(d3.extent(data, function (d) { return d[0]; }));
+                    this.y.domain([0, d3.max(data, function (d) { return +d[1]; })]);
+                };
+                ElevationChart.prototype.updateData = function (data) {
+                    var el = this.elementRef.nativeElement;
+                    var graph = d3.select(el);
+                    this.setAxes(data);
+                    var svg = graph.transition();
+                    svg.select(".area").duration(this.transitionTime).attr("d", this.area(data));
+                    svg.select(".x.axis").duration(this.transitionTime).call(this.xAxis);
+                    svg.select(".y.axis").duration(this.transitionTime).call(this.yAxis);
                 };
                 ElevationChart = __decorate([
                     core_1.Component({

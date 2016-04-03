@@ -17,20 +17,20 @@ export class ElevationChart {
         public store: Store<AppStore>
     ) {
         this.init([
-            [0, 95],
-            [0.2, 100],
-            [0.4, 102],
-            [0.6, 107],
-            [0.8, 110],
-            [1, 98]
+
         ]);
-        // this.route = new Route(store);
-        // this.route.elevation$.subscribe((v) => {
-        //     this.updateData(this.addDistanceToData(flatten(v)));
-        // });
+        this.route = new Route(store);
+        this.route.elevation$.subscribe((v) => {
+            this.updateData(this.addDistanceToData(flatten(v)));
+        });
     }
 
     private route: Route;
+    private x: any;
+    private y: any;
+    private xAxis: any;
+    private yAxis: any;
+    private area: any;
     private transitionTime: number = 250;
 
     addDistanceToData(elevation: any[]): any[] {
@@ -47,15 +47,15 @@ export class ElevationChart {
             width = 1920 - margin.left - margin.right,
             height = 234 - margin.top - margin.bottom;
 
-        let x = d3.scale.linear().range([0, width]);
-        let y = d3.scale.linear().range([height, 0]);
-        let xAxis = d3.svg.axis().scale(x).orient("bottom");
-        let yAxis = d3.svg.axis().scale(y).orient("left");
+        this.x = d3.scale.linear().range([0, width]);
+        this.y = d3.scale.linear().range([height, 0]);
+        this.xAxis = d3.svg.axis().scale(this.x).orient("bottom");
+        this.yAxis = d3.svg.axis().scale(this.y).orient("left");
 
-        let area = d3.svg.area()
-            .x(function(d) { return x(d[0]); })
+        this.area = d3.svg.area()
+            .x(function(d) { return this.x(d[0]); })
             .y0(height)
-            .y1(function(d) { return y(d[1]); })
+            .y1(function(d) { return this.y(d[1]); })
             .interpolate('basis');
 
         let el: any = this.elementRef.nativeElement;
@@ -67,22 +67,21 @@ export class ElevationChart {
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        x.domain(d3.extent(data, function(d) { return d[0]; }));
-        y.domain([0, d3.max(data, function(d) { return +d[1]; })]);
+        this.setAxes(data);
 
         svg.append("path")
             .datum(data)
             .attr("class", "area")
-            .attr("d", area);
+            .attr("d", this.area);
 
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
+            .call(this.xAxis);
 
         svg.append("g")
             .attr("class", "y axis")
-            .call(yAxis)
+            .call(this.yAxis)
             .append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 6)
@@ -91,19 +90,20 @@ export class ElevationChart {
             .text("Elevation (m)");
     }
 
-    // setAxes(data: any[]) {
-    //     this.x.domain(d3.extent(data, function(d) { return d[0]; }));
-    //     this.y.domain([0, d3.max(data, function(d) { return +d[1]; })]);
-    // }
+    setAxes(data: any[]) {
+        this.x.domain(d3.extent(data, function(d) { return d[0]; }));
+        this.y.domain([0, d3.max(data, function(d) { return +d[1]; })]);
+    }
 
-    // updateData(data: any[]) {
-    //     let el:any    = this.elementRef.nativeElement;
-    //     let graph:any = d3.select(el);
-    //     this.setAxes(data);
-    //     let svg = graph.transition();
-    //     svg.select(".area").duration(this.transitionTime).attr("d", this.area(data));
-    //     svg.select(".x.axis").duration(this.transitionTime).call(this.xAxis);
-    //     svg.select(".y.axis").duration(this.transitionTime).call(this.yAxis);
-    // }
+    updateData(data: any[]) {
+        let el:any    = this.elementRef.nativeElement;
+        let graph:any = d3.select(el);
+        
+        this.setAxes(data);
+        let svg = graph.transition();
+        svg.select(".area").duration(this.transitionTime).attr("d", this.area(data));
+        svg.select(".x.axis").duration(this.transitionTime).call(this.xAxis);
+        svg.select(".y.axis").duration(this.transitionTime).call(this.yAxis);
+    }
 
 }
