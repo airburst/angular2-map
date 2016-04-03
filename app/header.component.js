@@ -23,7 +23,6 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                     this.clear = new core_1.EventEmitter();
                     this.remove = new core_1.EventEmitter();
                     this.import = new core_1.EventEmitter();
-                    this.recalc = new core_1.EventEmitter();
                     this.save = new core_1.EventEmitter();
                 }
                 __decorate([
@@ -45,15 +44,12 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                 __decorate([
                     core_1.Output(), 
                     __metadata('design:type', Object)
-                ], AppHeader.prototype, "recalc", void 0);
-                __decorate([
-                    core_1.Output(), 
-                    __metadata('design:type', Object)
                 ], AppHeader.prototype, "save", void 0);
                 AppHeader = __decorate([
                     core_1.Component({
                         selector: 'app-header',
-                        template: "\n        <div class=\"stats\">\n            <div class=\"text\">\n                {{route.name}} &nbsp;&nbsp;&nbsp; Distance: {{route.distance | number:'1.1-2'}} km&nbsp;&nbsp;&nbsp;\n                Ascent: {{route.ascent}} m&nbsp;\n                <a *ngIf=\"!route.hasNewElevation\" class=\"header-link\" href=\"#\" title=\"recalculate elevation\" (click)=\"recalc.emit()\">Recalculate</a>\n            </div>\n            <div class=\"form\">\n                <button id=\"clear\" (click)=\"clear.emit()\">Clear Route</button>\n                <button id=\"delete\" (click)=\"remove.emit()\">Remove WayPoint</button>\n                <button id=\"save\" (click)=\"save.emit()\">Save</button>\n                <label for=\"file\">Load GPX or TCX File:</label>\n                <input id=\"file\" type=\"file\" (change)=\"import.emit($event)\">\n            </div>\n        </div>\n    ",
+                        template: "\n        <div class=\"stats\">\n            <div class=\"text\">\n            </div>\n            <div class=\"form\">\n                <button id=\"clear\" (click)=\"clear.emit()\">Clear Route</button>\n                <button id=\"delete\" (click)=\"remove.emit()\">Remove WayPoint</button>\n                <button id=\"save\" (click)=\"save.emit()\">Save</button>\n                <label for=\"file\">Load GPX or TCX File:</label>\n                <input id=\"file\" type=\"file\" (change)=\"import.emit($event)\">\n            </div>\n        </div>\n    ",
+                        styles: ["\n        .stats {\n            background-color: #f1f1f1;\n            color: #222;\n            font-family: 'Open Sans', 'Arial', 'Helvetica';\n            line-height: 2em;\n            position: absolute;\n            top: 0;\n            z-index: 999;\n            width: 100%;\n            padding: 10px;\n            box-sizing: border-box;\n        }\n\n        .text {\n            width: 50%;\n            float: left;\n        }\n\n        .form {\n            width: 50%;\n            float: right;\n            text-align: right;\n        }\n\n        .header-link {\n            color: white;\n            text-decoration-style: dashed;\n        }\n    "],
                         changeDetection: core_1.ChangeDetectionStrategy.OnPush
                     }), 
                     __metadata('design:paramtypes', [])

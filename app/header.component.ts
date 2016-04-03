@@ -6,9 +6,6 @@ import {Segment} from './route';
     template: `
         <div class="stats">
             <div class="text">
-                {{route.name}} &nbsp;&nbsp;&nbsp; Distance: {{route.distance | number:'1.1-2'}} km&nbsp;&nbsp;&nbsp;
-                Ascent: {{route.ascent}} m&nbsp;
-                <a *ngIf="!route.hasNewElevation" class="header-link" href="#" title="recalculate elevation" (click)="recalc.emit()">Recalculate</a>
             </div>
             <div class="form">
                 <button id="clear" (click)="clear.emit()">Clear Route</button>
@@ -19,6 +16,36 @@ import {Segment} from './route';
             </div>
         </div>
     `,
+    styles: [`
+        .stats {
+            background-color: #f1f1f1;
+            color: #222;
+            font-family: 'Open Sans', 'Arial', 'Helvetica';
+            line-height: 2em;
+            position: absolute;
+            top: 0;
+            z-index: 999;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .text {
+            width: 50%;
+            float: left;
+        }
+
+        .form {
+            width: 50%;
+            float: right;
+            text-align: right;
+        }
+
+        .header-link {
+            color: white;
+            text-decoration-style: dashed;
+        }
+    `],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
@@ -27,6 +54,5 @@ export class AppHeader {
     @Output() clear = new EventEmitter();
     @Output() remove = new EventEmitter();
     @Output() import = new EventEmitter();
-    @Output() recalc = new EventEmitter();
     @Output() save = new EventEmitter();
 }

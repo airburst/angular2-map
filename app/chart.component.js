@@ -23,6 +23,8 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1, contex
         execute: function() {
             Chart = (function () {
                 function Chart() {
+                    //@Input() elevation: number[];
+                    this.recalc = new core_1.EventEmitter();
                     this.show = true;
                     this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
                 }
@@ -30,12 +32,20 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1, contex
                     this.show = !this.show;
                     this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
                 };
+                __decorate([
+                    core_1.Input(), 
+                    __metadata('design:type', Array)
+                ], Chart.prototype, "route", void 0);
+                __decorate([
+                    core_1.Output(), 
+                    __metadata('design:type', Object)
+                ], Chart.prototype, "recalc", void 0);
                 Chart = __decorate([
                     core_1.Component({
                         selector: 'chart',
-                        template: "\n        <div class=\"elevation-chart\" [ngClass]=\"{show: show}\">\n            <div class=\"elevation-header\">\n                <a class=\"toggle\" href=\"#\" (click)=\"togglePanel()\">{{toggleText}}</a>\n            </div>\n            <div class=\"elevation-graph\"></div>\n        </div>\n    ",
+                        template: "\n        <div class=\"elevation-chart\" [ngClass]=\"{show: show}\">\n            <div class=\"elevation-header\">\n                <div class=\"left\">\n                    <div class=\"item\">\n                        <div class=\"value\">{{route.distance | number:'1.1-2'}} km</div>\n                        <div class=\"label\">Distance</div>\n                    </div>\n                    <div class=\"item\">\n                        <div class=\"value\">{{route.ascent}} m</div>\n                        <div class=\"label\">Height Gain</div>\n                    </div>\n                        <!--<a *ngIf=\"!route.hasNewElevation\" class=\"header-link\" href=\"#\" title=\"recalculate elevation\" (click)=\"recalc.emit()\">Recalculate</a>-->\n                </div>\n                <div class=\"right\">\n                    <a class=\"toggle\" href=\"#\" (click)=\"togglePanel()\">{{toggleText}}</a>\n                </div>\n            </div>\n            <div class=\"elevation-graph\"></div>\n        </div>\n    ",
                         directives: [common_1.NgClass],
-                        styles: ["\n        .elevation-chart {\n            position: absolute;\n            display: inline-block;\n            height: 300px;\n            width: 100%;\n            left: 0px;\n            bottom: -250px;\n            background-color: #fff;\n            color: #222;\n            z-index: 9999;\n            transition: all 0.25s ease-in-out;\n        }\n        \n        .elevation-header {\n            height: 40px;\n            background-color: #f1f1f1;\n            padding: 5px;\n            text-align: right;\n            vertical-align: middle;\n        }\n\n        .elevation-chart.show {\n            bottom: 0;\n        }\n    "],
+                        styles: ["\n        .elevation-chart {\n            position: absolute;\n            height: 300px;\n            width: 100%;\n            left: 0px;\n            bottom: -246px; /* 300px (chart-height) - 54px (header-height) */\n            background-color: #fff;\n            color: #222;\n            z-index: 9999;\n            transition: all 0.25s ease-in-out;\n        }\n        \n        .elevation-header {\n            background-color: #f1f1f1;\n            height: 54px;\n            color: #222;\n            font-family: 'Open Sans', 'Arial', 'Helvetica';\n            padding: 0 10px;\n            display: flex;\n        }\n\n        .elevation-chart.show {\n            bottom: 0;\n        }\n        \n        .left, .right {\n            width: 50%;\n            display: flex;\n        }\n\n        .right {\n            -webkit-justify-content: flex-end;\n            justify-content: flex-end;\n        }\n        \n        .item {\n            width: 120px;\n        }\n        \n        .value {\n            font-size: 1.5em;\n            line-height: 1.6em;\n        }\n        \n        .label {\n            font-size: 0.8em;\n            line-height: 0.4em;\n        }\n    "],
                         changeDetection: core_1.ChangeDetectionStrategy.OnPush
                     }), 
                     __metadata('design:paramtypes', [])

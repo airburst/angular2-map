@@ -24,11 +24,13 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS} from './reducers/details';
             (remove)="removeLast()"
             (save)="save()"
             (import)="importFile($event)"
-            (recalc)="recalculateElevation()"
         >
         </app-header>
         <map></map>
-        <chart></chart>
+        <chart [route]="route.details$ | async"
+            (recalc)="recalculateElevation()"
+        >
+        </chart>
         `,
     directives: [FORM_DIRECTIVES, OsMap, AppHeader, Chart],
     providers: [

@@ -1,0 +1,15 @@
+Features
+
+- Draw elevation area chart
+- Wire up elevation to observable with async pipe
+- Record distance-from-last with each Point (replace .ele)
+- Search (bar, dialog for results, autocomplete)
+- Save (API)
+- Export to GPX and download
+- Toasts for warnings and messages
+
+Design
+
+Bugs
+
+- Cannot import the same route again after clearing.

@@ -136,7 +136,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (import)=\"importFile($event)\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </app-header>\n        <map></map>\n        <chart></chart>\n        ",
+                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (import)=\"importFile($event)\"\n        >\n        </app-header>\n        <map></map>\n        <chart [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </chart>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader, chart_component_1.Chart],
                         providers: [
                             gpx_service_1.GpxService,
