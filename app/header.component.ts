@@ -5,8 +5,7 @@ import {Segment} from './route';
     selector: 'app-header',
     template: `
         <div class="stats">
-            <div class="text">
-            </div>
+            <div class="text">OS Route Planner</div>
             <div class="form">
                 <button id="clear" (click)="clear.emit()">Clear Route</button>
                 <button id="delete" (click)="remove.emit()">Remove WayPoint</button>
@@ -33,6 +32,7 @@ import {Segment} from './route';
         .text {
             width: 50%;
             float: left;
+            font-size: 1.6em;
         }
 
         .form {

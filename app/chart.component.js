@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', 'ng2-charts/ng2-charts'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,8 +10,8 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1, contex
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1;
-    var Chart;
+    var core_1, common_1, ng2_charts_1;
+    var ElevationChart;
     return {
         setters:[
             function (core_1_1) {
@@ -19,40 +19,75 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1, contex
             },
             function (common_1_1) {
                 common_1 = common_1_1;
+            },
+            function (ng2_charts_1_1) {
+                ng2_charts_1 = ng2_charts_1_1;
             }],
         execute: function() {
-            Chart = (function () {
-                function Chart() {
-                    //@Input() elevation: number[];
-                    this.recalc = new core_1.EventEmitter();
-                    this.show = true;
-                    this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
+            ElevationChart = (function () {
+                //@Input() elevation: number[];
+                function ElevationChart() {
+                    this.lineChartData = [
+                        [65, 59, 80, 81, 56, 55, 40],
+                        [28, 48, 40, 19, 86, 27, 90],
+                        [18, 48, 77, 9, 100, 27, 40]
+                    ];
+                    this.lineChartLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+                    this.lineChartSeries = ['Series A', 'Series B', 'Series C'];
+                    this.lineChartOptions = {
+                        animation: false,
+                        responsive: true,
+                        multiTooltipTemplate: '<%if (datasetLabel){%><%=datasetLabel %>: <%}%><%= value %>'
+                    };
+                    this.lineChartColours = [
+                        {
+                            fillColor: 'rgba(148,159,177,0.2)',
+                            strokeColor: 'rgba(148,159,177,1)',
+                            pointColor: 'rgba(148,159,177,1)',
+                            pointStrokeColor: '#fff',
+                            pointHighlightFill: '#fff',
+                            pointHighlightStroke: 'rgba(148,159,177,0.8)'
+                        },
+                        {
+                            fillColor: 'rgba(77,83,96,0.2)',
+                            strokeColor: 'rgba(77,83,96,1)',
+                            pointColor: 'rgba(77,83,96,1)',
+                            pointStrokeColor: '#fff',
+                            pointHighlightFill: '#fff',
+                            pointHighlightStroke: 'rgba(77,83,96,1)'
+                        },
+                        {
+                            fillColor: 'rgba(148,159,177,0.2)',
+                            strokeColor: 'rgba(148,159,177,1)',
+                            pointColor: 'rgba(148,159,177,1)',
+                            pointStrokeColor: '#fff',
+                            pointHighlightFill: '#fff',
+                            pointHighlightStroke: 'rgba(148,159,177,0.8)'
+                        }
+                    ];
+                    this.lineChartLegend = true;
+                    this.lineChartType = 'Line';
+                    console.log('bar demo');
                 }
-                Chart.prototype.togglePanel = function () {
-                    this.show = !this.show;
-                    this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
+                // events
+                ElevationChart.prototype.chartClicked = function (ev) {
+                    console.log(ev);
                 };
-                __decorate([
-                    core_1.Input(), 
-                    __metadata('design:type', Array)
-                ], Chart.prototype, "route", void 0);
-                __decorate([
-                    core_1.Output(), 
-                    __metadata('design:type', Object)
-                ], Chart.prototype, "recalc", void 0);
-                Chart = __decorate([
+                ElevationChart.prototype.chartHovered = function (ev) {
+                    console.log(ev);
+                };
+                ElevationChart = __decorate([
                     core_1.Component({
-                        selector: 'chart',
-                        template: "\n        <div class=\"elevation-chart\" [ngClass]=\"{show: show}\">\n            <div class=\"elevation-header\">\n                <div class=\"left\">\n                    <div class=\"item\">\n                        <div class=\"value\">{{route.distance | number:'1.1-2'}} km</div>\n                        <div class=\"label\">Distance</div>\n                    </div>\n                    <div class=\"item\">\n                        <div class=\"value\">{{route.ascent}} m</div>\n                        <div class=\"label\">Height Gain <a *ngIf=\"!route.hasNewElevation\" class=\"header-link\" href=\"#\" title=\"recalculate elevation\" (click)=\"recalc.emit()\">Recalculate</a></div>\n                    </div>\n                </div>\n                <div class=\"right\">\n                    <a class=\"toggle-link\" href=\"#\" (click)=\"togglePanel()\">{{toggleText}}</a>\n                </div>\n            </div>\n            <div class=\"elevation-graph\"></div>\n        </div>\n    ",
-                        directives: [common_1.NgClass],
-                        styles: ["\n        .elevation-chart {\n            position: absolute;\n            height: 300px;\n            width: 100%;\n            left: 0px;\n            bottom: -246px; /* 300px (chart-height) - 54px (header-height) */\n            background-color: #fff;\n            color: #222;\n            z-index: 9999;\n            transition: all 0.25s ease-in-out;\n        }\n        \n        .elevation-header {\n            background-color: #f1f1f1;\n            height: 54px;\n            color: #222;\n            font-family: 'Open Sans', 'Arial', 'Helvetica';\n            padding: 0 10px;\n            display: flex;\n        }\n\n        .elevation-chart.show {\n            bottom: 0;\n        }\n        \n        .left, .right {\n            width: 50%;\n            display: flex;\n        }\n\n        .right {\n            -webkit-justify-content: flex-end;\n            justify-content: flex-end;\n        }\n        \n        .item {\n            width: 140px;\n        }\n        \n        .value {\n            font-size: 1.5em;\n            line-height: 1.6em;\n        }\n        \n        .label {\n            font-size: 0.8em;\n            line-height: 0.4em;\n        }\n        \n        .toggle-link {\n            font-size: 0.8em;\n            line-height: 4em;\n        }\n    "],
-                        changeDetection: core_1.ChangeDetectionStrategy.OnPush
+                        selector: 'elevation-chart',
+                        template: "\n        <base-chart class=\"chart\"\n                [data]=\"lineChartData\"\n                [labels]=\"lineChartLabels\"\n                [options]=\"lineChartOptions\"\n                [series]=\"lineChartSeries\"\n                [colours]=\"lineChartColours\"\n                [legend]=\"lineChartLegend\"\n                [chartType]=\"lineChartType\"\n                (chartHover)=\"chartHovered($event)\"\n                (chartClick)=\"chartClicked($event)\"></base-chart>\n    ",
+                        styles: ["\n        .chart {\n            display: flex;\n            height: 244px;\n        }\n    "],
+                        directives: [ng2_charts_1.CHART_DIRECTIVES, common_1.NgClass, common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES]
                     }), 
                     __metadata('design:paramtypes', [])
-                ], Chart);
-                return Chart;
+                ], ElevationChart);
+                return ElevationChart;
             }());
-            exports_1("Chart", Chart);
+            exports_1("ElevationChart", ElevationChart);
         }
     }
 });

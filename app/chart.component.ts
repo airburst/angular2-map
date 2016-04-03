@@ -1,104 +1,85 @@
-import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
-import {NgClass} from 'angular2/common';
-import {Segment} from './route';
+import {Component, EventEmitter, Input} from 'angular2/core';
+import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from 'angular2/common';
+import {CHART_DIRECTIVES} from 'ng2-charts/ng2-charts';
 
 @Component({
-    selector: 'chart',
+    selector: 'elevation-chart',
     template: `
-        <div class="elevation-chart" [ngClass]="{show: show}">
-            <div class="elevation-header">
-                <div class="left">
-                    <div class="item">
-                        <div class="value">{{route.distance | number:'1.1-2'}} km</div>
-                        <div class="label">Distance</div>
-                    </div>
-                    <div class="item">
-                        <div class="value">{{route.ascent}} m</div>
-                        <div class="label">Height Gain <a *ngIf="!route.hasNewElevation" class="header-link" href="#" title="recalculate elevation" (click)="recalc.emit()">Recalculate</a></div>
-                    </div>
-                </div>
-                <div class="right">
-                    <a class="toggle-link" href="#" (click)="togglePanel()">{{toggleText}}</a>
-                </div>
-            </div>
-            <div class="elevation-graph"></div>
-        </div>
+        <base-chart class="chart"
+                [data]="lineChartData"
+                [labels]="lineChartLabels"
+                [options]="lineChartOptions"
+                [series]="lineChartSeries"
+                [colours]="lineChartColours"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></base-chart>
     `,
-    directives: [NgClass],
     styles: [`
-        .elevation-chart {
-            position: absolute;
-            height: 300px;
-            width: 100%;
-            left: 0px;
-            bottom: -246px; /* 300px (chart-height) - 54px (header-height) */
-            background-color: #fff;
-            color: #222;
-            z-index: 9999;
-            transition: all 0.25s ease-in-out;
-        }
-        
-        .elevation-header {
-            background-color: #f1f1f1;
-            height: 54px;
-            color: #222;
-            font-family: 'Open Sans', 'Arial', 'Helvetica';
-            padding: 0 10px;
+        .chart {
             display: flex;
-        }
-
-        .elevation-chart.show {
-            bottom: 0;
-        }
-        
-        .left, .right {
-            width: 50%;
-            display: flex;
-        }
-
-        .right {
-            -webkit-justify-content: flex-end;
-            justify-content: flex-end;
-        }
-        
-        .item {
-            width: 140px;
-        }
-        
-        .value {
-            font-size: 1.5em;
-            line-height: 1.6em;
-        }
-        
-        .label {
-            font-size: 0.8em;
-            line-height: 0.4em;
-        }
-        
-        .toggle-link {
-            font-size: 0.8em;
-            line-height: 4em;
+            height: 244px;
         }
     `],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    directives: [CHART_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES]
 })
 
-export class Chart {
-    @Input() route: Segment[];
+export class ElevationChart {
     //@Input() elevation: number[];
-    @Output() recalc = new EventEmitter();
 
-    private show: boolean;
-    private toggleText: string;
-    
     constructor() {
-        this.show = true;
-        this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
+        console.log('bar demo');
     }
-    
-    togglePanel() {
-        this.show = !this.show;
-        this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
+
+    private lineChartData: Array<any> = [
+        [65, 59, 80, 81, 56, 55, 40],
+        [28, 48, 40, 19, 86, 27, 90],
+        [18, 48, 77, 9, 100, 27, 40]
+    ];
+    private lineChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    private lineChartSeries: Array<any> = ['Series A', 'Series B', 'Series C'];
+    private lineChartOptions: any = {
+        animation: false,
+        responsive: true,
+        multiTooltipTemplate: '<%if (datasetLabel){%><%=datasetLabel %>: <%}%><%= value %>'
+    };
+    private lineChartColours: Array<any> = [
+        { // grey
+            fillColor: 'rgba(148,159,177,0.2)',
+            strokeColor: 'rgba(148,159,177,1)',
+            pointColor: 'rgba(148,159,177,1)',
+            pointStrokeColor: '#fff',
+            pointHighlightFill: '#fff',
+            pointHighlightStroke: 'rgba(148,159,177,0.8)'
+        },
+        { // dark grey
+            fillColor: 'rgba(77,83,96,0.2)',
+            strokeColor: 'rgba(77,83,96,1)',
+            pointColor: 'rgba(77,83,96,1)',
+            pointStrokeColor: '#fff',
+            pointHighlightFill: '#fff',
+            pointHighlightStroke: 'rgba(77,83,96,1)'
+        },
+        { // grey
+            fillColor: 'rgba(148,159,177,0.2)',
+            strokeColor: 'rgba(148,159,177,1)',
+            pointColor: 'rgba(148,159,177,1)',
+            pointStrokeColor: '#fff',
+            pointHighlightFill: '#fff',
+            pointHighlightStroke: 'rgba(148,159,177,0.8)'
+        }
+    ];
+    private lineChartLegend: boolean = true;
+    private lineChartType: string = 'Line';
+
+    // events
+    chartClicked(ev: any) {
+        console.log(ev);
     }
-    
+
+    chartHovered(ev: any) {
+        console.log(ev);
+    }
+
 }
