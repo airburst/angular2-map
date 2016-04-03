@@ -25,10 +25,14 @@
                 '@ngrx/store': {
                     main: 'index.js',
                     format: 'cjs'           
-                }      
+                },
+                'ng2-charts': {
+                    main: 'charts.js'         
+                }  
             },
             map: {
-                '@ngrx/store': 'node_modules/@ngrx/store/dist'
+                '@ngrx/store': 'node_modules/@ngrx/store/dist',
+                'ng2-charts': 'node_modules/ng2-charts/components/charts'
             }  
         });     
         System.import('app/boot')
