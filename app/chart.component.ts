@@ -14,12 +14,11 @@ import {Segment} from './route';
                     </div>
                     <div class="item">
                         <div class="value">{{route.ascent}} m</div>
-                        <div class="label">Height Gain</div>
+                        <div class="label">Height Gain <a *ngIf="!route.hasNewElevation" class="header-link" href="#" title="recalculate elevation" (click)="recalc.emit()">Recalculate</a></div>
                     </div>
-                        <!--<a *ngIf="!route.hasNewElevation" class="header-link" href="#" title="recalculate elevation" (click)="recalc.emit()">Recalculate</a>-->
                 </div>
                 <div class="right">
-                    <a class="toggle" href="#" (click)="togglePanel()">{{toggleText}}</a>
+                    <a class="toggle-link" href="#" (click)="togglePanel()">{{toggleText}}</a>
                 </div>
             </div>
             <div class="elevation-graph"></div>
@@ -63,7 +62,7 @@ import {Segment} from './route';
         }
         
         .item {
-            width: 120px;
+            width: 140px;
         }
         
         .value {
@@ -74,6 +73,11 @@ import {Segment} from './route';
         .label {
             font-size: 0.8em;
             line-height: 0.4em;
+        }
+        
+        .toggle-link {
+            font-size: 0.8em;
+            line-height: 4em;
         }
     `],
     changeDetection: ChangeDetectionStrategy.OnPush
