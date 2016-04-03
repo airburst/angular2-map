@@ -22,7 +22,7 @@ import {Segment} from './route';
                     <a class="toggle-link" href="#" (click)="togglePanel()">{{toggleText}}</a>
                 </div>
             </div>
-            <elevation-chart [elevation]="elevation"></elevation-chart>
+            <elevation-chart></elevation-chart>
         </div>
     `,
     directives: [NgClass, ElevationChart],
@@ -88,7 +88,6 @@ import {Segment} from './route';
 
 export class InfoPanel {
     @Input() route: Segment[];
-    @Input() elevation: any[];
     @Output() recalc = new EventEmitter();
 
     private show: boolean;

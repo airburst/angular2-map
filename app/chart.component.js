@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'ng2-charts'], function(exports_1, context_1) {
+System.register(['angular2/core', 'ng2-charts', '@ngrx/store', './route', './utils/utils'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'ng2-charts'], function(exports_1, context_1) 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, ng2_charts_1;
+    var core_1, ng2_charts_1, store_1, route_1, utils_1;
     var ElevationChart;
     return {
         setters:[
@@ -19,10 +19,21 @@ System.register(['angular2/core', 'ng2-charts'], function(exports_1, context_1) 
             },
             function (ng2_charts_1_1) {
                 ng2_charts_1 = ng2_charts_1_1;
+            },
+            function (store_1_1) {
+                store_1 = store_1_1;
+            },
+            function (route_1_1) {
+                route_1 = route_1_1;
+            },
+            function (utils_1_1) {
+                utils_1 = utils_1_1;
             }],
         execute: function() {
             ElevationChart = (function () {
-                function ElevationChart() {
+                function ElevationChart(store) {
+                    var _this = this;
+                    this.store = store;
                     this.lineChartData = [[]];
                     this.lineChartLabels = [];
                     this.lineChartSeries = ['Test'];
@@ -39,26 +50,36 @@ System.register(['angular2/core', 'ng2-charts'], function(exports_1, context_1) 
                         }];
                     this.lineChartLegend = false;
                     this.lineChartType = 'Line';
+                    this.numberOfDistanceTicks = 10;
+                    this.route = new route_1.Route(store);
+                    this.route.elevation$.subscribe(function (v) {
+                        _this.setData(utils_1.flatten(v));
+                    });
                 }
+                ElevationChart.prototype.setData = function (elevations) {
+                    var _this = this;
+                    var averageDistance = this.store.getState().details.distance / elevations.length, chartData = [], labels = [];
+                    elevations.forEach(function (ele, i) {
+                        chartData.push(ele);
+                        labels.push(((i % _this.numberOfDistanceTicks) === 0) ? averageDistance * i : '');
+                    });
+                    this.lineChartData = chartData;
+                    this.lineChartLabels = labels;
+                };
                 ElevationChart.prototype.chartClicked = function (ev) {
                     console.log('click: ', ev);
                 };
                 ElevationChart.prototype.chartHovered = function (ev) {
                     //console.log('hover: ', ev);
                 };
-                __decorate([
-                    core_1.Input(), 
-                    __metadata('design:type', Object)
-                ], ElevationChart.prototype, "elevation", void 0);
                 ElevationChart = __decorate([
                     core_1.Component({
                         selector: 'elevation-chart',
-                        template: "\n        <base-chart class=\"chart\"\n            [data]=\"elevation\"\n            [labels]=\"lineChartLabels\"\n            [options]=\"lineChartOptions\"\n            [series]=\"lineChartSeries\"\n            [colours]=\"lineChartColours\"\n            [legend]=\"lineChartLegend\"\n            [chartType]=\"lineChartType\"\n            (chartHover)=\"chartHovered($event)\"\n            (chartClick)=\"chartClicked($event)\"\n            ></base-chart>\n    ",
+                        template: "\n        <base-chart class=\"chart\"\n            [data]=\"lineChartData\"\n            [labels]=\"lineChartLabels\"\n            [options]=\"lineChartOptions\"\n            [series]=\"lineChartSeries\"\n            [colours]=\"lineChartColours\"\n            [legend]=\"lineChartLegend\"\n            [chartType]=\"lineChartType\"\n            (chartHover)=\"chartHovered($event)\"\n            (chartClick)=\"chartClicked($event)\"\n            ></base-chart>\n    ",
                         styles: ["\n        .chart {\n            display: flex;\n            height: 234px;\n            padding: 5px 10px;\n        }\n    "],
-                        directives: [ng2_charts_1.CHART_DIRECTIVES],
-                        changeDetection: core_1.ChangeDetectionStrategy.OnPush
+                        directives: [ng2_charts_1.CHART_DIRECTIVES]
                     }), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [store_1.Store])
                 ], ElevationChart);
                 return ElevationChart;
             }());

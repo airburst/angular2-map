@@ -116,7 +116,7 @@ const centre = (lat1: number, lon1: number, lat2: number, lon2: number) => {
 }
 
 // Return distance (km) between two points
-const distanceBetween = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+export const distanceBetween = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     let p = 0.017453292519943295;    // Math.PI / 180
     let c = Math.cos;
     let a = 0.5 - c((lat2 - lat1) * p) / 2 +

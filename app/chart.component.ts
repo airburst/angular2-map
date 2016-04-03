@@ -1,12 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, ChangeDetectionStrategy} from 'angular2/core';
+import {Component, EventEmitter, Input, OnInit} from 'angular2/core';
 import {CHART_DIRECTIVES} from 'ng2-charts';
+import {Store} from '@ngrx/store';
+import {Route, AppStore} from './route';
 import {flatten} from './utils/utils';
 
 @Component({
     selector: 'elevation-chart',
     template: `
         <base-chart class="chart"
-            [data]="elevation"
+            [data]="lineChartData"
             [labels]="lineChartLabels"
             [options]="lineChartOptions"
             [series]="lineChartSeries"
@@ -24,15 +26,19 @@ import {flatten} from './utils/utils';
             padding: 5px 10px;
         }
     `],
-    directives: [CHART_DIRECTIVES],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    directives: [CHART_DIRECTIVES]
 })
 
 export class ElevationChart {
-
-    @Input() elevation;
     
-    constructor() { }
+    constructor(
+        public store: Store<AppStore>
+    ) {
+        this.route = new Route(store);
+        this.route.elevation$.subscribe((v) => {
+            this.setData(flatten(v));
+        });
+    }
 
     private route;
     private lineChartData: Array<any> = [[]];
@@ -51,9 +57,23 @@ export class ElevationChart {
     }];
     private lineChartLegend: boolean = false;
     private lineChartType: string = 'Line';
+    private numberOfDistanceTicks = 10;
+    
+    setData(elevations) {
+        let averageDistance = this.store.getState().details.distance / elevations.length,
+            chartData: number[] = [],
+            labels: any[] = [];
+        elevations.forEach((ele, i) => {
+            chartData.push(ele);
+            labels.push(((i % this.numberOfDistanceTicks) === 0) ? averageDistance * i : '');
+        });
+        this.lineChartData = chartData;
+        this.lineChartLabels = labels;
+    }
 
     chartClicked(ev: any) {
         console.log('click: ', ev);
+        
     }
 
     chartHovered(ev: any) {
