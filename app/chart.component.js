@@ -31,23 +31,15 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
             }],
         execute: function() {
             ElevationChart = (function () {
-                function ElevationChart(elementRef, 
-                    // ngZone: NgZone,
-                    store) {
+                function ElevationChart(elementRef, ngZone, store) {
                     var _this = this;
                     this.elementRef = elementRef;
                     this.store = store;
                     this.width = parseInt(d3.select('.chart').style('width'));
                     this.margin = { top: 10, right: 10, bottom: 20, left: 40 };
                     this.transitionTime = 250;
-                    this.width = window.innerWidth;
                     this.data = [];
                     this.init(this.data);
-                    // window.onresize = (e) => {
-                    //     ngZone.run(() => {
-                    //         this.resize();
-                    //     });
-                    // };
                     // Subscribe to changes in elevation observable        
                     this.route = new route_1.Route(store);
                     this.route.elevation$.subscribe(function (v) {
@@ -63,7 +55,7 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
                     return chartData;
                 };
                 ElevationChart.prototype.init = function (data) {
-                    var width = this.width - this.margin.left - this.margin.right, height = 234 - this.margin.top - this.margin.bottom;
+                    var width = this.width - this.margin.left - this.margin.right, height = 244 - this.margin.top - this.margin.bottom;
                     this.x = d3.scale.linear().range([0, width]);
                     this.y = d3.scale.linear().range([height, 0]);
                     this.xAxis = d3.svg.axis().scale(this.x).orient("bottom");
@@ -75,11 +67,11 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
                         .interpolate('basis');
                     var el = this.elementRef.nativeElement;
                     var graph = d3.select(el);
-                    var svg = graph.append("svg")
-                        .attr("width", width + this.margin.left + this.margin.right)
-                        .attr("height", height + this.margin.top + this.margin.bottom)
-                        .append("g")
-                        .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+                    var svg = graph.append('svg')
+                        .attr('width', width + this.margin.left + this.margin.right)
+                        .attr('height', height + this.margin.top + this.margin.bottom)
+                        .append('g')
+                        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
                     this.setAxes(data);
                     svg.append("path")
                         .datum(data)
@@ -89,6 +81,10 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + height + ")")
                         .call(this.xAxis);
+                    // .append("text")
+                    // .attr("dy", ".71em")
+                    // .style("text-anchor", "end")
+                    // .text("Distance (km)");
                     svg.append("g")
                         .attr("class", "y axis")
                         .call(this.yAxis)
@@ -117,7 +113,7 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
                         selector: 'elevation-chart',
                         template: ""
                     }), 
-                    __metadata('design:paramtypes', [core_1.ElementRef, store_1.Store])
+                    __metadata('design:paramtypes', [core_1.ElementRef, core_1.NgZone, store_1.Store])
                 ], ElevationChart);
                 return ElevationChart;
             }());

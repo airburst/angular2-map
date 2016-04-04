@@ -14,18 +14,11 @@ export class ElevationChart {
 
     constructor(
         public elementRef: ElementRef,
-        // ngZone: NgZone,
+        ngZone: NgZone,
         public store: Store<AppStore>
     ) {
-        this.width = window.innerWidth;
         this.data = [];
         this.init(this.data);
-
-        // window.onresize = (e) => {
-        //     ngZone.run(() => {
-        //         this.resize();
-        //     });
-        // };
 
         // Subscribe to changes in elevation observable        
         this.route = new Route(store);
@@ -57,7 +50,7 @@ export class ElevationChart {
 
     init(data) {
         let width = this.width - this.margin.left - this.margin.right,
-            height = 234 - this.margin.top - this.margin.bottom;
+            height = 244 - this.margin.top - this.margin.bottom;
 
         this.x = d3.scale.linear().range([0, width]);
         this.y = d3.scale.linear().range([height, 0]);
@@ -73,11 +66,11 @@ export class ElevationChart {
         let el: any = this.elementRef.nativeElement;
         let graph: any = d3.select(el);
 
-        let svg = graph.append("svg")
-            .attr("width", width + this.margin.left + this.margin.right)
-            .attr("height", height + this.margin.top + this.margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+        let svg = graph.append('svg')
+            .attr('width', width + this.margin.left + this.margin.right)
+            .attr('height', height + this.margin.top + this.margin.bottom)
+            .append('g')
+            .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
         this.setAxes(data);
 
@@ -90,6 +83,10 @@ export class ElevationChart {
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(this.xAxis);
+        // .append("text")
+        // .attr("dy", ".71em")
+        // .style("text-anchor", "end")
+        // .text("Distance (km)");
 
         svg.append("g")
             .attr("class", "y axis")
@@ -99,7 +96,7 @@ export class ElevationChart {
             .attr("y", 6)
             .attr("dy", ".71em")
             .style("text-anchor", "end")
-            .text("Elevation (m)");
+            .text("Elevation (m)");    
     }
 
     setAxes(data: any[]) {
@@ -117,11 +114,5 @@ export class ElevationChart {
         svg.select(".x.axis").duration(this.transitionTime).call(this.xAxis);
         svg.select(".y.axis").duration(this.transitionTime).call(this.yAxis);
     }
-
-    // resize() {
-    //     this.width = window.innerWidth;
-    //     d3.select('svg').remove();
-    //     this.init(this.data);
-    // }
 
 }
