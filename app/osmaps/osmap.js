@@ -55,6 +55,9 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                 }
                 OsMap.prototype.init = function () {
                     var _this = this;
+                    if (this.osMap.id !== undefined) {
+                        this.osMap.destroy();
+                    }
                     this.ol = window.OpenLayers;
                     this.os = window.OpenSpace;
                     // Instantiate the map canvas
@@ -91,7 +94,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                 OsMap.prototype.centreAndSetMapEvents = function () {
                     this.centreMap(this.store.getState().details);
                     this.osMap.events.remove('dblclick');
-                    this.osMap.events.register('touchmove', this.osMap, function () { console.log('setting isMoving to true'); this.isMoving = true; });
+                    this.osMap.events.register('touchmove', this.osMap, function () { this.isMoving = true; });
                     this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
                     this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
                 };
@@ -113,8 +116,10 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                 };
                 ;
                 OsMap.prototype.clickPoint = function (e) {
-                    var pt = this.osMap.getLonLatFromViewPortPx(e.xy);
-                    this.addWayPointToMap(e, pt);
+                    if (!this.isMoving) {
+                        var pt = this.osMap.getLonLatFromViewPortPx(e.xy);
+                        this.addWayPointToMap(e, pt);
+                    }
                 };
                 ;
                 OsMap.prototype.addWayPointToMap = function (e, pt) {

@@ -95,7 +95,8 @@ export class AppComponent implements OnInit {
         this.store.dispatch({ type: CLEAR_TRACK });
         this.store.dispatch({ type: CLEAR_ELEVATION });
         this.store.dispatch({ type: CLEAR_DETAILS });
-        this.osmap.centreAndSetMapEvents();
+        //this.osmap.centreAndSetMapEvents();
+        this.osmap.init();
     }
 
     removeLast() {

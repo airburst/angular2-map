@@ -32,6 +32,9 @@ export class OsMap {
     }
 
     init() {
+        if (this.osMap.id !== undefined) {
+            this.osMap.destroy();
+        }
         this.ol = window.OpenLayers;
         this.os = window.OpenSpace;
 
@@ -79,7 +82,7 @@ export class OsMap {
     centreAndSetMapEvents() {
         this.centreMap(this.store.getState().details);
         this.osMap.events.remove('dblclick');
-        this.osMap.events.register('touchmove', this.osMap, function() { console.log('setting isMoving to true'); this.isMoving = true; });
+        this.osMap.events.register('touchmove', this.osMap, function() { this.isMoving = true; });
         this.osMap.events.register('touchend', this.osMap, this.touchPoint.bind(this));
         this.osMap.events.register('click', this.osMap, this.clickPoint.bind(this));
     }
@@ -105,8 +108,10 @@ export class OsMap {
     };
 
     clickPoint(e) {
-        var pt = this.osMap.getLonLatFromViewPortPx(e.xy);
-        this.addWayPointToMap(e, pt);
+        if (!this.isMoving) {
+            var pt = this.osMap.getLonLatFromViewPortPx(e.xy);
+            this.addWayPointToMap(e, pt);
+        }
     };
 
     addWayPointToMap(e, pt) {
