@@ -31,15 +31,28 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
             }],
         execute: function() {
             ElevationChart = (function () {
-                function ElevationChart(elementRef, store) {
+                function ElevationChart(elementRef, 
+                    // ngZone: NgZone,
+                    store) {
                     var _this = this;
                     this.elementRef = elementRef;
                     this.store = store;
+                    this.width = parseInt(d3.select('.chart').style('width'));
+                    this.margin = { top: 10, right: 10, bottom: 20, left: 40 };
                     this.transitionTime = 250;
-                    this.init([]);
+                    this.width = window.innerWidth;
+                    this.data = [];
+                    this.init(this.data);
+                    // window.onresize = (e) => {
+                    //     ngZone.run(() => {
+                    //         this.resize();
+                    //     });
+                    // };
+                    // Subscribe to changes in elevation observable        
                     this.route = new route_1.Route(store);
                     this.route.elevation$.subscribe(function (v) {
-                        _this.updateData(_this.addDistanceToData(utils_1.flatten(v)));
+                        _this.data = _this.addDistanceToData(utils_1.flatten(v));
+                        _this.updateData(_this.data);
                     });
                 }
                 ElevationChart.prototype.addDistanceToData = function (elevation) {
@@ -50,7 +63,7 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
                     return chartData;
                 };
                 ElevationChart.prototype.init = function (data) {
-                    var margin = { top: 10, right: 10, bottom: 20, left: 40 }, width = 1920 - margin.left - margin.right, height = 234 - margin.top - margin.bottom;
+                    var width = this.width - this.margin.left - this.margin.right, height = 234 - this.margin.top - this.margin.bottom;
                     this.x = d3.scale.linear().range([0, width]);
                     this.y = d3.scale.linear().range([height, 0]);
                     this.xAxis = d3.svg.axis().scale(this.x).orient("bottom");
@@ -63,10 +76,10 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
                     var el = this.elementRef.nativeElement;
                     var graph = d3.select(el);
                     var svg = graph.append("svg")
-                        .attr("width", width + margin.left + margin.right)
-                        .attr("height", height + margin.top + margin.bottom)
+                        .attr("width", width + this.margin.left + this.margin.right)
+                        .attr("height", height + this.margin.top + this.margin.bottom)
                         .append("g")
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                        .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
                     this.setAxes(data);
                     svg.append("path")
                         .datum(data)

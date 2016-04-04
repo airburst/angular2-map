@@ -5,8 +5,8 @@ import {Segment} from './route';
     selector: 'app-header',
     template: `
         <div class="stats">
-            <div class="text">OS Route Planner</div>
-            <div class="form">
+            <div class="left">OS Route Planner</div>
+            <div class="right">
                 <button id="clear" (click)="clear.emit()">Clear Route</button>
                 <button id="delete" (click)="remove.emit()">Remove WayPoint</button>
                 <button id="save" (click)="save.emit()">Save</button>
@@ -26,19 +26,20 @@ import {Segment} from './route';
             z-index: 999;
             width: 100%;
             padding: 10px;
-            box-sizing: border-box;
+            display: flex;
         }
 
-        .text {
-            width: 50%;
-            float: left;
+        .left {
+            width: 25%;
             font-size: 1.6em;
+            display: flex;
         }
 
-        .form {
-            width: 50%;
-            float: right;
-            text-align: right;
+        .right {
+            width: 75%;
+            display: flex;
+            -webkit-justify-content: flex-end;
+            justify-content: flex-end;
         }
 
         .header-link {

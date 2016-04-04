@@ -1,5 +1,5 @@
 /// <reference path="../typings/d3.d.ts"/>
-import {Component, EventEmitter, Input, OnInit, ElementRef} from 'angular2/core';
+import {Component, EventEmitter, ElementRef, NgZone} from 'angular2/core';
 import * as d3 from 'd3';
 import {Store} from '@ngrx/store';
 import {Route, AppStore} from './route';
@@ -14,23 +14,36 @@ export class ElevationChart {
 
     constructor(
         public elementRef: ElementRef,
+        // ngZone: NgZone,
         public store: Store<AppStore>
     ) {
-        this.init([
+        this.width = window.innerWidth;
+        this.data = [];
+        this.init(this.data);
 
-        ]);
+        // window.onresize = (e) => {
+        //     ngZone.run(() => {
+        //         this.resize();
+        //     });
+        // };
+
+        // Subscribe to changes in elevation observable        
         this.route = new Route(store);
         this.route.elevation$.subscribe((v) => {
-            this.updateData(this.addDistanceToData(flatten(v)));
+            this.data = this.addDistanceToData(flatten(v));
+            this.updateData(this.data);
         });
     }
 
     private route: Route;
+    private data: any[];
     private x: any;
     private y: any;
     private xAxis: any;
     private yAxis: any;
     private area: any;
+    private width: number = parseInt(d3.select('.chart').style('width'));
+    private margin: any = { top: 10, right: 10, bottom: 20, left: 40 };
     private transitionTime: number = 250;
 
     addDistanceToData(elevation: any[]): any[] {
@@ -43,9 +56,8 @@ export class ElevationChart {
     }
 
     init(data) {
-        let margin = { top: 10, right: 10, bottom: 20, left: 40 },
-            width = 1920 - margin.left - margin.right,
-            height = 234 - margin.top - margin.bottom;
+        let width = this.width - this.margin.left - this.margin.right,
+            height = 234 - this.margin.top - this.margin.bottom;
 
         this.x = d3.scale.linear().range([0, width]);
         this.y = d3.scale.linear().range([height, 0]);
@@ -62,10 +74,10 @@ export class ElevationChart {
         let graph: any = d3.select(el);
 
         let svg = graph.append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+            .attr("width", width + this.margin.left + this.margin.right)
+            .attr("height", height + this.margin.top + this.margin.bottom)
             .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
         this.setAxes(data);
 
@@ -96,14 +108,20 @@ export class ElevationChart {
     }
 
     updateData(data: any[]) {
-        let el:any    = this.elementRef.nativeElement;
-        let graph:any = d3.select(el);
-        
+        let el: any = this.elementRef.nativeElement;
+        let graph: any = d3.select(el);
+
         this.setAxes(data);
         let svg = graph.transition();
         svg.select(".area").duration(this.transitionTime).attr("d", this.area(data));
         svg.select(".x.axis").duration(this.transitionTime).call(this.xAxis);
         svg.select(".y.axis").duration(this.transitionTime).call(this.yAxis);
     }
+
+    // resize() {
+    //     this.width = window.innerWidth;
+    //     d3.select('svg').remove();
+    //     this.init(this.data);
+    // }
 
 }
