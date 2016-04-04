@@ -40,6 +40,9 @@ import {Segment} from './route';
             background-color: #fff;
             color: #222;
             z-index: 9999;
+            box-shadow: 0 5px 5px -3px rgba(0,0,0,.14),
+                0 8px 10px 1px rgba(0,0,0,.098),
+                0 3px 14px 2px rgba(0,0,0,.084);
             transition: all 0.25s ease-in-out;
         }
         
@@ -96,7 +99,7 @@ export class InfoPanel {
     private toggleText: string;
     
     constructor() {
-        this.show = true;
+        this.show = false;
         this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
     }
     
