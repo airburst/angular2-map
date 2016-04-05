@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './chart2.component'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', './chart.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', './chart2.component'], func
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, chart2_component_1;
+    var core_1, common_1, chart_component_1;
     var InfoPanel;
     return {
         setters:[
@@ -20,8 +20,8 @@ System.register(['angular2/core', 'angular2/common', './chart2.component'], func
             function (common_1_1) {
                 common_1 = common_1_1;
             },
-            function (chart2_component_1_1) {
-                chart2_component_1 = chart2_component_1_1;
+            function (chart_component_1_1) {
+                chart_component_1 = chart_component_1_1;
             }],
         execute: function() {
             InfoPanel = (function () {
@@ -49,7 +49,7 @@ System.register(['angular2/core', 'angular2/common', './chart2.component'], func
                     core_1.Component({
                         selector: 'infopanel',
                         template: "\n        <div class=\"infopanel\" [ngClass]=\"{show: show}\">\n            <div class=\"elevation-header\">\n                <div class=\"left\">\n                    <div class=\"item\">\n                        <div class=\"value\">{{route.distance | number:'1.1-2'}} km</div>\n                        <div class=\"label\">Distance</div>\n                    </div>\n                    <div class=\"item\">\n                        <div class=\"value\">{{route.ascent}} m</div>\n                        <div class=\"label\">Height Gain <a *ngIf=\"!route.hasNewElevation\" class=\"header-link\" href=\"#\" title=\"recalculate elevation\" (click)=\"recalc.emit()\">Recalculate</a></div>\n                    </div>\n                </div>\n                <div class=\"right\">\n                    <a class=\"toggle-link\" href=\"#\" (click)=\"togglePanel()\">{{toggleText}}</a>\n                </div>\n            </div>\n            <div class=\"chart\">\n                <elevation-chart></elevation-chart>\n            </div>\n        </div>\n    ",
-                        directives: [common_1.NgClass, chart2_component_1.ElevationChart],
+                        directives: [common_1.NgClass, chart_component_1.ElevationChart],
                         styles: ["\n        .infopanel {\n            position: absolute;\n            display: flex;\n            flex-direction: column;\n            height: 300px;\n            width: 100%;\n            left: 0px;\n            bottom: -244px; /* 300px (chart-height) - 56px (header-height) */\n            background-color: #fff;\n            color: #222;\n            z-index: 9999;\n            box-shadow: 0 5px 5px -3px rgba(0,0,0,.14),\n                0 8px 10px 1px rgba(0,0,0,.098),\n                0 3px 14px 2px rgba(0,0,0,.084);\n            transition: all 0.25s ease-in-out;\n        }\n        \n        .elevation-header {\n            background-color: #f1f1f1;\n            color: #222;\n            font-family: 'Open Sans', 'Arial', 'Helvetica';\n            padding: 0 10px;\n            display: flex;\n        }\n\n        .infopanel.show {\n            bottom: 0;\n        }\n        \n        .left, .right {\n            width: 50%;\n            display: flex;\n        }\n\n        .right {\n            -webkit-justify-content: flex-end;\n            justify-content: flex-end;\n        }\n        \n        .item {\n            width: 140px;\n            height: 56px;  /* 3.4em */\n        }\n        \n        .value {\n            font-size: 1.5em;\n            line-height: 1.6em;\n        }\n        \n        .label {\n            font-size: 0.8em;\n            line-height: 0.4em;\n        }\n        \n        .header-link {\n            color: #999;\n        }\n        \n        .toggle-link {\n            font-size: 0.8em;\n            line-height: 4em;\n        }\n    "],
                         changeDetection: core_1.ChangeDetectionStrategy.OnPush
                     }), 
