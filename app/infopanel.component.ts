@@ -83,6 +83,10 @@ import {Segment} from './route';
             line-height: 0.4em;
         }
         
+        .header-link {
+            color: #999;
+        }
+        
         .toggle-link {
             font-size: 0.8em;
             line-height: 4em;

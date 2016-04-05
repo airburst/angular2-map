@@ -73,22 +73,28 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
                         .append('g')
                         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
                     this.setAxes(data);
+                    // Area plot
                     svg.append("path")
                         .datum(data)
                         .attr("class", "area")
                         .attr("d", this.area);
+                    // X axis
                     svg.append("g")
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + height + ")")
-                        .call(this.xAxis);
-                    // .append("text")
-                    // .attr("dy", ".71em")
-                    // .style("text-anchor", "end")
-                    // .text("Distance (km)");
+                        .call(this.xAxis)
+                        .append("text")
+                        .attr("class", "x label")
+                        .attr("text-anchor", "end")
+                        .attr("x", width)
+                        .attr("y", -10)
+                        .text("Distance (km)");
+                    // Y axis
                     svg.append("g")
                         .attr("class", "y axis")
                         .call(this.yAxis)
                         .append("text")
+                        .attr("class", "y label")
                         .attr("transform", "rotate(-90)")
                         .attr("y", 6)
                         .attr("dy", ".71em")
