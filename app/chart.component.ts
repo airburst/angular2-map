@@ -75,22 +75,31 @@ export class ElevationChart {
         this.setAxes(data);
 
         // Area plot
-        svg.append("path")
+        svg.append('path')
             .datum(data)
-            .attr("class", "area")
-            .attr("d", this.area);
+            .attr('class', 'area')
+            .attr('d', this.area);
+
+        // Crosshairs - event layer
+        svg.append('rect')
+            .attr('class', 'event-layer')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', width)
+            .attr('height', height)
+            .attr('mousemove', console.log(event));
 
         // X axis
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
+        svg.append('g')
+            .attr('class', 'x axis')
+            .attr('transform', 'translate(0,' + height + ')')
             .call(this.xAxis)
-            .append("text")
-            .attr("class", "x label")
-            .attr("text-anchor", "end")
-            .attr("x", width)
-            .attr("y", -10)
-            .text("Distance (km)");
+            .append('text')
+            .attr('class', 'x label')
+            .attr('text-anchor', 'end')
+            .attr('x', width)
+            .attr('y', -10)
+            .text('Distance (km)');
         
         // Y axis
         svg.append("g")

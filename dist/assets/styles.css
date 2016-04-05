@@ -26,3 +26,8 @@ body {
 .area {
     fill: #e2e2e2;
 }
+
+.event-layer {
+    fill: transparent;
+    cursor: crosshair;
+}
