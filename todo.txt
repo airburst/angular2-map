@@ -4,6 +4,7 @@ Features
 - Save (API)
 - Export to GPX and download
 - Toasts for warnings and messages
+- Pulse animation when setting spot on map
 
 Design
 
@@ -12,3 +13,4 @@ Build system for production
 Bugs
 
 - Cannot import the same route again after clearing.
+- Cannot invoke file button (click) from wrapping link.

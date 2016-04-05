@@ -49,7 +49,7 @@ import {Segment} from './route';
         .elevation-header {
             background-color: #f1f1f1;
             color: #222;
-            font-family: 'Open Sans', 'Arial', 'Helvetica';
+            font-family: 'Roboto', 'Arial', 'Helvetica';
             padding: 0 10px;
             display: flex;
         }

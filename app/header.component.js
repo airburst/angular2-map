@@ -19,12 +19,17 @@ System.register(['angular2/core'], function(exports_1, context_1) {
             }],
         execute: function() {
             AppHeader = (function () {
-                function AppHeader() {
+                function AppHeader(elementRef) {
+                    this.elementRef = elementRef;
                     this.clear = new core_1.EventEmitter();
                     this.remove = new core_1.EventEmitter();
                     this.import = new core_1.EventEmitter();
                     this.save = new core_1.EventEmitter();
                 }
+                AppHeader.prototype.fileTrigger = function () {
+                    var el = this.elementRef.nativeElement;
+                    console.log(el);
+                };
                 __decorate([
                     core_1.Input(), 
                     __metadata('design:type', Array)
@@ -48,11 +53,11 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                 AppHeader = __decorate([
                     core_1.Component({
                         selector: 'app-header',
-                        template: "\n        <div class=\"stats\">\n            <div class=\"left\">OS Route Planner</div>\n            <div class=\"right\">\n                <button id=\"clear\" (click)=\"clear.emit()\">Clear Route</button>\n                <button id=\"delete\" (click)=\"remove.emit()\">Remove WayPoint</button>\n                <button id=\"save\" (click)=\"save.emit()\">Save</button>\n                <label for=\"file\">Load GPX or TCX File:</label>\n                <input id=\"file\" type=\"file\" (change)=\"import.emit($event)\">\n            </div>\n        </div>\n    ",
-                        styles: ["\n        .stats {\n            background-color: #f1f1f1;\n            color: #222;\n            font-family: 'Open Sans', 'Arial', 'Helvetica';\n            line-height: 2em;\n            position: absolute;\n            top: 0;\n            z-index: 999;\n            width: 100%;\n            padding: 10px;\n            display: flex;\n            box-shadow: 0 5px 5px -3px rgba(0,0,0,.14),\n                0 8px 10px 1px rgba(0,0,0,.098),\n                0 3px 14px 2px rgba(0,0,0,.084);\n        }\n\n        .left {\n            width: 25%;\n            font-size: 1.6em;\n            display: flex;\n        }\n\n        .right {\n            width: 75%;\n            display: flex;\n            -webkit-justify-content: flex-end;\n            justify-content: flex-end;\n        }\n\n        .header-link {\n            color: white;\n            text-decoration-style: dashed;\n        }\n    "],
+                        template: "\n        <div class=\"stats\">\n            <!--<div class=\"left\">OS Route Planner</div>\n            <div class=\"left\">-->\n                <a class=\"item\" href=\"#\" (click)=\"clear.emit()\">\n                    <div class=\"icon icon-clear\"></div>\n                    <span>Clear</span>\n                </a>\n                <a class=\"item\" href=\"#\" (click)=\"remove.emit()\">\n                    <div class=\"icon icon-undo\"></div>\n                    <span>Undo</span>\n                </a>\n                <a class=\"item\" href=\"#\" (click)=\"save.emit()\">\n                    <div class=\"icon icon-save\"></div>\n                    <span>Save</span>\n                </a>\n                <a class=\"item\" href=\"#\" (click)=\"fileTrigger()\">\n                    <div class=\"icon icon-save\"></div>\n                    <span>Import</span>\n                    <label for=\"file\" class=\"hidden\">Load GPX or TCX File:</label>\n                    <input class=\"hidden\" id=\"file\" type=\"file\" (change)=\"import.emit($event)\">\n                </a>\n            <!--</div>-->\n        </div>\n    ",
+                        styles: ["\n        .stats {\n            background-color: #f1f1f1;\n            color: #222;\n            font-family: 'Roboto', 'Arial', 'Helvetica';\n            position: absolute;\n            top: 0;\n            z-index: 999;\n            width: 100%;\n            padding: 8px 0;\n            display: flex;\n            box-shadow: 0 5px 5px -3px rgba(0,0,0,.14),\n                0 8px 10px 1px rgba(0,0,0,.098),\n                0 3px 14px 2px rgba(0,0,0,.084);\n        }\n\n        .left {\n            width: 25%;\n            font-size: 1.6em;\n            display: flex;\n        }\n\n        .right {\n            width: 75%;\n            display: flex;\n            -webkit-justify-content: flex-end;\n            justify-content: flex-end;\n        }\n        \n        .item { \n            width: 50px;\n            text-align: center;\n            text-decoration: none;\n            font-size: 0.8em;\n            line-height: 1.2em;\n            color: #666;\n        }\n        .item>div {\n            margin-left: 13px;\n            border: 0;\n        }\n        \n        .icon {\n            display: block;\n            text-indent: -9999px;\n            width: 24px;\n            height: 24px;\n            background-size: 24px 24px;\n        }\n        .icon-clear { background: url(dist/assets/images/icons/ic_close_black_24px.svg); }\n        .icon-undo { background: url(dist/assets/images/icons/ic_undo_black_24px.svg); }\n        .icon-save { background: url(dist/assets/images/icons/ic_cloud_upload_black_24px.svg); }\n        \n        .hidden { display: none; }\n    "],
                         changeDetection: core_1.ChangeDetectionStrategy.OnPush
                     }), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [core_1.ElementRef])
                 ], AppHeader);
                 return AppHeader;
             }());

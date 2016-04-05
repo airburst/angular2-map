@@ -13,7 +13,7 @@ body {
 .chart {
     display: flex;
     height: 234px;
-    font-family: 'Open Sans', 'Arial', 'Helvetica';
+    font-family: 'Roboto', 'Arial', 'Helvetica'; 
     font-size: 0.6em;
 }
 
