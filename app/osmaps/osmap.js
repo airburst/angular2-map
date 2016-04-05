@@ -49,6 +49,7 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     this.lineVectorLayer = {};
                     this.pointVectorLayer = {};
                     this.markerVectorLayer = {};
+                    this.spotVectorLayer = {};
                     this.gridProjection = {};
                     this.isMoving = false;
                     this.route = new route_1.Route(store);
@@ -81,13 +82,19 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                     this.osMap.addLayer(this.pointVectorLayer);
                     this.markerVectorLayer = new this.ol.Layer.Vector('Point Vector Layer');
                     this.osMap.addLayer(this.markerVectorLayer);
+                    this.spotVectorLayer = new this.ol.Layer.Vector('Point Vector Layer');
+                    this.osMap.addLayer(this.spotVectorLayer);
                     // Add controls
                     var position = new this.os.Control.ControlPosition(this.os.Control.ControlAnchor.ANCHOR_TOP_LEFT, new this.ol.Size(0, 100));
                     this.osMap.addControl(new this.os.Control.LargeMapControl(), position);
                     this.centreAndSetMapEvents();
+                    // Observable subscriptionns
                     this.route.track$.subscribe(function (v) {
                         _this.draw(v);
                         _this.updateDistance(v);
+                    });
+                    this.route.details$.subscribe(function (v) {
+                        _this.setSpot(v.selectedPointIndex);
                     });
                 };
                 ;
@@ -167,9 +174,9 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                 ;
                 OsMap.prototype.draw = function (track) {
                     var _this = this;
-                    var path = this.convertRouteToOsFormat(track);
+                    this.path = this.convertRouteToOsFormat(track);
                     // Plot route layer
-                    var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(path), null, config_1.settings.routeStyle);
+                    var routeFeature = new this.ol.Feature.Vector(new this.ol.Geometry.LineString(this.path), null, config_1.settings.routeStyle);
                     // Plot waypoints layer
                     var waypointsFeature = [];
                     track.forEach(function (s) {
@@ -228,6 +235,30 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                         graphicXOffset: -16,
                         graphicYOffset: -32
                     });
+                };
+                ;
+                OsMap.prototype.setSpot = function (index) {
+                    if (index === -1) {
+                        this.removeSpot();
+                    }
+                    else {
+                        this.addSpot(this.path[index]);
+                    }
+                };
+                OsMap.prototype.addSpot = function (mapPoint) {
+                    var spot = new this.ol.Feature.Vector(mapPoint, {}, {
+                        externalGraphic: 'dist/assets/images/spot.png',
+                        graphicHeight: 32,
+                        graphicWidth: 32,
+                        graphicXOffset: -16,
+                        graphicYOffset: -16
+                    });
+                    this.removeSpot();
+                    this.spotVectorLayer.addFeatures([spot]);
+                };
+                ;
+                OsMap.prototype.removeSpot = function () {
+                    this.spotVectorLayer.removeAllFeatures();
                 };
                 ;
                 OsMap = __decorate([

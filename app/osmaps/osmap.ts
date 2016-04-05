@@ -20,9 +20,11 @@ export class OsMap {
     lineVectorLayer: any = {};
     pointVectorLayer: any = {};
     markerVectorLayer: any = {};
+    spotVectorLayer: any = {};
     gridProjection: any = {};
     isMoving: boolean = false;
     route: Route;
+    path: MapPoint[];
 
     constructor(
         private directionsService: DirectionsService,
@@ -60,6 +62,8 @@ export class OsMap {
         this.osMap.addLayer(this.pointVectorLayer);
         this.markerVectorLayer = new this.ol.Layer.Vector('Point Vector Layer');
         this.osMap.addLayer(this.markerVectorLayer);
+        this.spotVectorLayer = new this.ol.Layer.Vector('Point Vector Layer');
+        this.osMap.addLayer(this.spotVectorLayer);
 
         // Add controls
         let position = new this.os.Control.ControlPosition(
@@ -73,9 +77,14 @@ export class OsMap {
 
         this.centreAndSetMapEvents();
 
+        // Observable subscriptionns
         this.route.track$.subscribe((v) => {
             this.draw(v);
             this.updateDistance(v);
+        });
+
+        this.route.details$.subscribe((v) => {
+            this.setSpot(v.selectedPointIndex);
         });
     };
 
@@ -165,11 +174,11 @@ export class OsMap {
     };
 
     draw(track: Segment[]): void {
-        let path = this.convertRouteToOsFormat(track);
+        this.path = this.convertRouteToOsFormat(track);
 
         // Plot route layer
         let routeFeature = new this.ol.Feature.Vector(
-            new this.ol.Geometry.LineString(path), null, settings.routeStyle
+            new this.ol.Geometry.LineString(this.path), null, settings.routeStyle
         );
 
         // Plot waypoints layer
@@ -240,6 +249,33 @@ export class OsMap {
                 graphicYOffset: -32
             }
         );
+    };
+
+    setSpot(index: number) {
+        if (index === -1) {
+            this.removeSpot();
+        } else {
+            this.addSpot(this.path[index]);
+        }
+    }
+
+    addSpot(mapPoint: MapPoint) {
+        var spot = new this.ol.Feature.Vector(
+            mapPoint, {},
+            {
+                externalGraphic: 'dist/assets/images/spot.png',
+                graphicHeight: 32,
+                graphicWidth: 32,
+                graphicXOffset: -16,
+                graphicYOffset: -16
+            }
+        );
+        this.removeSpot();
+        this.spotVectorLayer.addFeatures([spot]);
+    };
+
+    removeSpot() {
+        this.spotVectorLayer.removeAllFeatures();
     };
 
 }
