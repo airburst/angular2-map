@@ -30,6 +30,12 @@ import {flatten} from './utils/utils';
         .hidden {
             display: none;
         }
+        
+        .focusLine {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 0.5px;
+        }
     `]
 })
 
@@ -47,6 +53,7 @@ export class ElevationChart {
         this.route = new Route(store);
         this.route.elevation$.subscribe((v) => {
             this.data = this.addDistanceToData(flatten(v));
+            this.factor = this.data.length / this.chartWidth;
             this.update();
         });
     }
@@ -65,6 +72,7 @@ export class ElevationChart {
     private chartHeight: number;
     private margin: any = { top: 10, right: 10, bottom: 20, left: 40 };
     private transitionTime: number = 250;
+    private factor: number;
 
     addDistanceToData(elevation: any[]): any[] {
         let averageDistance = this.store.getState().details.distance / elevation.length,
@@ -115,7 +123,11 @@ export class ElevationChart {
     }
     
     hover(ev) {
-        console.log(ev.clientX, ev.clientY);
+        let x = ev.clientX - this.margin.left,
+            index = Math.floor(x * this.factor),
+            point = this.data[index];
+        
+        console.log(point[1]);
     }
 
 }

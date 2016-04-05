@@ -48,6 +48,7 @@ System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './rou
                     this.route = new route_1.Route(store);
                     this.route.elevation$.subscribe(function (v) {
                         _this.data = _this.addDistanceToData(utils_1.flatten(v));
+                        _this.factor = _this.data.length / _this.chartWidth;
                         _this.update();
                     });
                 }
@@ -92,14 +93,15 @@ System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './rou
                     }
                 };
                 ElevationChart.prototype.hover = function (ev) {
-                    console.log(ev.clientX, ev.clientY);
+                    var x = ev.clientX - this.margin.left, index = Math.floor(x * this.factor), point = this.data[index];
+                    console.log(point[1]);
                 };
                 ElevationChart = __decorate([
                     core_1.Component({
                         selector: 'elevation-chart',
                         template: "\n        <svg [ngClass]=\"{hidden: hideSVG}\" attr.width=\"{{width}}\" attr.height=\"{{height}}\">\n            <g attr.transform=\"translate({{margin.left}},{{margin.top}})\">\n                <path class=\"area\"></path>\n                <rect class=\"event-layer\" x=\"0\" y=\"0\" attr.width=\"{{chartWidth}}\" attr.height=\"{{chartHeight}}\"\n                    (mousemove)=\"hover($event)\"></rect>\n                <g class=\"x axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"x label\" style=\"text-anchor: end;\">Distance (km)</text>\n                </g>\n                <g class=\"y axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"y label\" style=\"text-anchor: end;\">Elevation (m)</text>\n                </g>\n            </g>\n        </svg>\n    ",
                         directives: [common_1.NgClass],
-                        styles: ["\n        .hidden {\n            display: none;\n        }\n    "]
+                        styles: ["\n        .hidden {\n            display: none;\n        }\n        \n        .focusLine {\n            fill: none;\n            stroke: steelblue;\n            stroke-width: 0.5px;\n        }\n    "]
                     }), 
                     __metadata('design:paramtypes', [core_1.ElementRef, store_1.Store])
                 ], ElevationChart);
