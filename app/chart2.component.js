@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './route', './utils/utils'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,12 +10,15 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, d3, store_1, route_1, utils_1;
+    var core_1, common_1, d3, store_1, route_1, utils_1;
     var ElevationChart;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (common_1_1) {
+                common_1 = common_1_1;
             },
             function (d3_1) {
                 d3 = d3_1;
@@ -38,7 +41,6 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
                     this.height = 244;
                     this.margin = { top: 10, right: 10, bottom: 20, left: 40 };
                     this.transitionTime = 250;
-                    this.data = [];
                     this.width = parseInt(d3.select('.chart').style('width'));
                     this.chartWidth = this.width - this.margin.left - this.margin.right;
                     this.chartHeight = 244 - this.margin.top - this.margin.bottom;
@@ -57,7 +59,7 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
                     return chartData;
                 };
                 ElevationChart.prototype.update = function () {
-                    console.log(this.chartWidth, this.chartHeight);
+                    this.hideSVG = (this.data.length === 0) ? true : false;
                     var el = this.elementRef.nativeElement;
                     var graph = d3.select(el);
                     this.x = d3.scale.linear().range([0, this.chartWidth]);
@@ -95,7 +97,9 @@ System.register(['angular2/core', 'd3', '@ngrx/store', './route', './utils/utils
                 ElevationChart = __decorate([
                     core_1.Component({
                         selector: 'elevation-chart',
-                        template: "\n        <svg attr.width=\"{{width}}\" attr.height=\"{{height}}\">\n            <g attr.transform=\"translate({{margin.left}},{{margin.top}})\">\n                <path class=\"area\"></path>\n                <rect class=\"event-layer\" x=\"0\" y=\"0\" attr.width=\"{{chartWidth}}\" attr.height=\"{{chartHeight}}\"\n                    (mousemove)=\"hover($event)\"></rect>\n                <g class=\"x axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"x label\" style=\"text-anchor: end;\">Distance (km)</text>\n                </g>\n                <g class=\"y axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"y label\" style=\"text-anchor: end;\">Elevation (m)</text>\n                </g>\n            </g>\n        </svg>\n    "
+                        template: "\n        <svg [ngClass]=\"{hidden: hideSVG}\" attr.width=\"{{width}}\" attr.height=\"{{height}}\">\n            <g attr.transform=\"translate({{margin.left}},{{margin.top}})\">\n                <path class=\"area\"></path>\n                <rect class=\"event-layer\" x=\"0\" y=\"0\" attr.width=\"{{chartWidth}}\" attr.height=\"{{chartHeight}}\"\n                    (mousemove)=\"hover($event)\"></rect>\n                <g class=\"x axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"x label\" style=\"text-anchor: end;\">Distance (km)</text>\n                </g>\n                <g class=\"y axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"y label\" style=\"text-anchor: end;\">Elevation (m)</text>\n                </g>\n            </g>\n        </svg>\n    ",
+                        directives: [common_1.NgClass],
+                        styles: ["\n        .hidden {\n            display: none;\n        }\n    "]
                     }), 
                     __metadata('design:paramtypes', [core_1.ElementRef, store_1.Store])
                 ], ElevationChart);

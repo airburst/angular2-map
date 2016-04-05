@@ -104,11 +104,15 @@ export class InfoPanel {
     
     constructor() {
         this.show = false;
-        this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
+        this.setToggleText()
     }
     
     togglePanel() {
         this.show = !this.show;
+        this.setToggleText()
+    }
+    
+    setToggleText() {
         this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
     }
     

@@ -28,10 +28,13 @@ System.register(['angular2/core', 'angular2/common', './chart2.component'], func
                 function InfoPanel() {
                     this.recalc = new core_1.EventEmitter();
                     this.show = false;
-                    this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
+                    this.setToggleText();
                 }
                 InfoPanel.prototype.togglePanel = function () {
                     this.show = !this.show;
+                    this.setToggleText();
+                };
+                InfoPanel.prototype.setToggleText = function () {
                     this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
                 };
                 __decorate([

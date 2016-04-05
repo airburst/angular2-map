@@ -113,7 +113,6 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.store.dispatch({ type: track_1.CLEAR_TRACK });
                     this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
                     this.store.dispatch({ type: details_1.CLEAR_DETAILS });
-                    //this.osmap.centreAndSetMapEvents();
                     this.osmap.init();
                 };
                 AppComponent.prototype.removeLast = function () {

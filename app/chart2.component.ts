@@ -1,5 +1,6 @@
 /// <reference path="../typings/d3.d.ts"/>
 import {Component, EventEmitter, ElementRef} from 'angular2/core';
+import {NgClass} from 'angular2/common';
 import * as d3 from 'd3';
 import {Store} from '@ngrx/store';
 import {Route, AppStore} from './route';
@@ -8,7 +9,7 @@ import {flatten} from './utils/utils';
 @Component({
     selector: 'elevation-chart',
     template: `
-        <svg attr.width="{{width}}" attr.height="{{height}}">
+        <svg [ngClass]="{hidden: hideSVG}" attr.width="{{width}}" attr.height="{{height}}">
             <g attr.transform="translate({{margin.left}},{{margin.top}})">
                 <path class="area"></path>
                 <rect class="event-layer" x="0" y="0" attr.width="{{chartWidth}}" attr.height="{{chartHeight}}"
@@ -23,7 +24,13 @@ import {flatten} from './utils/utils';
                 </g>
             </g>
         </svg>
-    `
+    `,
+    directives: [NgClass],
+    styles: [`
+        .hidden {
+            display: none;
+        }
+    `]
 })
 
 export class ElevationChart {
@@ -32,7 +39,6 @@ export class ElevationChart {
         public elementRef: ElementRef,
         public store: Store<AppStore>
     ) {
-        this.data = [];
         this.width = parseInt(d3.select('.chart').style('width'));
         this.chartWidth = this.width - this.margin.left - this.margin.right;
         this.chartHeight = 244 - this.margin.top - this.margin.bottom;
@@ -47,6 +53,7 @@ export class ElevationChart {
 
     private route: Route;
     private data: any[];
+    private hideSVG: boolean;
     private x: any;
     private y: any;
     private xAxis: any;
@@ -69,7 +76,7 @@ export class ElevationChart {
     }
 
     update() {
-        console.log(this.chartWidth, this.chartHeight)
+        this.hideSVG = (this.data.length === 0) ? true : false;
         let el: any = this.elementRef.nativeElement;
         let graph: any = d3.select(el);
 
