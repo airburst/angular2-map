@@ -95,8 +95,8 @@ System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './red
                         svg.select(".y.axis").duration(this.transitionTime).call(this.yAxis);
                     }
                 };
-                ElevationChart.prototype.hover = function (ev) {
-                    var x = ev.clientX - this.margin.left, labelX = (x + 10), labelY = (this.chartHeight / 2), index = Math.floor(x * this.factor), point = this.data[index], elevationText = 'Elevation: ' + point[1].toFixed(1), distanceText = 'Distance: ' + point[0].toFixed(1);
+                ElevationChart.prototype.mouseMove = function (ev) {
+                    var x = ev.clientX - this.margin.left, labelOffset = 10, labelRightBuffer = 160, labelX = ((x + labelOffset) < (this.chartWidth - labelRightBuffer)) ? (x + labelOffset) : (x - labelRightBuffer), labelY = (this.chartHeight / 2), index = Math.floor(x * this.factor), point = this.data[index], elevationText = 'Elevation: ' + point[1].toFixed(1), distanceText = 'Distance: ' + point[0].toFixed(1);
                     // Draw the line and details box
                     d3.select('#focusLineX')
                         .attr('x1', x).attr('y1', 0)
@@ -110,10 +110,21 @@ System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './red
                         payload: { selectedPointIndex: index }
                     });
                 };
+                ElevationChart.prototype.mouseOut = function (ev) {
+                    d3.selectAll('#focusLineX, #focusLabelX').attr('style', 'display: none');
+                    // Reset the selected point
+                    this.store.dispatch({
+                        type: details_1.UPDATE_DETAILS,
+                        payload: { selectedPointIndex: -1 }
+                    });
+                };
+                ElevationChart.prototype.mouseOver = function (ev) {
+                    d3.selectAll('#focusLineX, #focusLabelX').attr('style', 'display: null');
+                };
                 ElevationChart = __decorate([
                     core_1.Component({
                         selector: 'elevation-chart',
-                        template: "\n        <svg [ngClass]=\"{hidden: hideSVG}\" attr.width=\"{{width}}\" attr.height=\"{{height}}\">\n            <g attr.transform=\"translate({{margin.left}},{{margin.top}})\">\n                <path class=\"area\"></path>\n                <rect class=\"event-layer\" x=\"0\" y=\"0\" attr.width=\"{{chartWidth}}\" attr.height=\"{{chartHeight}}\"\n                    (mousemove)=\"hover($event)\"></rect>\n                <line class=\"focusLine\" id=\"focusLineX\"></line>\n                <g class=\"focusLabel\" id=\"focusLabelX\">\n                    <text x=\"0\" y=\"0\">\n                        <tspan id=\"elevation-text\" x=\"0\" dy=\"0em\">ele</tspan>\n                        <tspan id=\"distance-text\" x=\"0\" dy=\"1.4em\">dist</tspan>\n                    </text>\n                </g>\n                <g class=\"x axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"x label\" style=\"text-anchor: end;\">Distance (km)</text>\n                </g>\n                <g class=\"y axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"y label\" style=\"text-anchor: end;\">Elevation (m)</text>\n                </g>\n            </g>\n        </svg>\n    ",
+                        template: "\n        <svg [ngClass]=\"{hidden: hideSVG}\" attr.width=\"{{width}}\" attr.height=\"{{height}}\">\n            <g attr.transform=\"translate({{margin.left}},{{margin.top}})\">\n                <path class=\"area\"></path>\n                <rect class=\"event-layer\" x=\"0\" y=\"0\" attr.width=\"{{chartWidth}}\" attr.height=\"{{chartHeight}}\"\n                    (mouseover)=\"mouseOver($event)\"\n                    (mousemove)=\"mouseMove($event)\"\n                    (mouseout)=\"mouseOut($event)\"\n                    >\n                </rect>\n                <line class=\"focusLine\" id=\"focusLineX\"></line>\n                <g class=\"focusLabel\" id=\"focusLabelX\">\n                    <text x=\"0\" y=\"0\">\n                        <tspan id=\"elevation-text\" x=\"0\" dy=\"0em\">ele</tspan>\n                        <tspan id=\"distance-text\" x=\"0\" dy=\"1.4em\">dist</tspan>\n                    </text>\n                </g>\n                <g class=\"x axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"x label\" style=\"text-anchor: end;\">Distance (km)</text>\n                </g>\n                <g class=\"y axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"y label\" style=\"text-anchor: end;\">Elevation (m)</text>\n                </g>\n            </g>\n        </svg>\n    ",
                         directives: [common_1.NgClass],
                         styles: ["\n        .hidden {\n            display: none;\n        }\n        \n        .focusLine {\n            stroke: #222;\n            stroke-width: 1px;\n        }\n        \n        .focusLabel {\n            fill: #222;\n            font-size: 1.6em;\n        }\n    "]
                     }), 

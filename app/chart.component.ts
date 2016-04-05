@@ -14,7 +14,11 @@ import {flatten} from './utils/utils';
             <g attr.transform="translate({{margin.left}},{{margin.top}})">
                 <path class="area"></path>
                 <rect class="event-layer" x="0" y="0" attr.width="{{chartWidth}}" attr.height="{{chartHeight}}"
-                    (mousemove)="hover($event)"></rect>
+                    (mouseover)="mouseOver($event)"
+                    (mousemove)="mouseMove($event)"
+                    (mouseout)="mouseOut($event)"
+                    >
+                </rect>
                 <line class="focusLine" id="focusLineX"></line>
                 <g class="focusLabel" id="focusLabelX">
                     <text x="0" y="0">
@@ -134,9 +138,11 @@ export class ElevationChart {
         }
     }
 
-    hover(ev) {
+    mouseMove(ev) {
         let x = ev.clientX - this.margin.left,
-            labelX = (x + 10),
+            labelOffset = 10,
+            labelRightBuffer = 160,
+            labelX = ((x + labelOffset) < (this.chartWidth - labelRightBuffer)) ? (x + labelOffset) : (x - labelRightBuffer),
             labelY = (this.chartHeight / 2),
             index = Math.floor(x * this.factor),
             point = this.data[index],
@@ -157,5 +163,19 @@ export class ElevationChart {
             payload: { selectedPointIndex: index }
         });
     }
+    
+    mouseOut(ev) {
+        d3.selectAll('#focusLineX, #focusLabelX').attr('style', 'display: none');
 
+        // Reset the selected point
+        this.store.dispatch({
+            type: UPDATE_DETAILS,
+            payload: { selectedPointIndex: -1 }
+        });
+    }
+    
+    mouseOver(ev) {
+        d3.selectAll('#focusLineX, #focusLabelX').attr('style', 'display: null');
+    }
+                
 }

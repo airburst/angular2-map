@@ -7,7 +7,8 @@ Features
 
 Design
 
+Build system for production
+
 Bugs
 
 - Cannot import the same route again after clearing.
-- After clearing an import, isMoving bug occurs again.
