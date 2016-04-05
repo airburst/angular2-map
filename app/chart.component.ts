@@ -14,6 +14,7 @@ import {flatten} from './utils/utils';
                 <path class="area"></path>
                 <rect class="event-layer" x="0" y="0" attr.width="{{chartWidth}}" attr.height="{{chartHeight}}"
                     (mousemove)="hover($event)"></rect>
+                <line class="focusLine" id="focusLineX"></line>
                 <g class="x axis">
                     <path class="domain"></path>
                     <text class="x label" style="text-anchor: end;">Distance (km)</text>
@@ -127,7 +128,11 @@ export class ElevationChart {
             index = Math.floor(x * this.factor),
             point = this.data[index];
         
-        console.log(point[1]);
+        d3.select('#focusLineX')
+            .attr('x1', x).attr('y1', 0)
+            .attr('x2', x).attr('y2', this.chartHeight);
+            
+        console.log(point[1]);//
     }
 
 }
