@@ -3,6 +3,7 @@ import {Component, EventEmitter, ElementRef} from 'angular2/core';
 import {NgClass} from 'angular2/common';
 import * as d3 from 'd3';
 import {Store} from '@ngrx/store';
+import {UPDATE_DETAILS} from './reducers/details';
 import {Route, AppStore} from './route';
 import {flatten} from './utils/utils';
 
@@ -15,6 +16,12 @@ import {flatten} from './utils/utils';
                 <rect class="event-layer" x="0" y="0" attr.width="{{chartWidth}}" attr.height="{{chartHeight}}"
                     (mousemove)="hover($event)"></rect>
                 <line class="focusLine" id="focusLineX"></line>
+                <g class="focusLabel" id="focusLabelX">
+                    <text x="0" y="0">
+                        <tspan id="elevation-text" x="0" dy="0em">ele</tspan>
+                        <tspan id="distance-text" x="0" dy="1.4em">dist</tspan>
+                    </text>
+                </g>
                 <g class="x axis">
                     <path class="domain"></path>
                     <text class="x label" style="text-anchor: end;">Distance (km)</text>
@@ -33,9 +40,13 @@ import {flatten} from './utils/utils';
         }
         
         .focusLine {
-            fill: none;
-            stroke: steelblue;
-            stroke-width: 0.5px;
+            stroke: #222;
+            stroke-width: 1px;
+        }
+        
+        .focusLabel {
+            fill: #222;
+            font-size: 1.6em;
         }
     `]
 })
@@ -95,7 +106,7 @@ export class ElevationChart {
         this.yAxis = d3.svg.axis().scale(this.y).orient("left");
         this.x.domain(d3.extent(this.data, function(d) { return d[0]; }));
         this.y.domain([0, d3.max(this.data, function(d) { return +d[1]; })]);
-        
+
         this.area = d3.svg.area()
             .x(function(d) { return this.x(d[0]); })
             .y0(this.chartHeight)
@@ -113,26 +124,38 @@ export class ElevationChart {
             .attr("transform", "rotate(-90)")
             .attr("y", 6)
             .attr("dy", ".71em");
-        
+
         let svg = graph.transition();
-        
+
         if (this.data.length > 0) {
             svg.select(".area").duration(this.transitionTime).attr("d", this.area(this.data));
             svg.select(".x.axis").duration(this.transitionTime).call(this.xAxis);
             svg.select(".y.axis").duration(this.transitionTime).call(this.yAxis);
         }
     }
-    
+
     hover(ev) {
         let x = ev.clientX - this.margin.left,
+            labelX = (x + 10),
+            labelY = (this.chartHeight / 2),
             index = Math.floor(x * this.factor),
-            point = this.data[index];
-        
+            point = this.data[index],
+            elevationText = 'Elevation: ' + point[1].toFixed(1),
+            distanceText = 'Distance: ' + point[0].toFixed(1);
+
+        // Draw the line and details box
         d3.select('#focusLineX')
             .attr('x1', x).attr('y1', 0)
             .attr('x2', x).attr('y2', this.chartHeight);
-            
-        console.log(point[1]);//
+        d3.select('#focusLabelX').attr('transform', 'translate(' + labelX + ',' + labelY + ')');
+        d3.select('#elevation-text').text(elevationText);
+        d3.select('#distance-text').text(distanceText);
+
+        // Update the selected point (for route spot display)
+        this.store.dispatch({
+            type: UPDATE_DETAILS,
+            payload: { selectedPointIndex: index }
+        });
     }
 
 }

@@ -19,7 +19,8 @@ System.register([], function(exports_1, context_1) {
                 zoom: 7,
                 followsRoads: true,
                 isEditable: false,
-                hasNewElevation: true
+                hasNewElevation: true,
+                selectedPointIndex: -1
             });
             exports_1("details", details = function (state, action) {
                 if (state === void 0) { state = initialState; }

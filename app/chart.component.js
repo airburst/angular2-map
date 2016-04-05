@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './route', './utils/utils'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './reducers/details', './route', './utils/utils'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './rou
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, d3, store_1, route_1, utils_1;
+    var core_1, common_1, d3, store_1, details_1, route_1, utils_1;
     var ElevationChart;
     return {
         setters:[
@@ -25,6 +25,9 @@ System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './rou
             },
             function (store_1_1) {
                 store_1 = store_1_1;
+            },
+            function (details_1_1) {
+                details_1 = details_1_1;
             },
             function (route_1_1) {
                 route_1 = route_1_1;
@@ -93,18 +96,26 @@ System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './rou
                     }
                 };
                 ElevationChart.prototype.hover = function (ev) {
-                    var x = ev.clientX - this.margin.left, index = Math.floor(x * this.factor), point = this.data[index];
+                    var x = ev.clientX - this.margin.left, labelX = (x + 10), labelY = (this.chartHeight / 2), index = Math.floor(x * this.factor), point = this.data[index], elevationText = 'Elevation: ' + point[1].toFixed(1), distanceText = 'Distance: ' + point[0].toFixed(1);
+                    // Draw the line and details box
                     d3.select('#focusLineX')
                         .attr('x1', x).attr('y1', 0)
                         .attr('x2', x).attr('y2', this.chartHeight);
-                    console.log(point[1]); //
+                    d3.select('#focusLabelX').attr('transform', 'translate(' + labelX + ',' + labelY + ')');
+                    d3.select('#elevation-text').text(elevationText);
+                    d3.select('#distance-text').text(distanceText);
+                    // Update the selected point (for route spot display)
+                    this.store.dispatch({
+                        type: details_1.UPDATE_DETAILS,
+                        payload: { selectedPointIndex: index }
+                    });
                 };
                 ElevationChart = __decorate([
                     core_1.Component({
                         selector: 'elevation-chart',
-                        template: "\n        <svg [ngClass]=\"{hidden: hideSVG}\" attr.width=\"{{width}}\" attr.height=\"{{height}}\">\n            <g attr.transform=\"translate({{margin.left}},{{margin.top}})\">\n                <path class=\"area\"></path>\n                <rect class=\"event-layer\" x=\"0\" y=\"0\" attr.width=\"{{chartWidth}}\" attr.height=\"{{chartHeight}}\"\n                    (mousemove)=\"hover($event)\"></rect>\n                <line class=\"focusLine\" id=\"focusLineX\"></line>\n                <g class=\"x axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"x label\" style=\"text-anchor: end;\">Distance (km)</text>\n                </g>\n                <g class=\"y axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"y label\" style=\"text-anchor: end;\">Elevation (m)</text>\n                </g>\n            </g>\n        </svg>\n    ",
+                        template: "\n        <svg [ngClass]=\"{hidden: hideSVG}\" attr.width=\"{{width}}\" attr.height=\"{{height}}\">\n            <g attr.transform=\"translate({{margin.left}},{{margin.top}})\">\n                <path class=\"area\"></path>\n                <rect class=\"event-layer\" x=\"0\" y=\"0\" attr.width=\"{{chartWidth}}\" attr.height=\"{{chartHeight}}\"\n                    (mousemove)=\"hover($event)\"></rect>\n                <line class=\"focusLine\" id=\"focusLineX\"></line>\n                <g class=\"focusLabel\" id=\"focusLabelX\">\n                    <text x=\"0\" y=\"0\">\n                        <tspan id=\"elevation-text\" x=\"0\" dy=\"0em\">ele</tspan>\n                        <tspan id=\"distance-text\" x=\"0\" dy=\"1.4em\">dist</tspan>\n                    </text>\n                </g>\n                <g class=\"x axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"x label\" style=\"text-anchor: end;\">Distance (km)</text>\n                </g>\n                <g class=\"y axis\">\n                    <path class=\"domain\"></path>\n                    <text class=\"y label\" style=\"text-anchor: end;\">Elevation (m)</text>\n                </g>\n            </g>\n        </svg>\n    ",
                         directives: [common_1.NgClass],
-                        styles: ["\n        .hidden {\n            display: none;\n        }\n        \n        .focusLine {\n            fill: none;\n            stroke: steelblue;\n            stroke-width: 0.5px;\n        }\n    "]
+                        styles: ["\n        .hidden {\n            display: none;\n        }\n        \n        .focusLine {\n            stroke: #222;\n            stroke-width: 1px;\n        }\n        \n        .focusLabel {\n            fill: #222;\n            font-size: 1.6em;\n        }\n    "]
                     }), 
                     __metadata('design:paramtypes', [core_1.ElementRef, store_1.Store])
                 ], ElevationChart);

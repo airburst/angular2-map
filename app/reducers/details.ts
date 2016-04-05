@@ -15,7 +15,8 @@ export const initialState: RouteDetails = {
     zoom: 7,
     followsRoads: true,
     isEditable: false,
-    hasNewElevation: true
+    hasNewElevation: true,
+    selectedPointIndex: -1
 }
 
 export const details = (state: RouteDetails = initialState, action: Action) => {

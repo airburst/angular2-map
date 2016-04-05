@@ -42,6 +42,7 @@ export interface RouteDetails {
     followsRoads: boolean;
     isEditable: boolean;
     hasNewElevation: boolean;
+    selectedPointIndex: number;
 }
 
 export interface AppStore {
