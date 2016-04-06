@@ -24,7 +24,7 @@ import {Segment} from './route';
                             <div class="toggle-text">{{toggleText}}</div>
                         </div>
                         <div class="centre-container">
-                            <div class="icon icon-clear"></div>
+                            <div class="icon" [ngClass]="{'icon-down': show, 'icon-up': !show}"></div>
                         </div>
                     </a>
                 </div>
@@ -114,6 +114,8 @@ import {Segment} from './route';
             background-size: 24px 24px;
         }
         .icon-clear { background: url(dist/assets/images/icons/ic_close_black_24px.svg); }
+        .icon-up { background: url(dist/assets/images/icons/ic_arrow_drop_up_black_24px.svg); }
+        .icon-down { background: url(dist/assets/images/icons/ic_arrow_drop_down_black_24px.svg); }
     `],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
