@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, ElementRef, ChangeDetectionStrategy} from 'angular2/core';
+import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
 import {Segment} from './route';
 import * as d3 from 'd3';
 
@@ -94,10 +94,9 @@ export class AppHeader {
     @Output() import = new EventEmitter();
     @Output() save = new EventEmitter();
     
-    constructor(public elementRef: ElementRef) { }
-    
     fileTrigger() {
-        let el = this.elementRef.nativeElement;
-        console.log(el);
+        // Warning: NOT the Angular2 way to access the DOM!
+        let f = window.document.getElementById('file');
+        f.click();
     }
 }
