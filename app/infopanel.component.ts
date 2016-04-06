@@ -19,7 +19,14 @@ import {Segment} from './route';
                     </div>
                 </div>
                 <div class="right">
-                    <a class="toggle-link" href="#" (click)="togglePanel()">{{toggleText}}</a>
+                    <a class="toggle-link" href="#" (click)="togglePanel()">
+                        <div class="centre-container">
+                            <div class="toggle-text">{{toggleText}}</div>
+                        </div>
+                        <div class="centre-container">
+                            <div class="icon icon-clear"></div>
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="chart">
@@ -40,19 +47,19 @@ import {Segment} from './route';
             background-color: #fff;
             color: #222;
             z-index: 9999;
-            box-shadow: 0 5px 5px -3px rgba(0,0,0,.14),
-                0 8px 10px 1px rgba(0,0,0,.098),
-                0 3px 14px 2px rgba(0,0,0,.084);
+            box-shadow: 2px 5px 5px 8px rgba(0,0,0,.10),
+                2px 5px 10px 1px rgba(0,0,0,.098),
+                2px 3px 14px 2px rgba(0,0,0,.084);
             transition: all 0.25s ease-in-out;
         }
         
         .elevation-header {
-            background-color: #f1f1f1;
-            color: #222;
+            background-color: #E0E0E0; /*grey 300*/;
             font-family: 'Roboto', 'Arial', 'Helvetica';
             padding: 0 10px;
             display: flex;
         }
+        .elevation-header, .toggle-link { color: #212121; }
 
         .infopanel.show {
             bottom: 0;
@@ -83,14 +90,30 @@ import {Segment} from './route';
             line-height: 0.4em;
         }
         
-        .header-link {
-            color: #999;
-        }
-        
         .toggle-link {
             font-size: 0.8em;
             line-height: 4em;
+            text-decoration: none;
+            display: flex;
+            flex-direction: row;
         }
+        .centre-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .toggle-text {
+            display: inline-block;
+            /*line-height: 56px;*/
+        }
+        .icon {
+            display: inline-block;
+            text-indent: -9999px;
+            width: 24px;
+            height: 24px;
+            background-size: 24px 24px;
+        }
+        .icon-clear { background: url(dist/assets/images/icons/ic_close_black_24px.svg); }
     `],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

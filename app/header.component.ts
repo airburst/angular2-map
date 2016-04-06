@@ -21,7 +21,7 @@ import * as d3 from 'd3';
                     <span>Save</span>
                 </a>
                 <a class="item" href="#" (click)="fileTrigger()">
-                    <div class="icon icon-save"></div>
+                    <div class="icon icon-import"></div>
                     <span>Import</span>
                     <label for="file" class="hidden">Load GPX or TCX File:</label>
                     <input class="hidden" id="file" type="file" (change)="import.emit($event)">
@@ -31,8 +31,7 @@ import * as d3 from 'd3';
     `,
     styles: [`
         .stats {
-            background-color: #f1f1f1;
-            color: #222;
+            background-color: #E0E0E0; /*grey 300*/
             font-family: 'Roboto', 'Arial', 'Helvetica';
             position: absolute;
             top: 0;
@@ -44,6 +43,7 @@ import * as d3 from 'd3';
                 0 8px 10px 1px rgba(0,0,0,.098),
                 0 3px 14px 2px rgba(0,0,0,.084);
         }
+        .stats, .item { color: #212121; }
 
         .left {
             width: 25%;
@@ -64,7 +64,6 @@ import * as d3 from 'd3';
             text-decoration: none;
             font-size: 0.8em;
             line-height: 1.2em;
-            color: #666;
         }
         .item>div {
             margin-left: 13px;
@@ -80,8 +79,9 @@ import * as d3 from 'd3';
         }
         .icon-clear { background: url(dist/assets/images/icons/ic_close_black_24px.svg); }
         .icon-undo { background: url(dist/assets/images/icons/ic_undo_black_24px.svg); }
-        .icon-save { background: url(dist/assets/images/icons/ic_cloud_upload_black_24px.svg); }
-        
+        .icon-save { background: url(dist/assets/images/icons/ic_save_black_24px.svg); }
+        .icon-import { background: url(dist/assets/images/icons/ic_file_upload_black_24px.svg); }
+
         .hidden { display: none; }
     `],
     changeDetection: ChangeDetectionStrategy.OnPush
