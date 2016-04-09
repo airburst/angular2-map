@@ -18,3 +18,4 @@ Bugs
 
 - Cannot import the same route again after clearing.
 - Imported files do not open at the correct zoom level.
+- In walk mode, hovering on chart does not show spot in correct place on map.  Need to resample segments.

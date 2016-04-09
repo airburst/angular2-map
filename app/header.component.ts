@@ -22,8 +22,9 @@ import * as d3 from 'd3';
                     <span>Undo</span>
                 </a>
                 <a class="item" href="#" (click)="toggleRoads.emit()">
-                    <div class="icon icon-undo"></div>
+                    <div *ngIf="route.followsRoads" class="icon icon-bike"></div>
                     <span *ngIf="route.followsRoads">Ride</span>
+                    <div *ngIf="!route.followsRoads" class="icon icon-walk"></div>
                     <span *ngIf="!route.followsRoads">Walk</span>
                 </a>
                 <!--<a class="item" href="#" (click)="save.emit()">
@@ -104,6 +105,8 @@ import * as d3 from 'd3';
         .icon-save { background: url(dist/assets/images/icons/ic_save_white_24px.svg); }
         .icon-import { background: url(dist/assets/images/icons/ic_file_upload_white_24px.svg); }
         .icon-export { background: url(dist/assets/images/icons/ic_file_download_white_24px.svg); }
+        .icon-bike { background: url(dist/assets/images/icons/ic_directions_bike_white_24px.svg); }
+        .icon-walk { background: url(dist/assets/images/icons/ic_directions_walk_white_24px.svg); }
 
         .hidden { display: none; }
     `],
