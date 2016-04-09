@@ -10,8 +10,11 @@ import {Segment} from './route';
             <div class="left">
                 <div class="centre-container">OS Route Planner</div>
                 <div class="centre-container">
-                    <input class="search" id="search" placeholder="Search for postcode or place" 
-                    (change)="search.emit($event)"/>
+                    <div class="search-input">
+                        <span class="icon-search input-prepend"></span>
+                        <input class="search" id="search" placeholder="Search for postcode or place" 
+                        (change)="search.emit($event)"/>
+                    </div>
                 </div>
             </div>
             <div class="right">
@@ -94,13 +97,28 @@ import {Segment} from './route';
             color: white;
             border: 0px;
             border-radius: 2px;
-            background-color: #009688;
+            background-color: transparent;
         }
-        #search::-webkit-input-placeholder,
-        #search:-moz-placeholder,
-        #search::-moz-placeholder,
-        #search:-ms-input-placeholder {
-            color: white;
+
+        ::-webkit-input-placeholder { color: white; }
+        :-moz-placeholder { color: white; }
+        ::-moz-placeholder { color: white; }
+        :-ms-input-placeholder { color: white; }
+
+        .search-input {
+            position: relative;
+            border: 0px;
+            border-radius: 2px;
+            background-color: #009688;
+            margin-left: 1em;
+        }
+        .input-prepend {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-size: 24px 24px;
+            top: 8px;
+            left: 8px;
         }
         
         .item { 
@@ -129,6 +147,7 @@ import {Segment} from './route';
         .icon-export { background: url(dist/assets/images/icons/ic_file_download_white_24px.svg); }
         .icon-bike { background: url(dist/assets/images/icons/ic_directions_bike_white_24px.svg); }
         .icon-walk { background: url(dist/assets/images/icons/ic_directions_walk_white_24px.svg); }
+        .icon-search { background: url(dist/assets/images/icons/ic_search_white_24px.svg); }
 
         .hidden { display: none; }
     `],

@@ -23,7 +23,7 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS, TOGGLE_ROADS} from './reduce
             (clear)="clearRoute()"
             (remove)="removeLast()"
             (save)="save()"
-            (search)="search()"
+            (search)="search($event)"
             (import)="importFile($event)"
             (export)="exportFile($event)"
             (toggleRoads)="toggleRoads()"
