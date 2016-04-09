@@ -31,6 +31,8 @@ export class ElevationService {
         // Subscribe to changes in the track and get elevation for 
         // the latest segment, if it hasn't already been processed
         this.route.track$.subscribe((v) => {
+            // console.log(v[v.length - 1])//
+            // console.log(flatten(v.map((s) => {return s.track[0];} )))//
             this.getElevationData(v[v.length - 1]);
         });
 
@@ -49,7 +51,7 @@ export class ElevationService {
             elevationPromises,
             segmentElevation = [];
 
-        if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
+        if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 1)) {
             path = this.convertToGoogleRoute(segment.track);
             pathArray = chunk(path, this.sampleSize);
             
@@ -85,14 +87,16 @@ export class ElevationService {
     };
 
     elevation(delay: number, path: any): Promise<any> {
-        let self = this;
+        let self = this,
+            rideMode = self.store.getState().details.followsRoads;
+            
         return new Promise(function(resolve, reject) {
             if (path.length <= 1) {
                 reject('No elevation requested: too few points in path');
             }
             setTimeout(() => { self.elevator.getElevationAlongPath({
                     'path': path,
-                    'samples': (path.length < self.sampleSize) ? path.length : self.sampleSize
+                    'samples': ((path.length < self.sampleSize) && rideMode) ? path.length : self.sampleSize
                 }, function(results, status) {
                     if (status === self.status.OK) {
                         if (results[0]) {

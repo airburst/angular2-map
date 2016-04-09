@@ -14,7 +14,7 @@ import {settings} from './config/config';
 import {Store} from '@ngrx/store';
 import {SET_TRACK, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
 import {SET_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from './reducers/elevation';
-import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS} from './reducers/details';
+import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS, TOGGLE_ROADS} from './reducers/details';
 
 @Component({
     selector: 'my-app',
@@ -25,6 +25,7 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS} from './reducers/details';
             (save)="save()"
             (import)="importFile($event)"
             (export)="exportFile($event)"
+            (toggleRoads)="toggleRoads()"
         >
         </app-header>
         <map></map>
@@ -108,6 +109,10 @@ export class AppComponent implements OnInit {
     removeLast() {
         this.store.dispatch({ type: REMOVE_LAST_SEGMENT });
         this.store.dispatch({ type: REMOVE_ELEVATION });
+    }
+    
+    toggleRoads() {
+        this.store.dispatch({ type: TOGGLE_ROADS });
     }
 
     recalculateElevation() {

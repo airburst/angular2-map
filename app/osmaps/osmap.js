@@ -137,18 +137,28 @@ System.register(['angular2/core', '../route', '../utils/utils', '../google/direc
                         payload: { id: uid, waypoint: { lat: p.lat, lon: p.lon, ele: 0 }, track: [], hasElevationData: false }
                     });
                     // Get value from Observable
-                    var track = this.store.getState().track;
-                    if ((this.store.getState().details.followsRoads) && (track.length > 1)) {
-                        var fp = track[track.length - 2].waypoint, from = this.directionsService.convertToGoogleMapPoint(fp), tp = track[track.length - 1].waypoint, to = this.directionsService.convertToGoogleMapPoint(tp);
-                        this.directionsService.getRouteBetween(from, to)
-                            .then(function (response) {
-                            _this.store.dispatch({
-                                type: track_1.UPDATE_SEGMENT,
-                                payload: { id: uid, track: response }
+                    var track = this.store.getState().track, roadMode = this.store.getState().details.followsRoads;
+                    if (track.length > 1) {
+                        var fp = track[track.length - 2].waypoint, tp = track[track.length - 1].waypoint;
+                        if (roadMode) {
+                            var from = this.directionsService.convertToGoogleMapPoint(fp), to = this.directionsService.convertToGoogleMapPoint(tp);
+                            this.directionsService.getRouteBetween(from, to)
+                                .then(function (response) {
+                                _this.store.dispatch({
+                                    type: track_1.UPDATE_SEGMENT,
+                                    payload: { id: uid, track: response }
+                                });
+                            }, function (response) {
+                                console.error('Problem with directions service:', response);
                             });
-                        }, function (response) {
-                            console.error('Problem with directions service:', response);
-                        });
+                        }
+                        else {
+                            // Walk mode: add the waypoint as a track point
+                            this.store.dispatch({
+                                type: track_1.UPDATE_SEGMENT,
+                                payload: { id: uid, track: [fp, tp] }
+                            });
+                        }
                     }
                     this.ol.Event.stop(e);
                 };

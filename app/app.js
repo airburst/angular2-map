@@ -123,6 +123,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.store.dispatch({ type: track_1.REMOVE_LAST_SEGMENT });
                     this.store.dispatch({ type: elevation_1.REMOVE_ELEVATION });
                 };
+                AppComponent.prototype.toggleRoads = function () {
+                    this.store.dispatch({ type: details_1.TOGGLE_ROADS });
+                };
                 AppComponent.prototype.recalculateElevation = function () {
                     var segment = this.store.getState().track[0];
                     segment.hasElevationData = false;
@@ -141,7 +144,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n        >\n        </app-header>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
+                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n            (toggleRoads)=\"toggleRoads()\"\n        >\n        </app-header>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader, infopanel_component_1.InfoPanel],
                         providers: [
                             gpx_service_1.GpxService,

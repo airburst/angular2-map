@@ -21,6 +21,11 @@ import * as d3 from 'd3';
                     <div class="icon icon-undo"></div>
                     <span>Undo</span>
                 </a>
+                <a class="item" href="#" (click)="toggleRoads.emit()">
+                    <div class="icon icon-undo"></div>
+                    <span *ngIf="route.followsRoads">Ride</span>
+                    <span *ngIf="!route.followsRoads">Walk</span>
+                </a>
                 <!--<a class="item" href="#" (click)="save.emit()">
                     <div class="icon icon-save"></div>
                     <span>Save</span>
@@ -112,6 +117,7 @@ export class AppHeader {
     @Output() import = new EventEmitter();
     @Output() save = new EventEmitter();
     @Output() export = new EventEmitter();
+    @Output() toggleRoads = new EventEmitter();
     
     fileTrigger() {
         // Warning: NOT the Angular2 way to access the DOM!

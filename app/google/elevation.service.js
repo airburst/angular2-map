@@ -53,6 +53,8 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     // Subscribe to changes in the track and get elevation for 
                     // the latest segment, if it hasn't already been processed
                     this.route.track$.subscribe(function (v) {
+                        // console.log(v[v.length - 1])//
+                        // console.log(flatten(v.map((s) => {return s.track[0];} )))//
                         _this.getElevationData(v[v.length - 1]);
                     });
                     this.route.elevation$.subscribe(function (v) {
@@ -66,7 +68,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                 ElevationService.prototype.getElevationData = function (segment) {
                     var _this = this;
                     var i = 0, pathArray, path = [], elevationPromises, segmentElevation = [];
-                    if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 0)) {
+                    if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 1)) {
                         path = this.convertToGoogleRoute(segment.track);
                         pathArray = utils_1.chunk(path, this.sampleSize);
                         elevationPromises = [];
@@ -100,7 +102,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                 };
                 ;
                 ElevationService.prototype.elevation = function (delay, path) {
-                    var self = this;
+                    var self = this, rideMode = self.store.getState().details.followsRoads;
                     return new Promise(function (resolve, reject) {
                         if (path.length <= 1) {
                             reject('No elevation requested: too few points in path');
@@ -108,7 +110,7 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                         setTimeout(function () {
                             self.elevator.getElevationAlongPath({
                                 'path': path,
-                                'samples': (path.length < self.sampleSize) ? path.length : self.sampleSize
+                                'samples': ((path.length < self.sampleSize) && rideMode) ? path.length : self.sampleSize
                             }, function (results, status) {
                                 if (status === self.status.OK) {
                                     if (results[0]) {

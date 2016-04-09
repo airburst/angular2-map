@@ -1,8 +1,12 @@
 Features
 
 - Search (bar, dialog for results, autocomplete)
+- ride/walk switch
+- Spinner for screen load and recalculating
+
+[release]
+
 - Save (API)
-- Export download
 - Toasts for warnings and messages
 - Pulse animation when setting spot on map
 - Disable export/save if no route

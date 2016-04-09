@@ -3,6 +3,7 @@ import {RouteDetails} from '../route';
 export const CLEAR_DETAILS = 'CLEAR_DETAILS';
 export const SET_DETAILS = 'SET_DETAILS';
 export const UPDATE_DETAILS = 'UPDATE_DETAILS';
+export const TOGGLE_ROADS = 'TOGGLE_ROADS';
 
 export const initialState: RouteDetails = {
     name: "",
@@ -30,6 +31,9 @@ export const details = (state: RouteDetails = initialState, action: Action) => {
 
         case CLEAR_DETAILS:
             return (state = initialState);
+
+        case TOGGLE_ROADS:
+            return Object.assign({}, state, { followsRoads: !state.followsRoads });
 
         default:
             return state;
