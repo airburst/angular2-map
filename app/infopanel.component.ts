@@ -59,7 +59,9 @@ import {Segment} from './route';
             padding: 0 10px;
             display: flex;
         }
-        .elevation-header, .toggle-link { color: white; }
+        .elevation-header,
+        .toggle-link,
+        .header-link { color: white; }
 
         .infopanel.show {
             bottom: 0;
@@ -104,7 +106,6 @@ import {Segment} from './route';
         }
         .toggle-text {
             display: inline-block;
-            /*line-height: 56px;*/
         }
         .icon {
             display: inline-block;
