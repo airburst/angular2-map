@@ -31,9 +31,9 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1, contex
                 SearchResults = __decorate([
                     core_1.Component({
                         selector: 'search-results',
-                        template: "\n        <div class=\"search-results\">\n        </div>\n    ",
+                        template: "\n        <div class=\"search-results-panel\">\n            <div class=\"results\">\n                test\n                test\n                test\n            </div>\n        </div>\n    ",
                         directives: [common_1.NgClass],
-                        styles: ["\n        .search-results {\n            position: absolute;\n            display: block;\n            top: 36px;\n            left: 8px;\n            padding: 36px 8px;\n            height: 300px;\n            width: 500px;\n            background-color: white;\n            z-index: 900;\n            display: flex;\n            box-shadow: 0 5px 5px -3px rgba(0,0,0,.14),\n                0 8px 10px 1px rgba(0,0,0,.098),\n                0 3px 14px 2px rgba(0,0,0,.084);\n        }\n    "],
+                        styles: ["\n        .search-results-panel {\n            position: absolute;\n            display: block;\n            top: 18px;\n            left: 8px;\n            padding: 36px 0 0 0;\n            height: 300px;\n            width: 500px;\n            background-color: white;\n            z-index: 900;\n            display: flex;\n            box-shadow: 0 5px 5px -3px rgba(0,0,0,.14),\n                0 8px 10px 1px rgba(0,0,0,.098),\n                0 3px 14px 2px rgba(0,0,0,.084);\n        }\n        \n        .results {\n            width: 100%;\n            padding: 8px;\n        }\n    "],
                         changeDetection: core_1.ChangeDetectionStrategy.OnPush
                     }), 
                     __metadata('design:paramtypes', [])
