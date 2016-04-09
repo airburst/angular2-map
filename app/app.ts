@@ -113,6 +113,7 @@ export class AppComponent implements OnInit {
     recalculateElevation() {
         let segment = this.store.getState().track[0];
         segment.hasElevationData = false;
+        this.store.dispatch({ type: CLEAR_ELEVATION });
         this.elevationService.getElevationData(segment);
     }
 
