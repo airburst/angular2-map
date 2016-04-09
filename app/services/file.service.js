@@ -56,9 +56,12 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                 };
                 FileService.prototype.save = function (text, filename) {
                     var textFileAsBlob = new Blob([text], { type: 'text/plain' }), downloadLink = document.createElement('a');
+                    if (filename === ".gpx") {
+                        filename = "route.gpx";
+                    }
                     downloadLink.download = filename;
                     downloadLink.innerHTML = 'Download File';
-                    if (window.webkitURL !== null) {
+                    if (window.URL !== null) {
                         // Chrome allows the link to be clicked without actually adding it to the DOM
                         downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
                     }

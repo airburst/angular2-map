@@ -44,10 +44,12 @@ export class FileService {
     save(text: string, filename: string) {
         let textFileAsBlob = new Blob([text], {type: 'text/plain'}),
             downloadLink = document.createElement('a');
-            downloadLink.download = filename;
-            downloadLink.innerHTML = 'Download File';
+            
+        if (filename === ".gpx") { filename = "route.gpx"; }
+        downloadLink.download = filename;
+        downloadLink.innerHTML = 'Download File';
 
-        if (window.webkitURL !== null) {
+        if (window.URL !== null) {
             // Chrome allows the link to be clicked without actually adding it to the DOM
             downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
         } else {

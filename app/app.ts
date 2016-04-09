@@ -90,7 +90,7 @@ export class AppComponent implements OnInit {
     
     exportFile() {
         let name = this.store.getState().details.name + '.gpx',
-            gpx = this.gpxService.write();
+            gpx = this.gpxService.write();   
         this.fileService.save(gpx, name);
     }
     

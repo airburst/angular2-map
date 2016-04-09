@@ -5,6 +5,8 @@ Features
 - Export download
 - Toasts for warnings and messages
 - Pulse animation when setting spot on map
+- Disable export/save if no route
+- Change toolbar icons for context 
 
 Build system for production
 
