@@ -26,6 +26,10 @@ import * as d3 from 'd3';
                     <label for="file" class="hidden">Load GPX or TCX File:</label>
                     <input class="hidden" id="file" type="file" (change)="import.emit($event)">
                 </a>
+                <a class="item" href="#" (click)="export.emit()">
+                    <div class="icon icon-export"></div>
+                    <span>Export</span>
+                </a>
             <!--</div>-->
         </div>
     `,
@@ -81,6 +85,7 @@ import * as d3 from 'd3';
         .icon-undo { background: url(dist/assets/images/icons/ic_undo_white_24px.svg); }
         .icon-save { background: url(dist/assets/images/icons/ic_save_white_24px.svg); }
         .icon-import { background: url(dist/assets/images/icons/ic_file_upload_white_24px.svg); }
+        .icon-export { background: url(dist/assets/images/icons/ic_file_download_white_24px.svg); }
 
         .hidden { display: none; }
     `],
@@ -93,6 +98,7 @@ export class AppHeader {
     @Output() remove = new EventEmitter();
     @Output() import = new EventEmitter();
     @Output() save = new EventEmitter();
+    @Output() export = new EventEmitter();
     
     fileTrigger() {
         // Warning: NOT the Angular2 way to access the DOM!

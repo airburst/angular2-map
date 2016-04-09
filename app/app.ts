@@ -24,6 +24,7 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS} from './reducers/details';
             (remove)="removeLast()"
             (save)="save()"
             (import)="importFile($event)"
+            (export)="exportFile($event)"
         >
         </app-header>
         <map></map>
@@ -87,12 +88,16 @@ export class AppComponent implements OnInit {
         }
     }
     
-    save() {
-        let name = this.store.getState().details.name,
+    exportFile() {
+        let name = this.store.getState().details.name + '.gpx',
             gpx = this.gpxService.write();
         this.fileService.save(gpx, name);
     }
-
+    
+    save() {
+        console.log(this.store.getState());
+    }
+    
     clearRoute() {
         this.store.dispatch({ type: CLEAR_TRACK });
         this.store.dispatch({ type: CLEAR_ELEVATION });

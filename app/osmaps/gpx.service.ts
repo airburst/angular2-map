@@ -148,12 +148,11 @@ export class GpxService {
     };
 
     private template: any = {
-        header: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + 
-            '<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="maps.fairhursts.net">',
+        header: '<?xml version="1.0" encoding="UTF-8"?>' + 
+            '<gpx creator="maps.fairhursts.net" version="1.1" xmlns="http://www.topografix.com/GPX/1/1">',
         title: '<metadata><name>{name}</name></metadata><trk><name>{name}</name>',
         point: '<trkpt lon="{lon}" lat="{lat}">' +
                '<ele>{ele}</ele>' +
-               '<name></name>' +
                '</trkpt>',
         end: '</trk></gpx>'
     }
@@ -161,14 +160,15 @@ export class GpxService {
     write(name?: string): string {
         if (name === undefined) { name = 'Route'; }
         let gpxContent: string = this.template.header + replaceAll('{name}', name, this.template.title),
-            e = flatten(this.store.getState().elevation);
+            e: any[] = flatten(this.store.getState().elevation),
+            eIndex: number = 0;
         
         this.store.getState().track.forEach((segment) => {
-            segment.track.forEach((t, i) => {
+            segment.track.forEach((t) => {
                 gpxContent += this.template.point
                     .replace('{lat}', t.lat.toFixed(7))
                     .replace('{lon}', t.lon.toFixed(7))
-                    .replace('{ele}', e[i].toFixed(1));
+                    .replace('{ele}', e[eIndex++].toFixed(1));
             });
         });
         

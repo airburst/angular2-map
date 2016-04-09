@@ -43,12 +43,11 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
                 function GpxService(store) {
                     this.store = store;
                     this.template = {
-                        header: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
-                            '<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="maps.fairhursts.net">',
+                        header: '<?xml version="1.0" encoding="UTF-8"?>' +
+                            '<gpx creator="maps.fairhursts.net" version="1.1" xmlns="http://www.topografix.com/GPX/1/1">',
                         title: '<metadata><name>{name}</name></metadata><trk><name>{name}</name>',
                         point: '<trkpt lon="{lon}" lat="{lat}">' +
                             '<ele>{ele}</ele>' +
-                            '<name></name>' +
                             '</trkpt>',
                         end: '</trk></gpx>'
                     };
@@ -171,13 +170,13 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
                     if (name === undefined) {
                         name = 'Route';
                     }
-                    var gpxContent = this.template.header + utils_1.replaceAll('{name}', name, this.template.title), e = utils_1.flatten(this.store.getState().elevation);
+                    var gpxContent = this.template.header + utils_1.replaceAll('{name}', name, this.template.title), e = utils_1.flatten(this.store.getState().elevation), eIndex = 0;
                     this.store.getState().track.forEach(function (segment) {
-                        segment.track.forEach(function (t, i) {
+                        segment.track.forEach(function (t) {
                             gpxContent += _this.template.point
                                 .replace('{lat}', t.lat.toFixed(7))
                                 .replace('{lon}', t.lon.toFixed(7))
-                                .replace('{ele}', e[i].toFixed(1));
+                                .replace('{ele}', e[eIndex++].toFixed(1));
                         });
                     });
                     gpxContent += this.template.end;
