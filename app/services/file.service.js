@@ -54,6 +54,23 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                 FileService.prototype.setAllowedExtensions = function (extensions) {
                     this.options.types = extensions;
                 };
+                FileService.prototype.save = function (text, filename) {
+                    var textFileAsBlob = new Blob([text], { type: 'text/plain' }), downloadLink = document.createElement('a');
+                    downloadLink.download = filename;
+                    downloadLink.innerHTML = 'Download File';
+                    if (window.webkitURL !== null) {
+                        // Chrome allows the link to be clicked without actually adding it to the DOM
+                        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+                    }
+                    else {
+                        // Firefox requires the link to be added to the DOM before it can be clicked
+                        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+                        downloadLink.onclick = destroyClickedElement;
+                        downloadLink.style.display = 'none';
+                        document.body.appendChild(downloadLink);
+                    }
+                    downloadLink.click();
+                };
                 FileService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [])

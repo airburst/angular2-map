@@ -88,7 +88,9 @@ export class AppComponent implements OnInit {
     }
     
     save() {
-        console.log(this.gpxService.write());
+        let name = this.store.getState().details.name,
+            gpx = this.gpxService.write();
+        this.fileService.save(gpx, name);
     }
 
     clearRoute() {
