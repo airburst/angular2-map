@@ -5,6 +5,7 @@ import {SET_TRACK} from '../reducers/track';
 import {SET_MARKERS} from '../reducers/markers';
 import {SET_ELEVATION} from '../reducers/elevation';
 import {SET_DETAILS, initialState} from '../reducers/details';
+import {replaceAll, flatten} from '../utils/utils';
 
 @Injectable()
 export class GpxService {
@@ -146,31 +147,33 @@ export class GpxService {
         });        
     };
 
-    // private template: any = {
-    //     header: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="maps.fairhursts.net">',
-    //     title: '<metadata><name>{name}</name></metadata><rte><name>{name}</name>',
-    //     point: '<rtept lon="{lon}" lat="{lat}">' +
-    //            '<ele>0.0</ele>' +
-    //            '<name></name>' +
-    //            '</rtept>',
-    //     end: '</rte></gpx>'
-    // }
+    private template: any = {
+        header: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + 
+            '<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="maps.fairhursts.net">',
+        title: '<metadata><name>{name}</name></metadata><trk><name>{name}</name>',
+        point: '<trkpt lon="{lon}" lat="{lat}">' +
+               '<ele>{ele}</ele>' +
+               '<name></name>' +
+               '</trkpt>',
+        end: '</trk></gpx>'
+    }
 
-    // private replaceAll(find: string, replace: string, str: string): string {
-    //     return str.replace(new RegExp(find, 'g'), replace);
-    // }
-
-    // write(route: Route, name: string): string {
-    //     if (name === undefined) { name = 'Route'; }
-    //     let gpxContent: string = this.template.header + this.replaceAll('{name}', name, this.template.title);
-    //     for (let i = 0; i < route.points.length; i++) {
-    //         gpxContent += this.template.point
-    //             .replace('{lat}', route[i][0])
-    //             .replace('{lon}', route[i][1]);
-    //     };
-    //     gpxContent += this.template.end;
-
-    //     return gpxContent;
-    // }
+    write(name?: string): string {
+        if (name === undefined) { name = 'Route'; }
+        let gpxContent: string = this.template.header + replaceAll('{name}', name, this.template.title),
+            e = flatten(this.store.getState().elevation);
+        
+        this.store.getState().track.forEach((segment) => {
+            segment.track.forEach((t, i) => {
+                gpxContent += this.template.point
+                    .replace('{lat}', t.lat.toFixed(7))
+                    .replace('{lon}', t.lon.toFixed(7))
+                    .replace('{ele}', e[i].toFixed(1));
+            });
+        });
+        
+        gpxContent += this.template.end;
+        return gpxContent;
+    }
 
 }

@@ -107,7 +107,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     }
                 };
                 AppComponent.prototype.save = function () {
-                    console.log(JSON.stringify(this.store.getState()));
+                    console.log(this.gpxService.write());
                 };
                 AppComponent.prototype.clearRoute = function () {
                     this.store.dispatch({ type: track_1.CLEAR_TRACK });

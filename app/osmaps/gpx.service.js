@@ -1,4 +1,4 @@
-System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track', '../reducers/markers', '../reducers/elevation', '../reducers/details'], function(exports_1, context_1) {
+System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track', '../reducers/markers', '../reducers/elevation', '../reducers/details', '../utils/utils'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, store_1, route_1, track_1, markers_1, elevation_1, details_1;
+    var core_1, store_1, route_1, track_1, markers_1, elevation_1, details_1, utils_1;
     var GpxService;
     return {
         setters:[
@@ -34,11 +34,24 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
             },
             function (details_1_1) {
                 details_1 = details_1_1;
+            },
+            function (utils_1_1) {
+                utils_1 = utils_1_1;
             }],
         execute: function() {
             GpxService = (function () {
                 function GpxService(store) {
                     this.store = store;
+                    this.template = {
+                        header: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+                            '<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="maps.fairhursts.net">',
+                        title: '<metadata><name>{name}</name></metadata><trk><name>{name}</name>',
+                        point: '<trkpt lon="{lon}" lat="{lat}">' +
+                            '<ele>{ele}</ele>' +
+                            '<name></name>' +
+                            '</trkpt>',
+                        end: '</trk></gpx>'
+                    };
                 }
                 GpxService.prototype.init = function () {
                     this.appStore = {
@@ -153,6 +166,23 @@ System.register(['angular2/core', '@ngrx/store', '../route', '../reducers/track'
                     });
                 };
                 ;
+                GpxService.prototype.write = function (name) {
+                    var _this = this;
+                    if (name === undefined) {
+                        name = 'Route';
+                    }
+                    var gpxContent = this.template.header + utils_1.replaceAll('{name}', name, this.template.title), e = utils_1.flatten(this.store.getState().elevation);
+                    this.store.getState().track.forEach(function (segment) {
+                        segment.track.forEach(function (t, i) {
+                            gpxContent += _this.template.point
+                                .replace('{lat}', t.lat.toFixed(7))
+                                .replace('{lon}', t.lon.toFixed(7))
+                                .replace('{ele}', e[i].toFixed(1));
+                        });
+                    });
+                    gpxContent += this.template.end;
+                    return gpxContent;
+                };
                 GpxService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [store_1.Store])

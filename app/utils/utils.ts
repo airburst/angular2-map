@@ -5,6 +5,10 @@ export const uuid = () => {
         });
 };
 
+export const replaceAll = (find: string, replace: string, str: string): string => {
+    return str.replace(new RegExp(find, 'g'), replace);
+}
+
 export const chunk = (collection, chunkSize) => {
     let i, chunked = [];
     if (!collection || isNaN(parseInt(chunkSize, 10))) {

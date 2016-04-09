@@ -1,7 +1,7 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var uuid, chunk, flatten, elevationData;
+    var uuid, replaceAll, chunk, flatten, elevationData;
     return {
         setters:[],
         execute: function() {
@@ -10,6 +10,9 @@ System.register([], function(exports_1, context_1) {
                     .replace(/1|0/g, function () {
                     return (0 | Math.random() * 16).toString(16);
                 });
+            });
+            exports_1("replaceAll", replaceAll = function (find, replace, str) {
+                return str.replace(new RegExp(find, 'g'), replace);
             });
             exports_1("chunk", chunk = function (collection, chunkSize) {
                 var i, chunked = [];
