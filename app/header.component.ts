@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
+import {FORM_DIRECTIVES} from 'angular2/common';
 import {Segment} from './route';
-import * as d3 from 'd3';
 
 @Component({
     selector: 'app-header',
@@ -8,8 +8,10 @@ import * as d3 from 'd3';
     template: `
         <div class="stats">
             <div class="left">
+                <div class="centre-container">OS Route Planner</div>
                 <div class="centre-container">
-                    OS Route Planner
+                    <input class="search" id="search" placeholder="Search for postcode or place" 
+                    (change)="search.emit($event)"/>
                 </div>
             </div>
             <div class="right">
@@ -46,7 +48,7 @@ import * as d3 from 'd3';
     `,
     styles: [`
         .stats {
-            background-color: #00695C;
+            background-color: #00897B;
             font-family: 'Roboto', 'Arial', 'Helvetica';
             position: absolute;
             top: 0;
@@ -61,24 +63,44 @@ import * as d3 from 'd3';
         .stats, .item { color: white; }
 
         .left {
-            width: 25%;
             padding-left: 8px;
             font-size: 1.6em;
             display: flex;
+            -webkit-flex-grow:  2;
+            flex-grow: 2;
         }
 
         .right {
-            width: 75%;
             padding-right: 8px;
             display: flex;
             -webkit-justify-content: flex-end;
             justify-content: flex-end;
+            -webkit-flex-grow:  1;
+            flex-grow: 1;
         }
         
         .centre-container {
             display: flex;
             flex-direction: column;
             justify-content: center;
+        }
+        
+        .search {
+            margin-left: 2em;
+            padding-left: 0.5em;
+            height: 2.6em;
+            width: 30em;
+            font-size: 0.6em;
+            color: white;
+            border: 0px;
+            border-radius: 2px;
+            background-color: #009688;
+        }
+        #search::-webkit-input-placeholder,
+        #search:-moz-placeholder,
+        #search::-moz-placeholder,
+        #search:-ms-input-placeholder {
+            color: white;
         }
         
         .item { 
@@ -119,6 +141,7 @@ export class AppHeader {
     @Output() remove = new EventEmitter();
     @Output() import = new EventEmitter();
     @Output() save = new EventEmitter();
+    @Output() search = new EventEmitter();
     @Output() export = new EventEmitter();
     @Output() toggleRoads = new EventEmitter();
     

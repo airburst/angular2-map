@@ -1,7 +1,6 @@
 Features
 
 - Search (bar, dialog for results, autocomplete)
-- ride/walk switch
 - Spinner for screen load and recalculating
 
 [release]

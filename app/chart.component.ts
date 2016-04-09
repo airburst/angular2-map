@@ -50,7 +50,7 @@ import {flatten} from './utils/utils';
         }
 
         .area {
-            fill: #4DB6AC; /*grey 300*/;
+            fill: #4DB6AC;
         }
 
         .event-layer {
