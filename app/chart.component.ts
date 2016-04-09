@@ -43,6 +43,21 @@ import {flatten} from './utils/utils';
             display: none;
         }
         
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #00695C;
+        }
+
+        .area {
+            fill: #4DB6AC; /*grey 300*/;
+        }
+
+        .event-layer {
+            fill: transparent;
+            cursor: crosshair;
+        }
+        
         .focusLine {
             stroke: #222;
             stroke-width: 1px;

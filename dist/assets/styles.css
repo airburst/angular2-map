@@ -16,18 +16,3 @@ body {
     font-family: 'Roboto', 'Arial', 'Helvetica'; 
     font-size: 0.6em;
 }
-
-.axis path,
-.axis line {
-    fill: none;
-    stroke: #666;
-}
-
-.area {
-    fill: #E0E0E0; /*grey 300*/;
-}
-
-.event-layer {
-    fill: transparent;
-    cursor: crosshair;
-}

@@ -31,7 +31,7 @@ import * as d3 from 'd3';
     `,
     styles: [`
         .stats {
-            background-color: #E0E0E0; /*grey 300*/
+            background-color: #00695C;
             font-family: 'Roboto', 'Arial', 'Helvetica';
             position: absolute;
             top: 0;
@@ -43,7 +43,7 @@ import * as d3 from 'd3';
                 0 8px 10px 1px rgba(0,0,0,.098),
                 0 3px 14px 2px rgba(0,0,0,.084);
         }
-        .stats, .item { color: #212121; }
+        .stats, .item { color: white; }
 
         .left {
             width: 25%;
@@ -77,10 +77,10 @@ import * as d3 from 'd3';
             height: 24px;
             background-size: 24px 24px;
         }
-        .icon-clear { background: url(dist/assets/images/icons/ic_close_black_24px.svg); }
-        .icon-undo { background: url(dist/assets/images/icons/ic_undo_black_24px.svg); }
-        .icon-save { background: url(dist/assets/images/icons/ic_save_black_24px.svg); }
-        .icon-import { background: url(dist/assets/images/icons/ic_file_upload_black_24px.svg); }
+        .icon-clear { background: url(dist/assets/images/icons/ic_close_white_24px.svg); }
+        .icon-undo { background: url(dist/assets/images/icons/ic_undo_white_24px.svg); }
+        .icon-save { background: url(dist/assets/images/icons/ic_save_white_24px.svg); }
+        .icon-import { background: url(dist/assets/images/icons/ic_file_upload_white_24px.svg); }
 
         .hidden { display: none; }
     `],

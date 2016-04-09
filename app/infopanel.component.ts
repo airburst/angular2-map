@@ -54,12 +54,12 @@ import {Segment} from './route';
         }
         
         .elevation-header {
-            background-color: #E0E0E0; /*grey 300*/;
+            background-color: #00695C;
             font-family: 'Roboto', 'Arial', 'Helvetica';
             padding: 0 10px;
             display: flex;
         }
-        .elevation-header, .toggle-link { color: #212121; }
+        .elevation-header, .toggle-link { color: white; }
 
         .infopanel.show {
             bottom: 0;
@@ -113,9 +113,9 @@ import {Segment} from './route';
             height: 24px;
             background-size: 24px 24px;
         }
-        .icon-clear { background: url(dist/assets/images/icons/ic_close_black_24px.svg); }
-        .icon-up { background: url(dist/assets/images/icons/ic_arrow_drop_up_black_24px.svg); }
-        .icon-down { background: url(dist/assets/images/icons/ic_arrow_drop_down_black_24px.svg); }
+        .icon-clear { background: url(dist/assets/images/icons/ic_close_white_24px.svg); }
+        .icon-up { background: url(dist/assets/images/icons/ic_arrow_drop_up_white_24px.svg); }
+        .icon-down { background: url(dist/assets/images/icons/ic_arrow_drop_down_white_24px.svg); }
     `],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
