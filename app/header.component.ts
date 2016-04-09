@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 
 @Component({
     selector: 'app-header',
+    inputs: ['route'],
     template: `
         <div class="stats">
             <div class="left">
@@ -20,10 +21,10 @@ import * as d3 from 'd3';
                     <div class="icon icon-undo"></div>
                     <span>Undo</span>
                 </a>
-                <a class="item" href="#" (click)="save.emit()">
+                <!--<a class="item" href="#" (click)="save.emit()">
                     <div class="icon icon-save"></div>
                     <span>Save</span>
-                </a>
+                </a>-->
                 <a class="item" href="#" (click)="fileTrigger()">
                     <div class="icon icon-import"></div>
                     <span>Import</span>
