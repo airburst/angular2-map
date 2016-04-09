@@ -8,7 +8,7 @@ import {Segment} from './route';
     template: `
         <div class="stats">
             <div class="left">
-                <div class="centre-container">OS Route Planner</div>
+                <!--<div class="centre-container">OS Route Planner</div>-->
                 <div class="centre-container">
                     <div class="search-input">
                         <span class="icon-search input-prepend"></span>
@@ -92,7 +92,7 @@ import {Segment} from './route';
             margin-left: 2em;
             padding-left: 0.5em;
             height: 2.6em;
-            width: 30em;
+            width: 100%;
             font-size: 0.6em;
             color: white;
             border: 0px;
@@ -110,7 +110,8 @@ import {Segment} from './route';
             border: 0px;
             border-radius: 2px;
             background-color: #009688;
-            margin-left: 1em;
+            width: 500px;
+            /*margin-left: 1em;*/
         }
         .input-prepend {
             position: absolute;

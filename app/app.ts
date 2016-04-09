@@ -8,6 +8,7 @@ import {GpxService} from './osmaps/gpx.service';
 import {OsMap} from './osmaps/osmap';
 import {AppHeader} from './header.component';
 import {InfoPanel} from './infopanel.component';
+import {SearchResults} from './search.results.component';
 import {GazetteerService} from './osmaps/gazetteer';
 import {Route, RouteDetails, AppStore, boundingRectangle} from './route';
 import {settings} from './config/config';
@@ -29,13 +30,14 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS, TOGGLE_ROADS} from './reduce
             (toggleRoads)="toggleRoads()"
         >
         </app-header>
+        <search-results></search-results>
         <map></map>
         <infopanel [route]="route.details$ | async"
             (recalc)="recalculateElevation()"
         >
         </infopanel>
         `,
-    directives: [FORM_DIRECTIVES, OsMap, AppHeader, InfoPanel],
+    directives: [FORM_DIRECTIVES, OsMap, AppHeader, InfoPanel, SearchResults],
     providers: [
         GpxService,
         FileService,
