@@ -6,8 +6,12 @@ import * as d3 from 'd3';
     selector: 'app-header',
     template: `
         <div class="stats">
-            <!--<div class="left">OS Route Planner</div>
-            <div class="left">-->
+            <div class="left">
+                <div class="centre-container">
+                    OS Route Planner
+                </div>
+            </div>
+            <div class="right">
                 <a class="item" href="#" (click)="clear.emit()">
                     <div class="icon icon-clear"></div>
                     <span>Clear</span>
@@ -30,7 +34,7 @@ import * as d3 from 'd3';
                     <div class="icon icon-export"></div>
                     <span>Export</span>
                 </a>
-            <!--</div>-->
+            </div>
         </div>
     `,
     styles: [`
@@ -51,15 +55,23 @@ import * as d3 from 'd3';
 
         .left {
             width: 25%;
+            padding-left: 8px;
             font-size: 1.6em;
             display: flex;
         }
 
         .right {
             width: 75%;
+            padding-right: 8px;
             display: flex;
             -webkit-justify-content: flex-end;
             justify-content: flex-end;
+        }
+        
+        .centre-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         .item { 
