@@ -30,7 +30,9 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS, TOGGLE_ROADS} from './reduce
             (toggleRoads)="toggleRoads()"
         >
         </app-header>
-        <search-results></search-results>
+        <search-results [results]="searchResults"
+            (selected)="selectedSearchLocation(location)"
+        ></search-results>
         <map></map>
         <infopanel [route]="route.details$ | async"
             (recalc)="recalculateElevation()"
@@ -52,6 +54,7 @@ export class AppComponent implements OnInit {
 
     public osmap: OsMap;
     public route: Route;
+    public searchResults: any[];
 
     constructor(
         private gpxService: GpxService,
@@ -63,6 +66,7 @@ export class AppComponent implements OnInit {
         public store: Store<AppStore>
     ) {
         this.route = new Route(store);
+        this.searchResults = [];
     }
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
@@ -132,7 +136,15 @@ export class AppComponent implements OnInit {
         }
     }
 
+    selectedSearchLocation(location) {
+        this.store.dispatch({
+            type: UPDATE_DETAILS,
+            payload: { easting: location.lat, northing: location.lon }
+        });
+    }    
+
     showSearchResults(results, type) {
+        this.searchResults = results;
         console.log('Results in App:', type, results);
     }
 

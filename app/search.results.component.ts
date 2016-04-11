@@ -3,12 +3,16 @@ import {NgClass} from 'angular2/common';
 
 @Component({
     selector: 'search-results',
+    inputs: ['results'],
     template: `
         <div class="search-results-panel">
             <div class="results">
-                test
-                test
-                test
+                <ul class="results-list">
+                    <li class="results-item" *ngFor="#result of results" 
+                        (click)="selected(result.location)">
+                        {{result.name}}, {{result.county}}  {{result.type}}
+                    </li>
+                </ul>
             </div>
         </div>
     `,
@@ -32,13 +36,32 @@ import {NgClass} from 'angular2/common';
         
         .results {
             width: 100%;
-            padding: 8px;
+            /* display: flex;
+            flex-direction: column;
+            justify-content: center;
+             overflow */
+        }
+
+        .results-list {
+            width: 100%;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .results-item {
+            padding: 20px 16px;
+            font-family: 'Roboto';
+            border-bottom: 1px solid #e2e2e2;
+        }
+        .results-item:hover {
+            background-color: #e2e2e2;
         }
     `],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class SearchResults {
-    @Input() results: string[];
-    
+    @Input() results: any[];
+    @Output() selected = new EventEmitter();
 }
