@@ -25,6 +25,10 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1, contex
                 function SearchResults() {
                     this.selected = new core_1.EventEmitter();
                 }
+                SearchResults.prototype.resultClicked = function (item) {
+                    var point = this.results[item].location;
+                    this.selected.emit({ value: point });
+                };
                 __decorate([
                     core_1.Input(), 
                     __metadata('design:type', Array)
@@ -37,7 +41,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1, contex
                     core_1.Component({
                         selector: 'search-results',
                         inputs: ['results'],
-                        template: "\n        <div class=\"search-results-panel\">\n            <div class=\"results\">\n                <ul class=\"results-list\">\n                    <li class=\"results-item\" *ngFor=\"#result of results\" \n                        (click)=\"selected(result.location)\">\n                        {{result.name}}, {{result.county}}  {{result.type}}\n                    </li>\n                </ul>\n            </div>\n        </div>\n    ",
+                        template: "\n        <div *ngIf=\"results.length\" class=\"search-results-panel\">\n            <div class=\"results\">\n                <ul class=\"results-list\">\n                    <li class=\"results-item\" *ngFor=\"#result of results; #i=index\" \n                        (click)=\"resultClicked(i)\">\n                        {{result.name}}, {{result.county}}  {{result.type}}\n                    </li>\n                </ul>\n            </div>\n        </div>\n    ",
                         directives: [common_1.NgClass],
                         styles: ["\n        .search-results-panel {\n            position: absolute;\n            display: block;\n            top: 18px;\n            left: 8px;\n            padding: 36px 0 0 0;\n            height: 300px;\n            width: 500px;\n            background-color: white;\n            z-index: 900;\n            display: flex;\n            box-shadow: 0 5px 5px -3px rgba(0,0,0,.14),\n                0 8px 10px 1px rgba(0,0,0,.098),\n                0 3px 14px 2px rgba(0,0,0,.084);\n        }\n        \n        .results {\n            width: 100%;\n            /* display: flex;\n            flex-direction: column;\n            justify-content: center;\n             overflow */\n        }\n\n        .results-list {\n            width: 100%;\n            list-style-type: none;\n            padding: 0;\n            margin: 0;\n        }\n\n        .results-item {\n            padding: 20px 16px;\n            font-family: 'Roboto';\n            border-bottom: 1px solid #e2e2e2;\n        }\n        .results-item:hover {\n            background-color: #e2e2e2;\n        }\n    "],
                         changeDetection: core_1.ChangeDetectionStrategy.OnPush

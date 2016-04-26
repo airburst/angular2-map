@@ -5,11 +5,11 @@ import {NgClass} from 'angular2/common';
     selector: 'search-results',
     inputs: ['results'],
     template: `
-        <div class="search-results-panel">
+        <div *ngIf="results.length" class="search-results-panel">
             <div class="results">
                 <ul class="results-list">
-                    <li class="results-item" *ngFor="#result of results" 
-                        (click)="selected(result.location)">
+                    <li class="results-item" *ngFor="#result of results; #i=index" 
+                        (click)="resultClicked(i)">
                         {{result.name}}, {{result.county}}  {{result.type}}
                     </li>
                 </ul>
@@ -64,4 +64,9 @@ import {NgClass} from 'angular2/common';
 export class SearchResults {
     @Input() results: any[];
     @Output() selected = new EventEmitter();
+    
+    resultClicked(item) {
+        let point = this.results[item].location;
+        this.selected.emit({value: point})
+    }
 }

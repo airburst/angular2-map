@@ -32,7 +32,7 @@ import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
         >
         </app-header>
         <search-results [results]="searchResults"
-            (selected)="selectedSearchLocation(location)"
+            (selected)="selectedSearchLocation($event)"
         ></search-results>
         <map></map>
         <infopanel [route]="route.details$ | async"
@@ -141,10 +141,11 @@ export class AppComponent implements OnInit {
     }
 
     selectedSearchLocation(location) {
-        this.store.dispatch({
-            type: UPDATE_DETAILS,
-            payload: { easting: location.lat, northing: location.lon }
-        });
+        console.log(location)//
+        // this.store.dispatch({
+        //     type: UPDATE_DETAILS,
+        //     payload: { easting: location.lat, northing: location.lon }
+        // });
     }    
 
     showSearchResults(results) {
