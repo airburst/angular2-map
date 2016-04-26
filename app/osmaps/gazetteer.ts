@@ -1,54 +1,23 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 import {Injectable} from 'angular2/core';
 import {Observable} from 'rxjs/Observable';
-
-// @Injectable()
-// export class WikipediaService {
-
-//     search(terms: Observable<string>, debounceDuration = 400) {
-//         return terms.debounceTime(debounceDuration)
-//             .distinctUntilChanged()
-//             .switchMap(term => this.rawSearch(term));
-//     }
-
-//     // rawSearch(term: string) {
-//     //     var search = new URLSearchParams()
-//     //     search.set('action', 'opensearch');
-//     //     search.set('search', term);
-//     //     search.set('format', 'json');
-//     //     return this.jsonp
-//     //         .get('http://en.wikipedia.org/w/api.php?callback=JSONP_CALLBACK', { search })
-//     //         .map((response) => response.json()[1]);
-//     // }
-// }
+import {Store} from '@ngrx/store';
+import {LocationResult} from '../models/os';
+import {AppStore} from '../route';
+import {SET_RESULTS, CLEAR_RESULTS} from '../reducers/gazetteer';
 
 @Injectable()
 export class GazetteerService {
-
-    constructor() {
-        this.sectorFlag = 0;
+    
+    constructor(public store: Store<AppStore>) {
         this.place = '';
     }
 
-    private sectorFlag: number;
     private place: string;
-    private callback: Function;
 
-    // search(terms: Observable<string>, debounceDuration = 400) {
-    //     return terms.debounceTime(debounceDuration)
-    //         .distinctUntilChanged()
-    //         .switchMap(term => this.searchPostcode(term));
-    // }
-
-    public searchPostcode(place, callback?: Function): void {
+    public searchPostcode(place): void {
         let postcodeService = new window.OpenSpace.Postcode();
         this.place = place;
-        this.callback = callback;
-   
-        // Are we searching for a postcode sector or full postcode?
-        if (place.length < 5) { this.sectorFlag = 1; }      
-
-        // Search postcode service
         postcodeService.getLonLat(place, this.postcodeSearchResponse.bind(this));
     }
 
@@ -59,23 +28,36 @@ export class GazetteerService {
         if (mapPoint !== null) { eastVal = mapPoint.getEasting().toString(); }
 
         // No postcode match: search gazetteer for place name
-        if (eastVal.length === 3 || mapPoint === null) { this.searchPlace(this.place, this.callback); }     
-
-        // Centre map on postcode MapPoint       
-        if ((mapPoint !== null) && (eastVal.length > 3)) { this.callback(mapPoint, 'postcode'); }
+        if (eastVal.length === 3 || mapPoint === null) { this.searchPlace(this.place); }     
+    
+        if ((mapPoint !== null) && (eastVal.length > 3)) {
+            this.updateStore([{
+                name: this.place, 
+                location: mapPoint
+            }]); 
+        }
     }
 
-    public searchPlace(place: string, callback: Function): void {
-        this.callback = callback;
+    public searchPlace(place: string): void {
         let osGaz = new window.OpenSpace.Gazetteer;
         let gazArray = osGaz.getLocations(place, this.placeSearchResponse.bind(this));
     }
     
-    // Return place search results
-    private placeSearchResponse(places: any): void {
-        if (places.length === 0) { this.callback([], 'null'); }
-        if (places.length === 1) { this.callback(places[0], 'place'); }
-        if (places.length > 1) { this.callback(places, 'place'); }
+    private placeSearchResponse(places: LocationResult[]): void {
+        if (places.length === 0) {
+            this.updateStore([{
+                name: 'No matching places found',
+                location: {lat: 0, lon: 0}
+            }]); 
+        }
+        if (places.length === 1) { this.updateStore(places[0]); }
+        if (places.length > 1) { this.updateStore(places); }
     };
+    
+    private updateStore(results) {
+        if (results !== undefined) {
+            this.store.dispatch({ type: SET_RESULTS, payload: results });
+        }
+    }
 
 }

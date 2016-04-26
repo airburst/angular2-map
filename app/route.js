@@ -11,6 +11,7 @@ System.register([], function(exports_1, context_1) {
                     this.details$ = store.select('details');
                     this.track$ = store.select('track');
                     this.elevation$ = store.select('elevation');
+                    this.searchResults$ = store.select('results');
                 }
                 return Route;
             }());

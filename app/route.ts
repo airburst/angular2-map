@@ -1,6 +1,7 @@
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
 import {UPDATE_DETAILS} from './reducers/details';
+import {LocationResult} from './models/os';
 
 export interface Point {
     lat: number;
@@ -50,17 +51,20 @@ export interface AppStore {
     track: Segment[];
     elevation: any[];
     markers: Marker[];
+    searchResults: LocationResult[];
 }
 
 export class Route {
     public details$: Observable<RouteDetails>;
     public track$: Observable<Array<Segment>>;
     public elevation$: Observable<Array<any>>;
-
+    public searchResults$: Observable<Array<LocationResult>>;
+    
     constructor(store: Store<AppStore>) {
         this.details$ = store.select('details');
         this.track$ = store.select('track');
         this.elevation$ = store.select('elevation');
+        this.searchResults$ = store.select('results');
     }
 }
 

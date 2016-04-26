@@ -92,6 +92,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         _this.elevationService.init();
                         _this.osmap = new osmap_1.OsMap(_this.directionsService, _this.store);
                         _this.osmap.init();
+                        _this.route.searchResults$.subscribe(function (results) {
+                            _this.showSearchResults(results);
+                        });
                     }, function (value) {
                         console.error('Script not found:', value);
                     });
@@ -139,7 +142,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 AppComponent.prototype.search = function (ev) {
                     var place = ev.target.value;
                     if (place !== '') {
-                        this.gazetteerService.searchPostcode(place, this.showSearchResults);
+                        this.gazetteerService.searchPostcode(place);
                     }
                 };
                 AppComponent.prototype.selectedSearchLocation = function (location) {
@@ -148,9 +151,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         payload: { easting: location.lat, northing: location.lon }
                     });
                 };
-                AppComponent.prototype.showSearchResults = function (results, type) {
+                AppComponent.prototype.showSearchResults = function (results) {
                     this.searchResults = results;
-                    console.log('Results in App:', type, results);
+                    console.log('Results in App:', results);
                 };
                 AppComponent = __decorate([
                     core_1.Component({

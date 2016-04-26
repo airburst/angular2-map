@@ -16,6 +16,7 @@ import {Store} from '@ngrx/store';
 import {SET_TRACK, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
 import {SET_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from './reducers/elevation';
 import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS, TOGGLE_ROADS} from './reducers/details';
+import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
 
 @Component({
     selector: 'my-app',
@@ -81,6 +82,9 @@ export class AppComponent implements OnInit {
                 this.elevationService.init();
                 this.osmap = new OsMap(this.directionsService, this.store);
                 this.osmap.init();
+                this.route.searchResults$.subscribe((results) => {
+                    this.showSearchResults(results);
+                });
             }, function(value) {
                 console.error('Script not found:', value)
             });
@@ -132,7 +136,7 @@ export class AppComponent implements OnInit {
     search(ev) {
         let place: string = ev.target.value;
         if (place !== '') {
-            this.gazetteerService.searchPostcode(place, this.showSearchResults);
+            this.gazetteerService.searchPostcode(place);
         }
     }
 
@@ -143,9 +147,9 @@ export class AppComponent implements OnInit {
         });
     }    
 
-    showSearchResults(results, type) {
+    showSearchResults(results) {
         this.searchResults = results;
-        console.log('Results in App:', type, results);
+        console.log('Results in App:', results);
     }
 
 }

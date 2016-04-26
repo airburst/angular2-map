@@ -6,5 +6,6 @@ import {track} from './reducers/track';
 import {markers} from './reducers/markers';
 import {elevation} from './reducers/elevation';
 import {details} from './reducers/details';
+import {results} from './reducers/gazetteer';
 
-bootstrap(AppComponent, [provideStore({ track, elevation, details, markers }), HTTP_PROVIDERS]);
+bootstrap(AppComponent, [provideStore({ track, elevation, details, markers, results }), HTTP_PROVIDERS]);
