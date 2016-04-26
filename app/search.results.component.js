@@ -27,7 +27,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1, contex
                 }
                 SearchResults.prototype.resultClicked = function (item) {
                     var point = this.results[item].location;
-                    this.selected.emit({ value: point });
+                    this.selected.emit({ location: point });
                 };
                 __decorate([
                     core_1.Input(), 

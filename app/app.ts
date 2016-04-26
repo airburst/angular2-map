@@ -140,12 +140,12 @@ export class AppComponent implements OnInit {
         }
     }
 
-    selectedSearchLocation(location) {
-        console.log(location)//
-        // this.store.dispatch({
-        //     type: UPDATE_DETAILS,
-        //     payload: { easting: location.lat, northing: location.lon }
-        // });
+    selectedSearchLocation(selected) {
+        console.log(selected.location.lat)//
+        this.store.dispatch({
+            type: UPDATE_DETAILS,
+            payload: { easting: selected.location.lat, northing: selected.location.lon }
+        });
     }    
 
     showSearchResults(results) {

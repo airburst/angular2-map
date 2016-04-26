@@ -145,12 +145,12 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         this.gazetteerService.searchPostcode(place);
                     }
                 };
-                AppComponent.prototype.selectedSearchLocation = function (location) {
-                    console.log(location); //
-                    // this.store.dispatch({
-                    //     type: UPDATE_DETAILS,
-                    //     payload: { easting: location.lat, northing: location.lon }
-                    // });
+                AppComponent.prototype.selectedSearchLocation = function (selected) {
+                    console.log(selected.location.lat); //
+                    this.store.dispatch({
+                        type: details_1.UPDATE_DETAILS,
+                        payload: { easting: selected.location.lat, northing: selected.location.lon }
+                    });
                 };
                 AppComponent.prototype.showSearchResults = function (results) {
                     this.searchResults = results;

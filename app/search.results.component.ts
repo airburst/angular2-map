@@ -67,6 +67,6 @@ export class SearchResults {
     
     resultClicked(item) {
         let point = this.results[item].location;
-        this.selected.emit({value: point})
+        this.selected.emit({location: point})
     }
 }
