@@ -144,7 +144,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     var segment = this.store.getState().track[0];
                     segment.hasElevationData = false;
                     this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
-                    this.elevationService.getElevationData(segment);
+                    this.elevationService.getElevationDataWithThrottle(segment);
                 };
                 AppComponent.prototype.search = function (place) {
                     if (place !== '') {

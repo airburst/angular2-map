@@ -31,8 +31,6 @@ export class ElevationService {
         // Subscribe to changes in the track and get elevation for 
         // the latest segment, if it hasn't already been processed
         this.route.track$.subscribe((v) => {
-            // console.log(v[v.length - 1])//
-            // console.log(flatten(v.map((s) => {return s.track[0];} )))//
             this.getElevationData(v[v.length - 1]);
         });
 
@@ -43,13 +41,18 @@ export class ElevationService {
             });
         });
     };
+    
+    getElevationDataWithThrottle(segment: Segment): void {
+        this.getElevationData(segment, true);
+    }
 
-    getElevationData(segment: Segment): void {
+    getElevationData(segment: Segment, isThrottled?: boolean): void {
         let i: number = 0,
             pathArray,
             path: Point[] = [],
             elevationPromises,
-            segmentElevation = [];
+            segmentElevation = [],
+            throttle = isThrottled ? this.throttle : 0;
 
         if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 1)) {
             path = this.convertToGoogleRoute(segment.track);
@@ -57,7 +60,7 @@ export class ElevationService {
             
             elevationPromises = [];
             pathArray.forEach((p, i) => {
-                elevationPromises.push(this.elevation(i * this.throttle, p))
+                elevationPromises.push(this.elevation(i * throttle, p))
             })
 
             Promise.all(elevationPromises)

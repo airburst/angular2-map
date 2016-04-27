@@ -53,8 +53,6 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     // Subscribe to changes in the track and get elevation for 
                     // the latest segment, if it hasn't already been processed
                     this.route.track$.subscribe(function (v) {
-                        // console.log(v[v.length - 1])//
-                        // console.log(flatten(v.map((s) => {return s.track[0];} )))//
                         _this.getElevationData(v[v.length - 1]);
                     });
                     this.route.elevation$.subscribe(function (v) {
@@ -65,15 +63,18 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                     });
                 };
                 ;
-                ElevationService.prototype.getElevationData = function (segment) {
+                ElevationService.prototype.getElevationDataWithThrottle = function (segment) {
+                    this.getElevationData(segment, true);
+                };
+                ElevationService.prototype.getElevationData = function (segment, isThrottled) {
                     var _this = this;
-                    var i = 0, pathArray, path = [], elevationPromises, segmentElevation = [];
+                    var i = 0, pathArray, path = [], elevationPromises, segmentElevation = [], throttle = isThrottled ? this.throttle : 0;
                     if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 1)) {
                         path = this.convertToGoogleRoute(segment.track);
                         pathArray = utils_1.chunk(path, this.sampleSize);
                         elevationPromises = [];
                         pathArray.forEach(function (p, i) {
-                            elevationPromises.push(_this.elevation(i * _this.throttle, p));
+                            elevationPromises.push(_this.elevation(i * throttle, p));
                         });
                         Promise.all(elevationPromises)
                             .then(function (response) {
