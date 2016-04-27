@@ -32,7 +32,7 @@ import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
         >
         </app-header>
         <search-results [results]="searchResults"
-            (selected)="selectedSearchLocation($event)"
+            (selected)="selectSearchResult($event)"
         ></search-results>
         <map></map>
         <infopanel [route]="route.details$ | async"
@@ -82,8 +82,10 @@ export class AppComponent implements OnInit {
                 this.elevationService.init();
                 this.osmap = new OsMap(this.directionsService, this.store);
                 this.osmap.init();
+                
+                // Watch for search results
                 this.route.searchResults$.subscribe((results) => {
-                    this.searchResults = results;
+                    this.handleSearchResults(results);
                 });
             }, function(value) {
                 console.error('Script not found:', value)
@@ -138,12 +140,18 @@ export class AppComponent implements OnInit {
     }
 
     search(place: string) {
-        if (place !== '') {
-            this.gazetteerService.searchPostcode(place);
+        if (place !== '') { this.gazetteerService.searchPostcode(place); }
+    }
+    
+    handleSearchResults(results) {
+        if (results.length === 1) {
+            this.selectSearchResult(results[0]);
+        } else {
+            this.searchResults = results;
         }
     }
 
-    selectedSearchLocation(selected) {
+    selectSearchResult(selected) {
         this.store.dispatch({
             type: UPDATE_DETAILS,
             payload: { easting: selected.location.lon, northing: selected.location.lat }

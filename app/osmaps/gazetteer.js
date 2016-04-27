@@ -58,10 +58,6 @@ System.register(['angular2/core', '@ngrx/store', '../reducers/gazetteer'], funct
                 };
                 GazetteerService.prototype.placeSearchResponse = function (places) {
                     if (places.length === 0) {
-                        this.updateStore([{
-                                name: 'No matching places found',
-                                location: { lat: 0, lon: 0 }
-                            }]);
                     }
                     if (places.length === 1) {
                         this.updateStore(places[0]);

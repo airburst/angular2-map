@@ -45,10 +45,7 @@ export class GazetteerService {
     
     private placeSearchResponse(places: LocationResult[]): void {
         if (places.length === 0) {
-            this.updateStore([{
-                name: 'No matching places found',
-                location: {lat: 0, lon: 0}
-            }]); 
+            // TODO: Display a toast: no matches found 
         }
         if (places.length === 1) { this.updateStore(places[0]); }
         if (places.length > 1) { this.updateStore(places); }

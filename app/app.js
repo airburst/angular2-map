@@ -95,8 +95,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         _this.elevationService.init();
                         _this.osmap = new osmap_1.OsMap(_this.directionsService, _this.store);
                         _this.osmap.init();
+                        // Watch for search results
                         _this.route.searchResults$.subscribe(function (results) {
-                            _this.searchResults = results;
+                            _this.handleSearchResults(results);
                         });
                     }, function (value) {
                         console.error('Script not found:', value);
@@ -150,7 +151,15 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         this.gazetteerService.searchPostcode(place);
                     }
                 };
-                AppComponent.prototype.selectedSearchLocation = function (selected) {
+                AppComponent.prototype.handleSearchResults = function (results) {
+                    if (results.length === 1) {
+                        this.selectSearchResult(results[0]);
+                    }
+                    else {
+                        this.searchResults = results;
+                    }
+                };
+                AppComponent.prototype.selectSearchResult = function (selected) {
                     this.store.dispatch({
                         type: details_1.UPDATE_DETAILS,
                         payload: { easting: selected.location.lon, northing: selected.location.lat }
@@ -161,7 +170,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"resetRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (search)=\"search($event)\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n            (toggleRoads)=\"toggleRoads()\"\n        >\n        </app-header>\n        <search-results [results]=\"searchResults\"\n            (selected)=\"selectedSearchLocation($event)\"\n        ></search-results>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
+                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"resetRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (search)=\"search($event)\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n            (toggleRoads)=\"toggleRoads()\"\n        >\n        </app-header>\n        <search-results [results]=\"searchResults\"\n            (selected)=\"selectSearchResult($event)\"\n        ></search-results>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader, infopanel_component_1.InfoPanel, search_results_component_1.SearchResults],
                         providers: [
                             gpx_service_1.GpxService,
