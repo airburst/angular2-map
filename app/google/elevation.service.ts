@@ -54,7 +54,8 @@ export class ElevationService {
             elevationPromises,
             segmentElevation = [],
             throttle = isThrottled ? this.throttle : 0,
-            recalcTime;
+            recalcTime,
+            roadMode = this.store.getState().details.followsRoads;
 
         if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 1)) {
             path = this.convertToGoogleRoute(segment.track);
@@ -68,14 +69,12 @@ export class ElevationService {
 
             Promise.all(elevationPromises)
                 .then(function(response) {
+                    let data = flatten(response);
                     this.store.dispatch({
                         type: ADD_ELEVATION,
-                        payload: elevationData(flatten(response))
+                        payload: elevationData(data)
                     });
-                    this.store.dispatch({
-                        type: UPDATE_SEGMENT,
-                        payload: { id: segment.id, hasElevationData: true }
-                    });
+                    this.updateSegment(segment, data, roadMode);
                     this.store.dispatch({
                         type: UPDATE_DETAILS,
                         payload: { hasNewElevation: true }
@@ -84,6 +83,31 @@ export class ElevationService {
                     console.log(error);
                 });
         }
+    };
+    
+    updateSegment(segment, data, roadMode) {
+        if (roadMode) {
+            this.store.dispatch({
+                type: UPDATE_SEGMENT,
+                payload: { id: segment.id, hasElevationData: true }
+            });
+        } else {
+            // Replace the track with sampled points returned by Google
+            this.store.dispatch({
+                type: UPDATE_SEGMENT,
+                payload: { 
+                    id: segment.id, 
+                    hasElevationData: true,
+                    track: this.extractTrackFromElevationResponse(data)
+                }
+            });
+        }
+    }
+    
+    extractTrackFromElevationResponse(response): Point[] {
+        return response.map((point) => {
+            return { lat: point.location.lat(), lon: point.location.lng() }
+        });
     };
 
     convertToGoogleRoute(points: Point[]): any {
@@ -94,7 +118,7 @@ export class ElevationService {
 
     elevation(delay: number, path: any): Promise<any> {
         let self = this,
-            rideMode = self.store.getState().details.followsRoads;
+            roadMode = self.store.getState().details.followsRoads;
             
         return new Promise(function(resolve, reject) {
             if (path.length <= 1) {
@@ -102,7 +126,7 @@ export class ElevationService {
             }
             setTimeout(() => { self.elevator.getElevationAlongPath({
                     'path': path,
-                    'samples': ((path.length < self.sampleSize) && rideMode) ? path.length : self.sampleSize
+                    'samples': ((path.length < self.sampleSize) && roadMode) ? path.length : self.sampleSize
                 }, function(results, status) {
                     if (status === self.status.OK) {
                         if (results[0]) {

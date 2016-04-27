@@ -69,7 +69,7 @@ System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/st
                 };
                 ElevationService.prototype.getElevationData = function (segment, isThrottled) {
                     var _this = this;
-                    var i = 0, pathArray, path = [], elevationPromises, segmentElevation = [], throttle = isThrottled ? this.throttle : 0, recalcTime;
+                    var i = 0, pathArray, path = [], elevationPromises, segmentElevation = [], throttle = isThrottled ? this.throttle : 0, recalcTime, roadMode = this.store.getState().details.followsRoads;
                     if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 1)) {
                         path = this.convertToGoogleRoute(segment.track);
                         pathArray = utils_1.chunk(path, this.sampleSize);
@@ -80,14 +80,12 @@ System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/st
                         });
                         Promise.all(elevationPromises)
                             .then(function (response) {
+                            var data = utils_1.flatten(response);
                             this.store.dispatch({
                                 type: elevation_1.ADD_ELEVATION,
-                                payload: utils_1.elevationData(utils_1.flatten(response))
+                                payload: utils_1.elevationData(data)
                             });
-                            this.store.dispatch({
-                                type: track_1.UPDATE_SEGMENT,
-                                payload: { id: segment.id, hasElevationData: true }
-                            });
+                            this.updateSegment(segment, data, roadMode);
                             this.store.dispatch({
                                 type: details_1.UPDATE_DETAILS,
                                 payload: { hasNewElevation: true }
@@ -98,6 +96,31 @@ System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/st
                     }
                 };
                 ;
+                ElevationService.prototype.updateSegment = function (segment, data, roadMode) {
+                    if (roadMode) {
+                        this.store.dispatch({
+                            type: track_1.UPDATE_SEGMENT,
+                            payload: { id: segment.id, hasElevationData: true }
+                        });
+                    }
+                    else {
+                        // Replace the track with sampled points returned by Google
+                        this.store.dispatch({
+                            type: track_1.UPDATE_SEGMENT,
+                            payload: {
+                                id: segment.id,
+                                hasElevationData: true,
+                                track: this.extractTrackFromElevationResponse(data)
+                            }
+                        });
+                    }
+                };
+                ElevationService.prototype.extractTrackFromElevationResponse = function (response) {
+                    return response.map(function (point) {
+                        return { lat: point.location.lat(), lon: point.location.lng() };
+                    });
+                };
+                ;
                 ElevationService.prototype.convertToGoogleRoute = function (points) {
                     return points.map(function (point) {
                         return new window.google.maps.LatLng(point.lat, point.lon);
@@ -105,7 +128,7 @@ System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/st
                 };
                 ;
                 ElevationService.prototype.elevation = function (delay, path) {
-                    var self = this, rideMode = self.store.getState().details.followsRoads;
+                    var self = this, roadMode = self.store.getState().details.followsRoads;
                     return new Promise(function (resolve, reject) {
                         if (path.length <= 1) {
                             reject('No elevation requested: too few points in path');
@@ -113,7 +136,7 @@ System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/st
                         setTimeout(function () {
                             self.elevator.getElevationAlongPath({
                                 'path': path,
-                                'samples': ((path.length < self.sampleSize) && rideMode) ? path.length : self.sampleSize
+                                'samples': ((path.length < self.sampleSize) && roadMode) ? path.length : self.sampleSize
                             }, function (results, status) {
                                 if (status === self.status.OK) {
                                     if (results[0]) {

@@ -77,7 +77,7 @@ export class OsMap {
 
         this.centreAndSetMapEvents();
 
-        // Observable subscriptionns
+        // Observable subscriptions
         this.route.track$.subscribe((v) => {
             this.draw(v);
             this.updateDistance(v);
@@ -107,7 +107,6 @@ export class OsMap {
             this.isMoving = false;
             return;
         }
-
         let p = {
             x: e.changedTouches[0].clientX,
             y: e.changedTouches[0].clientY
@@ -152,7 +151,6 @@ export class OsMap {
                     }, function(response) {
                         console.error('Problem with directions service:', response)
                     });
-
             } else {
                 // Walk mode: add the waypoint as a track point
                 this.store.dispatch({

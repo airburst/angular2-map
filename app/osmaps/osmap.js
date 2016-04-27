@@ -88,7 +88,7 @@ System.register(['angular2/core', '../models/route', '../utils/utils', '../googl
                     var position = new this.os.Control.ControlPosition(this.os.Control.ControlAnchor.ANCHOR_TOP_LEFT, new this.ol.Size(0, 100));
                     this.osMap.addControl(new this.os.Control.LargeMapControl(), position);
                     this.centreAndSetMapEvents();
-                    // Observable subscriptionns
+                    // Observable subscriptions
                     this.route.track$.subscribe(function (v) {
                         _this.draw(v);
                         _this.updateDistance(v);

@@ -94,6 +94,7 @@ export class ElevationChart {
         this.route = new Route(store);
         this.route.elevation$.subscribe((v) => {
             this.data = this.addDistanceToData(flatten(v));
+            console.log('data:', this.data)//
             this.factor = this.data.length / this.chartWidth;
             this.update();
         });
