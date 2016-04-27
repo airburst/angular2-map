@@ -28,7 +28,9 @@ System.register([], function(exports_1, context_1) {
                         lastPoint = t;
                     });
                 });
-                var mapCentre = centre(b.minLat, b.minLon, b.maxLat, b.maxLon), diagonal = distanceBetween(b.minLat, b.minLon, b.maxLat, b.maxLon), zoom = getZoomLevel(diagonal);
+                var mapCentre = centre(b.minLat, b.minLon, b.maxLat, b.maxLon), 
+                //diagonal = distanceBetween(b.minLat, b.minLon, b.maxLat, b.maxLon),
+                zoom = getZoomLevel(b.minLat, b.minLon, b.maxLat, b.maxLon);
                 return { lat: mapCentre.lat, lon: mapCentre.lon, zoom: zoom, distance: dist };
             });
             exports_1("distance", distance = function (tracks) {
@@ -65,16 +67,16 @@ System.register([], function(exports_1, context_1) {
                         (1 - c((lon2 - lon1) * p)) / 2;
                 return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
             });
-            getZoomLevel = function (distance) {
-                if (distance <= 0) {
-                    return 10;
+            getZoomLevel = function (lat1, lon1, lat2, lon2) {
+                var toolbarHeight = 111, wHeight = window.innerHeight - toolbarHeight, wWidth = window.innerWidth, pixelDensity, osPixelMap = [1, 2, 5, 10, 20, 40, 100, 200, 500, 1000], z = 1;
+                // Establish box height and width
+                var bHeight = distanceBetween(lat1, lon1, lat2, lon1), bWidth = distanceBetween(lat1, lon1, lat1, lon2);
+                // Find out the minimum pixel density - height or width
+                pixelDensity = Math.min((wHeight / bHeight), (wWidth / bWidth));
+                while (pixelDensity > osPixelMap[z]) {
+                    z++;
                 }
-                var z = 10;
-                distance = distance / 1.5;
-                while (((distance / Math.pow(2, 10 - z)) > 1) && (z > 0)) {
-                    z -= 1;
-                }
-                return z + 1;
+                return z;
             };
         }
     }

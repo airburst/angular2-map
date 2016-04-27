@@ -86,9 +86,8 @@ export const boundingRectangle = (tracks: Array<Segment>) => {
     });
 
     let mapCentre = centre(b.minLat, b.minLon, b.maxLat, b.maxLon),
-        diagonal = distanceBetween(b.minLat, b.minLon, b.maxLat, b.maxLon),
-        zoom = getZoomLevel(diagonal);
-
+        //diagonal = distanceBetween(b.minLat, b.minLon, b.maxLat, b.maxLon),
+        zoom = getZoomLevel(b.minLat, b.minLon, b.maxLat, b.maxLon);
     return { lat: mapCentre.lat, lon: mapCentre.lon, zoom: zoom, distance: dist };
 }
 
@@ -130,12 +129,20 @@ export const distanceBetween = (lat1: number, lon1: number, lat2: number, lon2: 
     return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
 }
 
-const getZoomLevel = (distance: number) => {
-    if (distance <= 0) { return 10; }
-    let z = 10;
-    distance = distance / 1.5;
-    while (((distance / Math.pow(2, 10 - z)) > 1) && (z > 0)) {
-        z -= 1;
-    }
-    return z + 1;
+const getZoomLevel = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    let toolbarHeight = 111,
+        wHeight = window.innerHeight - toolbarHeight, 
+        wWidth = window.innerWidth,
+        pixelDensity,
+        osPixelMap = [1, 2, 5, 10, 20, 40, 100, 200, 500, 1000],
+        z = 1;
+        
+    // Establish box height and width
+    let bHeight = distanceBetween(lat1, lon1, lat2, lon1),
+        bWidth = distanceBetween(lat1, lon1, lat1, lon2);
+
+    // Find out the minimum pixel density - height or width
+    pixelDensity = Math.min((wHeight / bHeight), (wWidth / bWidth));
+    while (pixelDensity > osPixelMap[z]) { z++; }
+    return z;
 }
