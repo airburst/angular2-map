@@ -4,7 +4,7 @@ import {NgClass} from 'angular2/common';
 import * as d3 from 'd3';
 import {Store} from '@ngrx/store';
 import {UPDATE_DETAILS} from './reducers/details';
-import {Route, AppStore} from './route';
+import {Route, AppStore} from './models/route';
 import {flatten} from './utils/utils';
 
 @Component({

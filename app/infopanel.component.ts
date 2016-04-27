@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
 import {NgClass} from 'angular2/common';
 import {ElevationChart} from './chart.component';
-import {Segment} from './route';
+import {Segment} from './models/route';
 
 @Component({
     selector: 'infopanel',

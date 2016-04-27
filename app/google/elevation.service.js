@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '../reducers/elevation', '../reducers/track', '../reducers/details'], function(exports_1, context_1) {
+System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/store', '../reducers/elevation', '../reducers/track', '../reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -73,7 +73,6 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                         path = this.convertToGoogleRoute(segment.track);
                         pathArray = utils_1.chunk(path, this.sampleSize);
                         recalcTime = pathArray.length * throttle / 1000;
-                        console.log(recalcTime); //
                         elevationPromises = [];
                         pathArray.forEach(function (p, i) {
                             elevationPromises.push(_this.elevation(i * throttle, p));

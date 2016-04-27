@@ -3,7 +3,7 @@ import {Injectable} from 'angular2/core';
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
 import {LocationResult} from '../models/os';
-import {AppStore} from '../route';
+import {AppStore} from '../models/route';
 import {SET_RESULTS, CLEAR_RESULTS} from '../reducers/gazetteer';
 
 @Injectable()

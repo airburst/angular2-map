@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../route', '../utils/utils', '../google/directions.service', '../config/config', '@ngrx/store', '../reducers/track', '../reducers/details'], function(exports_1, context_1) {
+System.register(['angular2/core', '../models/route', '../utils/utils', '../google/directions.service', '../config/config', '@ngrx/store', '../reducers/track', '../reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {

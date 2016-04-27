@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
-import {UPDATE_DETAILS} from './reducers/details';
-import {LocationResult} from './models/os';
+import {UPDATE_DETAILS} from '../reducers/details';
+import {LocationResult} from './os';
 
 export interface Point {
     lat: number;

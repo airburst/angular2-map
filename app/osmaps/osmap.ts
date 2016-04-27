@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point, MapPoint, WayPoint, Marker, Segment, AppStore, Route, distance} from '../route';
+import {Point, MapPoint, WayPoint, Marker, Segment, AppStore, Route, distance} from '../models/route';
 import {uuid} from '../utils/utils';
 import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';

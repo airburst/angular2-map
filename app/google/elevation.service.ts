@@ -1,7 +1,7 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 import {Injectable} from 'angular2/core';
 import {chunk, flatten, elevationData} from '../utils/utils';
-import {Point, MapPoint, Segment, AppStore, Route} from '../route';
+import {Point, MapPoint, Segment, AppStore, Route} from '../models/route';
 import {Store} from '@ngrx/store';
 import {ADD_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from '../reducers/elevation';
 import {UPDATE_SEGMENT} from '../reducers/track';
@@ -59,8 +59,7 @@ export class ElevationService {
             path = this.convertToGoogleRoute(segment.track);
             pathArray = chunk(path, this.sampleSize);
             recalcTime = pathArray.length * throttle / 1000;
-            console.log(recalcTime)//
-            
+
             elevationPromises = [];
             pathArray.forEach((p, i) => {
                 elevationPromises.push(this.elevation(i * throttle, p))

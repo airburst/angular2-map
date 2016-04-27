@@ -10,7 +10,7 @@ import {AppHeader} from './header.component';
 import {InfoPanel} from './infopanel.component';
 import {SearchResults} from './search.results.component';
 import {GazetteerService} from './osmaps/gazetteer';
-import {Route, RouteDetails, AppStore, boundingRectangle} from './route';
+import {Route, RouteDetails, AppStore, boundingRectangle} from './models/route';
 import {settings} from './config/config';
 import {Store} from '@ngrx/store';
 import {SET_TRACK, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';

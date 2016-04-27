@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Segment} from './route';
+import {Segment} from './models/route';
 
 @Component({
     selector: 'app-header',

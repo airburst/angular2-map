@@ -1,6 +1,6 @@
 import {Injectable} from 'angular2/core';
 import {Store} from '@ngrx/store';
-import {Point, WayPoint, Marker, Segment, AppStore, boundingRectangle} from '../route';
+import {Point, WayPoint, Marker, Segment, AppStore, boundingRectangle} from '../models/route';
 import {SET_TRACK} from '../reducers/track';
 import {SET_MARKERS} from '../reducers/markers';
 import {SET_ELEVATION} from '../reducers/elevation';
