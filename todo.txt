@@ -15,5 +15,4 @@ Build system for production: Angular cli
 
 Bugs
 
-- Imported files do not open at the correct zoom level.
 - In walk mode, hovering on chart does not show spot in correct place on map.  Need to resample segments.
