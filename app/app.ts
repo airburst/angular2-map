@@ -22,7 +22,7 @@ import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
     selector: 'my-app',
     template: `
         <app-header [route]="route.details$ | async"
-            (clear)="clearRoute()"
+            (clear)="resetRoute()"
             (remove)="removeLast()"
             (save)="save()"
             (search)="search($event)"
@@ -113,8 +113,12 @@ export class AppComponent implements OnInit {
     clearRoute() {
         this.store.dispatch({ type: CLEAR_TRACK });
         this.store.dispatch({ type: CLEAR_ELEVATION });
-        this.store.dispatch({ type: CLEAR_DETAILS });
         this.osmap.init();
+    }
+    
+    resetRoute() {
+        this.store.dispatch({ type: CLEAR_DETAILS });
+        this.clearRoute();
     }
 
     removeLast() {
@@ -145,7 +149,8 @@ export class AppComponent implements OnInit {
             type: UPDATE_DETAILS,
             payload: { easting: selected.location.lon, northing: selected.location.lat }
         });
-        this.osmap.centreAndSetMapEvents();
+        this.store.dispatch({ type: CLEAR_RESULTS });   // Empty the search results
+        this.clearRoute();
     }
 
 }
