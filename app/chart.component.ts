@@ -20,10 +20,11 @@ import {flatten} from './utils/utils';
                     >
                 </rect>
                 <line class="focusLine" id="focusLineX"></line>
-                <g class="focusLabel" id="focusLabelX">
+                <g class="focusLabel" id="focusLabelX" style="display: none;">
+                    <rect class="label-box" x="0" y="-30" rx="3" ry="3" attr.width="{{labelBox.width}}" attr.height="{{labelBox.height}}"></rect>
                     <text x="0" y="0">
-                        <tspan id="elevation-text" x="0" dy="0em">ele</tspan>
-                        <tspan id="distance-text" x="0" dy="1.4em">dist</tspan>
+                        <tspan id="elevation-text" x="10" y="-7">ele</tspan>
+                        <tspan id="distance-text" x="10" y="20">dist</tspan>
                     </text>
                 </g>
                 <g class="x axis">
@@ -43,29 +44,38 @@ import {flatten} from './utils/utils';
             display: none;
         }
         
-        .axis path,
-        .axis line {
+        .axis path, .axis line {
             fill: none;
-            stroke: #00695C;
+            stroke: white;
         }
 
         .area {
-            fill: #4DB6AC;
+            fill: #666;
         }
 
+        .x.label, .y.label, .x.axis, .y.axis {
+            fill: white;
+        }
+        
         .event-layer {
             fill: transparent;
             cursor: crosshair;
         }
         
         .focusLine {
-            stroke: #222;
+            stroke: white;
             stroke-width: 1px;
         }
         
         .focusLabel {
-            fill: #222;
+            fill: black;
             font-size: 1.6em;
+        }
+        
+        .label-box {
+            fill: white;
+            stroke: black;
+            stroke-width: 1;
         }
     `]
 })
@@ -104,6 +114,7 @@ export class ElevationChart {
     private margin: any = { top: 10, right: 10, bottom: 20, left: 40 };
     private transitionTime: number = 250;
     private factor: number;
+    private labelBox: any = { width: 160, height: 60 };
 
     addDistanceToData(elevation: any[]): any[] {
         let averageDistance = this.store.getState().details.distance / elevation.length,
@@ -156,8 +167,10 @@ export class ElevationChart {
     mouseMove(ev) {
         let x = ev.clientX - this.margin.left,
             labelOffset = 10,
-            labelRightBuffer = 160,
-            labelX = ((x + labelOffset) < (this.chartWidth - labelRightBuffer)) ? (x + labelOffset) : (x - labelRightBuffer),
+            labelRightBuffer = this.labelBox.width,
+            labelX = ((x + labelOffset) < (this.chartWidth - labelRightBuffer)) ? 
+                (x + labelOffset) : 
+                (x - labelRightBuffer - labelOffset),
             labelY = (this.chartHeight / 2),
             index = Math.floor(x * this.factor),
             point = this.data[index],

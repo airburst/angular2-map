@@ -15,7 +15,9 @@ import {Segment} from './models/route';
                     </div>
                     <div class="item">
                         <div class="value">{{route.ascent}} m</div>
-                        <div class="label">Height Gain <a *ngIf="!route.hasNewElevation" class="header-link" href="#" title="recalculate elevation" (click)="recalc.emit()">Recalculate</a></div>
+                        <div class="label">Height Gain 
+                            <a *ngIf="!route.hasNewElevation && !calculating" class="header-link" href="#" title="recalculate elevation" (click)="recalculateElevation()">Recalculate</a>
+                        </div>
                     </div>
                 </div>
                 <div class="right">
@@ -44,8 +46,9 @@ import {Segment} from './models/route';
             width: 100%;
             left: 0px;
             bottom: -244px; /* 300px (chart-height) - 56px (header-height) */
-            background-color: #fff;
-            color: #222;
+            background-color: #222;
+            opacity: 0.9;
+            color: #white;
             z-index: 9999;
             box-shadow: 2px 5px 5px 8px rgba(0,0,0,.10),
                 2px 5px 10px 1px rgba(0,0,0,.098),
@@ -54,7 +57,8 @@ import {Segment} from './models/route';
         }
         
         .elevation-header {
-            background-color: #00695C;
+            /*background-color: #00695C;*/
+            background-color: #222;
             font-family: 'Roboto', 'Arial', 'Helvetica';
             padding: 0 10px;
             display: flex;
@@ -93,8 +97,8 @@ import {Segment} from './models/route';
         }
         
         .toggle-link {
-            font-size: 0.8em;
-            line-height: 4em;
+            font-size: 1.2em;
+            line-height: 3em;
             text-decoration: none;
             display: flex;
             flex-direction: row;
@@ -127,10 +131,17 @@ export class InfoPanel {
 
     private show: boolean;
     private toggleText: string;
+    private calculating: boolean;
     
     constructor() {
         this.show = false;
-        this.setToggleText()
+        this.calculating = false;
+        this.setToggleText();
+    }
+    
+    recalculateElevation() {
+        this.calculating = true;
+        this.recalc.emit();
     }
     
     togglePanel() {
