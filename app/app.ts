@@ -137,8 +137,7 @@ export class AppComponent implements OnInit {
         this.elevationService.getElevationData(segment);
     }
 
-    search(ev) {
-        let place: string = ev.target.value;
+    search(place: string) {
         if (place !== '') {
             this.gazetteerService.searchPostcode(place);
         }

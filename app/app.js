@@ -145,8 +145,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
                     this.elevationService.getElevationData(segment);
                 };
-                AppComponent.prototype.search = function (ev) {
-                    var place = ev.target.value;
+                AppComponent.prototype.search = function (place) {
                     if (place !== '') {
                         this.gazetteerService.searchPostcode(place);
                     }

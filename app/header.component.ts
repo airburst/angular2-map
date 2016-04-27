@@ -7,16 +7,18 @@ import {Segment} from './route';
     inputs: ['route'],
     template: `
         <div class="stats">
+        
             <div class="left">
                 <!--<div class="centre-container">OS Route Planner</div>-->
                 <div class="centre-container">
                     <div class="search-input">
                         <span class="icon-search input-prepend"></span>
                         <input class="search" id="search" placeholder="Search for postcode or place" 
-                        (change)="search.emit($event)"/>
+                        (change)="searchTrigger($event)"/>
                     </div>
                 </div>
             </div>
+            
             <div class="right">
                 <a class="item" href="#" (click)="clear.emit()">
                     <div class="icon icon-clear"></div>
@@ -164,6 +166,11 @@ export class AppHeader {
     @Output() search = new EventEmitter();
     @Output() export = new EventEmitter();
     @Output() toggleRoads = new EventEmitter();
+    
+    searchTrigger(ev) {
+        this.search.emit(ev.target.value);
+        ev.target.value = null;
+    }
     
     fileTrigger() {
         // Warning: NOT the Angular2 way to access the DOM!

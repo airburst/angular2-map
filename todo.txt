@@ -1,6 +1,6 @@
 Features
 
-- Search (bar, dialog for results, autocomplete)
+- Search (clear place after selection, style)
 - Spinner for screen load and recalculating
 
 [release]
@@ -15,6 +15,7 @@ Build system for production
 
 Bugs
 
+- remove elevation delay unless import.
 - Cannot import the same route again after clearing.
 - Imported files do not open at the correct zoom level.
 - In walk mode, hovering on chart does not show spot in correct place on map.  Need to resample segments.
