@@ -98,6 +98,7 @@ export class AppComponent implements OnInit {
                 this.gpxService.read(data);
                 this.osmap.centreAndSetMapEvents();
                 this.osmap.removeMapEvents();
+                ev.target.value = null;  // Empty the file input so that it can detect changes
             });
         }
     }

@@ -1,6 +1,7 @@
 Features
 
-- Spinner for screen load and recalculating
+- Spinner for screen load
+- progress bar for recalculating elevation
 
 [release]
 
@@ -15,7 +16,5 @@ Build system for production: Angular cli
 
 Bugs
 
-- remove elevation delay unless import.
 - Imported files do not open at the correct zoom level.
-- Cannot import the same route again after clearing.
 - In walk mode, hovering on chart does not show spot in correct place on map.  Need to resample segments.

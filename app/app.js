@@ -114,6 +114,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                             _this.gpxService.read(data);
                             _this.osmap.centreAndSetMapEvents();
                             _this.osmap.removeMapEvents();
+                            ev.target.value = null; // Empty the file input so that it can detect changes
                         });
                     }
                 };

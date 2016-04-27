@@ -36,10 +36,7 @@ import {NgClass} from 'angular2/common';
         
         .results {
             width: 100%;
-            /* display: flex;
-            flex-direction: column;
-            justify-content: center;
-             overflow */
+            overflow-y: scroll;
         }
 
         .results-list {

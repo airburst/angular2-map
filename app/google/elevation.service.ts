@@ -52,11 +52,14 @@ export class ElevationService {
             path: Point[] = [],
             elevationPromises,
             segmentElevation = [],
-            throttle = isThrottled ? this.throttle : 0;
+            throttle = isThrottled ? this.throttle : 0,
+            recalcTime;
 
         if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 1)) {
             path = this.convertToGoogleRoute(segment.track);
             pathArray = chunk(path, this.sampleSize);
+            recalcTime = pathArray.length * throttle / 1000;
+            console.log(recalcTime)//
             
             elevationPromises = [];
             pathArray.forEach((p, i) => {

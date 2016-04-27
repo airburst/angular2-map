@@ -68,10 +68,12 @@ System.register(['angular2/core', '../utils/utils', '../route', '@ngrx/store', '
                 };
                 ElevationService.prototype.getElevationData = function (segment, isThrottled) {
                     var _this = this;
-                    var i = 0, pathArray, path = [], elevationPromises, segmentElevation = [], throttle = isThrottled ? this.throttle : 0;
+                    var i = 0, pathArray, path = [], elevationPromises, segmentElevation = [], throttle = isThrottled ? this.throttle : 0, recalcTime;
                     if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 1)) {
                         path = this.convertToGoogleRoute(segment.track);
                         pathArray = utils_1.chunk(path, this.sampleSize);
+                        recalcTime = pathArray.length * throttle / 1000;
+                        console.log(recalcTime); //
                         elevationPromises = [];
                         pathArray.forEach(function (p, i) {
                             elevationPromises.push(_this.elevation(i * throttle, p));
