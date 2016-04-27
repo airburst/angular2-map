@@ -43,6 +43,7 @@ export class ElevationService {
     };
     
     getElevationDataWithThrottle(segment: Segment): void {
+        this.clear();
         this.getElevationData(segment, true);
     }
 
@@ -127,6 +128,10 @@ export class ElevationService {
             lastElevation = e;
         });
         return { ascent: Math.floor(ascent) };
+    }
+    
+    clear() {
+        this.store.dispatch({ type: CLEAR_ELEVATION });
     }
 
 }

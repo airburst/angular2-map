@@ -64,6 +64,7 @@ System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/st
                 };
                 ;
                 ElevationService.prototype.getElevationDataWithThrottle = function (segment) {
+                    this.clear();
                     this.getElevationData(segment, true);
                 };
                 ElevationService.prototype.getElevationData = function (segment, isThrottled) {
@@ -135,6 +136,9 @@ System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/st
                         lastElevation = e;
                     });
                     return { ascent: Math.floor(ascent) };
+                };
+                ElevationService.prototype.clear = function () {
+                    this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
                 };
                 ElevationService = __decorate([
                     core_1.Injectable(), 
