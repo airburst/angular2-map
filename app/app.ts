@@ -83,7 +83,7 @@ export class AppComponent implements OnInit {
                 this.osmap = new OsMap(this.directionsService, this.store);
                 this.osmap.init();
                 this.route.searchResults$.subscribe((results) => {
-                    this.showSearchResults(results);
+                    this.searchResults = results;
                 });
             }, function(value) {
                 console.error('Script not found:', value)
@@ -141,16 +141,11 @@ export class AppComponent implements OnInit {
     }
 
     selectedSearchLocation(selected) {
-        console.log(selected.location.lat)//
         this.store.dispatch({
             type: UPDATE_DETAILS,
-            payload: { easting: selected.location.lat, northing: selected.location.lon }
+            payload: { easting: selected.location.lon, northing: selected.location.lat }
         });
-    }    
-
-    showSearchResults(results) {
-        this.searchResults = results;
-        console.log('Results in App:', results);
+        this.osmap.centreAndSetMapEvents();
     }
 
 }

@@ -93,7 +93,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         _this.osmap = new osmap_1.OsMap(_this.directionsService, _this.store);
                         _this.osmap.init();
                         _this.route.searchResults$.subscribe(function (results) {
-                            _this.showSearchResults(results);
+                            _this.searchResults = results;
                         });
                     }, function (value) {
                         console.error('Script not found:', value);
@@ -146,15 +146,11 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     }
                 };
                 AppComponent.prototype.selectedSearchLocation = function (selected) {
-                    console.log(selected.location.lat); //
                     this.store.dispatch({
                         type: details_1.UPDATE_DETAILS,
-                        payload: { easting: selected.location.lat, northing: selected.location.lon }
+                        payload: { easting: selected.location.lon, northing: selected.location.lat }
                     });
-                };
-                AppComponent.prototype.showSearchResults = function (results) {
-                    this.searchResults = results;
-                    console.log('Results in App:', results);
+                    this.osmap.centreAndSetMapEvents();
                 };
                 AppComponent = __decorate([
                     core_1.Component({
