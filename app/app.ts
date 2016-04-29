@@ -12,7 +12,7 @@ import {AppHeader} from './header.component';
 import {InfoPanel} from './infopanel.component';
 import {SearchResults} from './search.results.component';
 import {GazetteerService} from './osmaps/gazetteer';
-import {RouteObserver, Route, AppStore} from './models/route';
+import {RouteObserver, Route, AppStore, SetRouteInStore} from './models/route';
 import {settings} from './config/config';
 import {Store} from '@ngrx/store';
 import {SET_TRACK, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
@@ -76,8 +76,7 @@ export class AppComponent implements OnInit {
     ) {
         this.route = new RouteObserver(store);
         this.searchResults = [];
-        // Get id parameter
-        this.routeId = this.params.get('id');
+        this.routeId = this.params.get('id');   // Get id parameter, if present
     }
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
@@ -99,6 +98,8 @@ export class AppComponent implements OnInit {
                 this.route.searchResults$.subscribe((results) => {
                     this.handleSearchResults(results);
                 });
+                
+                this.loadRoute();
                 
             }, function(value) {
                 console.error('Script not found:', value)
@@ -177,6 +178,19 @@ export class AppComponent implements OnInit {
         });
         this.store.dispatch({ type: CLEAR_RESULTS });   // Empty the search results
         this.clearRoute();
+    }
+    
+    loadRoute() {
+        if (this.routeId !== null) {
+            let r = this.storageService.getRoute(this.routeId)
+                .subscribe(
+                    (route) => {
+                        // Check not empty
+                        SetRouteInStore(route);
+                    },
+                    error => this.errorMessage = <any>error
+                );
+        }
     }
 
 }

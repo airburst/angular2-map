@@ -1,4 +1,4 @@
-System.register(['angular2/core', '@ngrx/store', '../models/route', '../reducers/track', '../reducers/markers', '../reducers/elevation', '../reducers/details', '../utils/utils'], function(exports_1, context_1) {
+System.register(['angular2/core', '@ngrx/store', '../models/route', '../utils/utils', '../reducers/details'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '@ngrx/store', '../models/route', '../reducers
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, store_1, route_1, track_1, markers_1, elevation_1, details_1, utils_1;
+    var core_1, store_1, route_1, utils_1, details_1;
     var GpxService;
     return {
         setters:[
@@ -23,20 +23,11 @@ System.register(['angular2/core', '@ngrx/store', '../models/route', '../reducers
             function (route_1_1) {
                 route_1 = route_1_1;
             },
-            function (track_1_1) {
-                track_1 = track_1_1;
-            },
-            function (markers_1_1) {
-                markers_1 = markers_1_1;
-            },
-            function (elevation_1_1) {
-                elevation_1 = elevation_1_1;
+            function (utils_1_1) {
+                utils_1 = utils_1_1;
             },
             function (details_1_1) {
                 details_1 = details_1_1;
-            },
-            function (utils_1_1) {
-                utils_1 = utils_1_1;
             }],
         execute: function() {
             GpxService = (function () {
@@ -109,7 +100,8 @@ System.register(['angular2/core', '@ngrx/store', '../models/route', '../reducers
                     this.appStore.elevation.push(elevation);
                     this.appStore.details.isEditable = true;
                     this.appStore.details.hasNewElevation = false;
-                    this.updateStore();
+                    this.route = new route_1.Route(this.appStore);
+                    route_1.SetRouteInStore(this.route);
                 };
                 // TODO: understand the full schema:
                 // http://www8.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd
@@ -136,35 +128,9 @@ System.register(['angular2/core', '@ngrx/store', '../models/route', '../reducers
                     this.appStore.markers.push({ name: 'Finish', point: track[track.length - 1] });
                     this.appStore.details.isEditable = true;
                     this.appStore.details.hasNewElevation = false;
-                    this.updateStore();
+                    this.route = new route_1.Route(this.appStore);
+                    route_1.SetRouteInStore(this.route);
                 };
-                GpxService.prototype.updateStore = function () {
-                    var box = route_1.boundingRectangle(this.appStore.track), payload = Object.assign({}, this.appStore.details, {
-                        lat: box.lat,
-                        lon: box.lon,
-                        zoom: box.zoom,
-                        distance: box.distance,
-                        easting: 0,
-                        northing: 0
-                    });
-                    this.store.dispatch({
-                        type: details_1.SET_DETAILS,
-                        payload: payload
-                    });
-                    this.store.dispatch({
-                        type: markers_1.SET_MARKERS,
-                        payload: this.appStore.markers
-                    });
-                    this.store.dispatch({
-                        type: track_1.SET_TRACK,
-                        payload: this.appStore.track
-                    });
-                    this.store.dispatch({
-                        type: elevation_1.SET_ELEVATION,
-                        payload: this.appStore.elevation
-                    });
-                };
-                ;
                 GpxService.prototype.write = function (name) {
                     var _this = this;
                     if (name === undefined) {

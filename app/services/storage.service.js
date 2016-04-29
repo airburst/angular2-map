@@ -49,7 +49,10 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/add/
                         throw new Error('Bad response status: ' + res.status);
                     }
                     var body = res.json();
-                    return body.data || {};
+                    if (body.length === 0) {
+                        return {};
+                    }
+                    return body[0].route;
                 };
                 StorageService.prototype.handleError = function (error) {
                     // In a real world app, we might send the error to remote logging infrastructure

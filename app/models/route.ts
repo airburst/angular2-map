@@ -1,6 +1,10 @@
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
-import {UPDATE_DETAILS} from '../reducers/details';
+import {SET_TRACK} from '../reducers/track';
+import {SET_MARKERS} from '../reducers/markers';
+import {SET_ELEVATION} from '../reducers/elevation';
+import {SET_DETAILS} from '../reducers/details';
+
 import {LocationResult} from './os';
 
 export interface Point {
@@ -59,6 +63,7 @@ export class Route {
     details: RouteDetails;
     track: Segment[];
     elevation: any[];
+    markers: Marker[];
     createdAt: string;
     id: string;
     
@@ -67,6 +72,7 @@ export class Route {
         this.name = this.details.name;
         this.track = appData.track;
         this.elevation = appData.elevation;
+        this.markers = appData.markers;
         this.createdAt = '';
         this.id = '';
     }
@@ -85,6 +91,41 @@ export class RouteObserver {
         this.searchResults$ = store.select('results');
     }
 }
+
+export const SetRouteInStore = (route: Route) => {
+    console.log('SetRouteInStore', route)//
+    let box = boundingRectangle(route.track);
+    console.log('box', box)//
+    let payload = Object.assign({}, 
+            route.details, {
+                lat: box.lat,
+                lon: box.lon,
+                zoom: box.zoom,
+                distance: box.distance,
+                easting: 0,
+                northing: 0
+            });
+console.log('payload', payload)// 
+    this.store.dispatch({
+        type: SET_DETAILS,
+        payload: payload
+    });
+    
+    this.store.dispatch({
+        type: SET_MARKERS,
+        payload: route.markers
+    });
+    
+    this.store.dispatch({
+        type: SET_TRACK,
+        payload: route.track
+    });
+
+    this.store.dispatch({
+        type: SET_ELEVATION,
+        payload: route.elevation
+    });        
+};
 
 export const boundingRectangle = (tracks: Array<Segment>) => {
     let b = Object.assign({}, initialBounds),

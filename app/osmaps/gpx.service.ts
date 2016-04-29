@@ -1,16 +1,14 @@
 import {Injectable} from 'angular2/core';
 import {Store} from '@ngrx/store';
-import {Point, WayPoint, Marker, Segment, AppStore, boundingRectangle} from '../models/route';
-import {SET_TRACK} from '../reducers/track';
-import {SET_MARKERS} from '../reducers/markers';
-import {SET_ELEVATION} from '../reducers/elevation';
-import {SET_DETAILS, initialState} from '../reducers/details';
+import {Point, WayPoint, Marker, Segment, AppStore, Route, SetRouteInStore} from '../models/route';
 import {replaceAll, flatten} from '../utils/utils';
+import {initialState} from '../reducers/details';
 
 @Injectable()
 export class GpxService {
 
-    public appStore: AppStore;
+    public appStore: AppStore;  // Refactor to Route
+    public route: Route;
 
     constructor(public store: Store<AppStore>) { }
 
@@ -77,8 +75,9 @@ export class GpxService {
         this.appStore.elevation.push(elevation);
         this.appStore.details.isEditable = true;
         this.appStore.details.hasNewElevation = false;
-
-        this.updateStore();
+        
+        this.route = new Route(this.appStore);
+        SetRouteInStore(this.route);
     }
 
     // TODO: understand the full schema:
@@ -111,41 +110,9 @@ export class GpxService {
         this.appStore.details.isEditable = true;
         this.appStore.details.hasNewElevation = false;
 
-        this.updateStore();
+        this.route = new Route(this.appStore);
+        SetRouteInStore(this.route);
     }
-
-    updateStore() {
-        let box = boundingRectangle(this.appStore.track),
-            payload = Object.assign({}, 
-                this.appStore.details, {
-                    lat: box.lat,
-                    lon: box.lon,
-                    zoom: box.zoom,
-                    distance: box.distance,
-                    easting: 0,
-                    northing: 0
-                });
-      
-        this.store.dispatch({
-            type: SET_DETAILS,
-            payload: payload
-        });
-        
-        this.store.dispatch({
-            type: SET_MARKERS,
-            payload: this.appStore.markers
-        });
-        
-        this.store.dispatch({
-            type: SET_TRACK,
-            payload: this.appStore.track
-        });
-
-        this.store.dispatch({
-            type: SET_ELEVATION,
-            payload: this.appStore.elevation
-        });        
-    };
 
     private template: any = {
         header: '<?xml version="1.0" encoding="UTF-8"?>' + 

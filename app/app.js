@@ -93,8 +93,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     this.routeId = '';
                     this.route = new route_1.RouteObserver(store);
                     this.searchResults = [];
-                    // Get id parameter
-                    this.routeId = this.params.get('id');
+                    this.routeId = this.params.get('id'); // Get id parameter, if present
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
@@ -112,6 +111,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                         _this.route.searchResults$.subscribe(function (results) {
                             _this.handleSearchResults(results);
                         });
+                        _this.loadRoute();
                     }, function (value) {
                         console.error('Script not found:', value);
                     });
@@ -183,6 +183,16 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     });
                     this.store.dispatch({ type: gazetteer_2.CLEAR_RESULTS }); // Empty the search results
                     this.clearRoute();
+                };
+                AppComponent.prototype.loadRoute = function () {
+                    var _this = this;
+                    if (this.routeId !== null) {
+                        var r = this.storageService.getRoute(this.routeId)
+                            .subscribe(function (route) {
+                            // Check not empty
+                            route_1.SetRouteInStore(route);
+                        }, function (error) { return _this.errorMessage = error; });
+                    }
                 };
                 AppComponent = __decorate([
                     core_1.Component({
