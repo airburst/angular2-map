@@ -2,20 +2,32 @@ System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var _this = this;
-    var Route, boundingRectangle, distance, initialBounds, centre, distanceBetween, getZoomLevel;
+    var Route, RouteObserver, boundingRectangle, distance, initialBounds, centre, distanceBetween, getZoomLevel;
     return {
         setters:[],
         execute: function() {
             Route = (function () {
-                function Route(store) {
+                function Route(appData) {
+                    this.details = appData.details;
+                    this.name = this.details.name;
+                    this.track = appData.track;
+                    this.elevation = appData.elevation;
+                    this.createdAt = '';
+                    this.id = '';
+                }
+                return Route;
+            }());
+            exports_1("Route", Route);
+            RouteObserver = (function () {
+                function RouteObserver(store) {
                     this.details$ = store.select('details');
                     this.track$ = store.select('track');
                     this.elevation$ = store.select('elevation');
                     this.searchResults$ = store.select('results');
                 }
-                return Route;
+                return RouteObserver;
             }());
-            exports_1("Route", Route);
+            exports_1("RouteObserver", RouteObserver);
             exports_1("boundingRectangle", boundingRectangle = function (tracks) {
                 var b = Object.assign({}, initialBounds), dist = 0, lastPoint = tracks[0].track[0], self = _this;
                 tracks.forEach(function (s) {

@@ -1,7 +1,7 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 import {Injectable} from 'angular2/core';
 import {chunk, flatten, elevationData} from '../utils/utils';
-import {Point, MapPoint, Segment, AppStore, Route} from '../models/route';
+import {Point, MapPoint, Segment, AppStore, RouteObserver} from '../models/route';
 import {Store} from '@ngrx/store';
 import {ADD_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from '../reducers/elevation';
 import {UPDATE_SEGMENT} from '../reducers/track';
@@ -14,14 +14,14 @@ export class ElevationService {
     public results: any;
     private elevator: any;
     private sampleSize: number;
-    private route: Route;
+    private route: RouteObserver;
     private throttle: number = 2000;
 
     constructor(public store: Store<AppStore>) {
         this.results = [];
         this.elevator = {};
         this.sampleSize = 200;
-        this.route = new Route(store);
+        this.route = new RouteObserver(store);
     };
 
     init(): any {

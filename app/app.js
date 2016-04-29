@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './infopanel.component', './search.results.component', './osmaps/gazetteer', './models/route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation', './reducers/details', './reducers/gazetteer'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './services/storage.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './infopanel.component', './search.results.component', './osmaps/gazetteer', './models/route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation', './reducers/details', './reducers/gazetteer'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, infopanel_component_1, search_results_component_1, gazetteer_1, route_1, config_1, store_1, track_1, elevation_1, details_1, gazetteer_2;
+    var core_1, common_1, file_service_1, scriptload_service_1, storage_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, infopanel_component_1, search_results_component_1, gazetteer_1, route_1, config_1, store_1, track_1, elevation_1, details_1, gazetteer_2;
     var AppComponent;
     return {
         setters:[
@@ -25,6 +25,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             },
             function (scriptload_service_1_1) {
                 scriptload_service_1 = scriptload_service_1_1;
+            },
+            function (storage_service_1_1) {
+                storage_service_1 = storage_service_1_1;
             },
             function (elevation_service_1_1) {
                 elevation_service_1 = elevation_service_1_1;
@@ -73,15 +76,17 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(gpxService, fileService, scriptLoadService, elevationService, directionsService, gazetteerService, store) {
+                function AppComponent(gpxService, fileService, scriptLoadService, storageService, elevationService, directionsService, gazetteerService, store) {
                     this.gpxService = gpxService;
                     this.fileService = fileService;
                     this.scriptLoadService = scriptLoadService;
+                    this.storageService = storageService;
                     this.elevationService = elevationService;
                     this.directionsService = directionsService;
                     this.gazetteerService = gazetteerService;
                     this.store = store;
-                    this.route = new route_1.Route(store);
+                    this.errorMessage = '';
+                    this.route = new route_1.RouteObserver(store);
                     this.searchResults = [];
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
@@ -123,7 +128,11 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.fileService.save(gpx, name);
                 };
                 AppComponent.prototype.save = function () {
-                    console.log(this.store.getState());
+                    var _this = this;
+                    console.log('Saving');
+                    var r = new route_1.Route(this.store.getState());
+                    this.storageService.saveRoute(r)
+                        .subscribe(function (route) { return _this.savedRoute = route; }, function (error) { return _this.errorMessage = error; });
                 };
                 AppComponent.prototype.clearRoute = function () {
                     this.store.dispatch({ type: track_1.CLEAR_TRACK });
@@ -176,12 +185,13 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                             gpx_service_1.GpxService,
                             file_service_1.FileService,
                             scriptload_service_1.ScriptLoadService,
+                            storage_service_1.StorageService,
                             elevation_service_1.ElevationService,
                             gazetteer_1.GazetteerService,
                             directions_service_1.DirectionsService
                         ]
                     }), 
-                    __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService, store_1.Store])
+                    __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, storage_service_1.StorageService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService, store_1.Store])
                 ], AppComponent);
                 return AppComponent;
             }());

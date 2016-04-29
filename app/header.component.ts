@@ -34,10 +34,10 @@ import {Segment} from './models/route';
                     <div *ngIf="!route.followsRoads" class="icon icon-walk"></div>
                     <span *ngIf="!route.followsRoads">Walk</span>
                 </a>
-                <!--<a class="item" href="#" (click)="save.emit()">
+                <a class="item" href="#" (click)="save.emit()">
                     <div class="icon icon-save"></div>
                     <span>Save</span>
-                </a>-->
+                </a>
                 <a class="item" href="#" (click)="fileTrigger()">
                     <div class="icon icon-import"></div>
                     <span>Import</span>

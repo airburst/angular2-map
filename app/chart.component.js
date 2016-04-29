@@ -49,7 +49,7 @@ System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './red
                     this.chartWidth = this.width - this.margin.left - this.margin.right;
                     this.chartHeight = 244 - this.margin.top - this.margin.bottom;
                     // Subscribe to changes in elevation observable        
-                    this.route = new route_1.Route(store);
+                    this.route = new route_1.RouteObserver(store);
                     this.route.elevation$.subscribe(function (v) {
                         _this.data = _this.addDistanceToData(utils_1.flatten(v));
                         _this.factor = _this.data.length / _this.chartWidth;

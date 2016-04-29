@@ -55,6 +55,24 @@ export interface AppStore {
 }
 
 export class Route {
+    name: string;
+    details: RouteDetails;
+    track: Segment[];
+    elevation: any[];
+    createdAt: string;
+    id: string;
+    
+    constructor(appData: AppStore) {
+        this.details = appData.details;
+        this.name = this.details.name;
+        this.track = appData.track;
+        this.elevation = appData.elevation;
+        this.createdAt = '';
+        this.id = '';
+    }
+}
+
+export class RouteObserver {
     public details$: Observable<RouteDetails>;
     public track$: Observable<Array<Segment>>;
     public elevation$: Observable<Array<any>>;

@@ -52,7 +52,7 @@ System.register(['angular2/core', '../models/route', '../utils/utils', '../googl
                     this.spotVectorLayer = {};
                     this.gridProjection = {};
                     this.isMoving = false;
-                    this.route = new route_1.Route(store);
+                    this.route = new route_1.RouteObserver(store);
                 }
                 OsMap.prototype.init = function () {
                     var _this = this;

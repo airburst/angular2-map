@@ -43,7 +43,7 @@ System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/st
                     this.results = [];
                     this.elevator = {};
                     this.sampleSize = 200;
-                    this.route = new route_1.Route(store);
+                    this.route = new route_1.RouteObserver(store);
                 }
                 ;
                 ElevationService.prototype.init = function () {

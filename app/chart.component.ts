@@ -4,7 +4,7 @@ import {NgClass} from 'angular2/common';
 import * as d3 from 'd3';
 import {Store} from '@ngrx/store';
 import {UPDATE_DETAILS} from './reducers/details';
-import {Route, AppStore} from './models/route';
+import {RouteObserver, AppStore} from './models/route';
 import {flatten} from './utils/utils';
 
 @Component({
@@ -91,7 +91,7 @@ export class ElevationChart {
         this.chartHeight = 244 - this.margin.top - this.margin.bottom;
 
         // Subscribe to changes in elevation observable        
-        this.route = new Route(store);
+        this.route = new RouteObserver(store);
         this.route.elevation$.subscribe((v) => {
             this.data = this.addDistanceToData(flatten(v));
             this.factor = this.data.length / this.chartWidth;
@@ -99,7 +99,7 @@ export class ElevationChart {
         });
     }
 
-    private route: Route;
+    private route: RouteObserver;
     private data: any[];
     private hideSVG: boolean;
     private x: any;

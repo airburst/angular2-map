@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Point, MapPoint, WayPoint, Marker, Segment, AppStore, Route, distance} from '../models/route';
+import {Point, MapPoint, WayPoint, Marker, Segment, AppStore, RouteObserver, distance} from '../models/route';
 import {uuid} from '../utils/utils';
 import {DirectionsService} from '../google/directions.service';
 import {settings} from '../config/config';
@@ -23,14 +23,14 @@ export class OsMap {
     spotVectorLayer: any = {};
     gridProjection: any = {};
     isMoving: boolean = false;
-    route: Route;
+    route: RouteObserver;
     path: MapPoint[];
 
     constructor(
         private directionsService: DirectionsService,
         public store: Store<AppStore>
     ) {
-        this.route = new Route(store);
+        this.route = new RouteObserver(store);
     }
 
     init() {

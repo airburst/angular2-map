@@ -6,13 +6,7 @@ Features
 - Toasts for warnings and messages
   - osmaps/gazetteer.ts: no matches found for search
   
-- Pulse animation when setting spot on map
 - Disable export/save if no route
 
 
 Build system for production: Angular cli
-
-
-Bugs
-
-- In walk mode, hovering on chart does not show spot in correct place on map.  Need to resample segments.

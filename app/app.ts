@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES, Control} from 'angular2/common';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
+import {StorageService} from './services/storage.service';
 import {ElevationService} from './google/elevation.service';
 import {DirectionsService} from './google/directions.service';
 import {GpxService} from './osmaps/gpx.service';
@@ -10,7 +11,7 @@ import {AppHeader} from './header.component';
 import {InfoPanel} from './infopanel.component';
 import {SearchResults} from './search.results.component';
 import {GazetteerService} from './osmaps/gazetteer';
-import {Route, RouteDetails, AppStore, boundingRectangle} from './models/route';
+import {RouteObserver, Route, AppStore} from './models/route';
 import {settings} from './config/config';
 import {Store} from '@ngrx/store';
 import {SET_TRACK, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
@@ -45,6 +46,7 @@ import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
         GpxService,
         FileService,
         ScriptLoadService,
+        StorageService,
         ElevationService,
         GazetteerService,
         DirectionsService
@@ -54,19 +56,22 @@ import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
 export class AppComponent implements OnInit {
 
     public osmap: OsMap;
-    public route: Route;
+    public route: RouteObserver;
     public searchResults: any[];
+    private savedRoute: Route;
+    private errorMessage: any = '';
 
     constructor(
         private gpxService: GpxService,
         private fileService: FileService,
         private scriptLoadService: ScriptLoadService,
+        private storageService: StorageService,
         private elevationService: ElevationService,
         private directionsService: DirectionsService,
         private gazetteerService: GazetteerService,
         public store: Store<AppStore>
     ) {
-        this.route = new Route(store);
+        this.route = new RouteObserver(store);
         this.searchResults = [];
     }
 
@@ -110,7 +115,13 @@ export class AppComponent implements OnInit {
     }
     
     save() {
-        console.log(this.store.getState());
+        console.log('Saving');
+        let r = new Route(this.store.getState());
+        this.storageService.saveRoute(r)
+            .subscribe(
+                route => this.savedRoute = route,
+                error => this.errorMessage = <any>error
+            );
     }
     
     clearRoute() {
