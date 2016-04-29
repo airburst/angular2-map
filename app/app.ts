@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES, Control} from 'angular2/common';
-//import {RouteParams, Router} from 'angular2/router';
+import {RouteParams, Router} from 'angular2/router';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {StorageService} from './services/storage.service';
@@ -44,8 +44,6 @@ import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
         `,
     directives: [FORM_DIRECTIVES, OsMap, AppHeader, InfoPanel, SearchResults],
     providers: [
-        // RouteParams,
-        // Router,
         GpxService,
         FileService,
         ScriptLoadService,
@@ -63,10 +61,10 @@ export class AppComponent implements OnInit {
     public searchResults: any[];
     private savedRoute: Route;
     private errorMessage: any = '';
+    private routeId: string = '';
 
     constructor(
-        // private routeParams: RouteParams,
-        // private router: Router,
+        public params: RouteParams,
         private gpxService: GpxService,
         private fileService: FileService,
         private scriptLoadService: ScriptLoadService,
@@ -78,13 +76,12 @@ export class AppComponent implements OnInit {
     ) {
         this.route = new RouteObserver(store);
         this.searchResults = [];
+        // Get id parameter
+        console.log(this.params.get('id'))
     }
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
-        // let id = this.routeParams.get('id');
-        // console.log(id)
-        
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
@@ -100,6 +97,7 @@ export class AppComponent implements OnInit {
                 this.route.searchResults$.subscribe((results) => {
                     this.handleSearchResults(results);
                 });
+                
             }, function(value) {
                 console.error('Script not found:', value)
             });

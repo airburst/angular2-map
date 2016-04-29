@@ -1,6 +1,7 @@
 import { Component } from 'angular2/core';
 import { RouteConfig, ROUTER_DIRECTIVES } from 'angular2/router';
 import { AppComponent } from './app';
+import { AppHeader } from './header.component';
 @Component({
     selector: 'my-app',
     template: `
@@ -9,7 +10,7 @@ import { AppComponent } from './app';
     directives: [ROUTER_DIRECTIVES]
 })
 @RouteConfig([
-    { path: '/',    name: 'Map',    component: AppComponent,    useAsDefault: true },
-    { path: '/:id', name: 'Route',  component: AppComponent }
+    { path: '/map/',   name: 'Map',    component: AppHeader },
+    { path: '/:id',    name: 'Route',  component: AppComponent }
 ])
 export class RootComponent { }

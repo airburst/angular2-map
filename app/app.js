@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './services/file.service', './services/scriptload.service', './services/storage.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './infopanel.component', './search.results.component', './osmaps/gazetteer', './models/route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation', './reducers/details', './reducers/gazetteer'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', 'angular2/router', './services/file.service', './services/scriptload.service', './services/storage.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './infopanel.component', './search.results.component', './osmaps/gazetteer', './models/route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation', './reducers/details', './reducers/gazetteer'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, file_service_1, scriptload_service_1, storage_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, infopanel_component_1, search_results_component_1, gazetteer_1, route_1, config_1, store_1, track_1, elevation_1, details_1, gazetteer_2;
+    var core_1, common_1, router_1, file_service_1, scriptload_service_1, storage_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, infopanel_component_1, search_results_component_1, gazetteer_1, route_1, config_1, store_1, track_1, elevation_1, details_1, gazetteer_2;
     var AppComponent;
     return {
         setters:[
@@ -19,6 +19,9 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             },
             function (common_1_1) {
                 common_1 = common_1_1;
+            },
+            function (router_1_1) {
+                router_1 = router_1_1;
             },
             function (file_service_1_1) {
                 file_service_1 = file_service_1_1;
@@ -76,10 +79,8 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(
-                    // private routeParams: RouteParams,
-                    // private router: Router,
-                    gpxService, fileService, scriptLoadService, storageService, elevationService, directionsService, gazetteerService, store) {
+                function AppComponent(params, gpxService, fileService, scriptLoadService, storageService, elevationService, directionsService, gazetteerService, store) {
+                    this.params = params;
                     this.gpxService = gpxService;
                     this.fileService = fileService;
                     this.scriptLoadService = scriptLoadService;
@@ -89,13 +90,14 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                     this.gazetteerService = gazetteerService;
                     this.store = store;
                     this.errorMessage = '';
+                    this.routeId = '';
                     this.route = new route_1.RouteObserver(store);
                     this.searchResults = [];
+                    // Get id parameter
+                    console.log(this.params.get('id'));
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
-                    // let id = this.routeParams.get('id');
-                    // console.log(id)
                     var _this = this;
                     this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
@@ -187,8 +189,6 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                         template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"resetRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (search)=\"search($event)\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n            (toggleRoads)=\"toggleRoads()\"\n        >\n        </app-header>\n        <search-results [results]=\"searchResults\"\n            (selected)=\"selectSearchResult($event)\"\n        ></search-results>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader, infopanel_component_1.InfoPanel, search_results_component_1.SearchResults],
                         providers: [
-                            // RouteParams,
-                            // Router,
                             gpx_service_1.GpxService,
                             file_service_1.FileService,
                             scriptload_service_1.ScriptLoadService,
@@ -198,7 +198,7 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                             directions_service_1.DirectionsService
                         ]
                     }), 
-                    __metadata('design:paramtypes', [gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, storage_service_1.StorageService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService, store_1.Store])
+                    __metadata('design:paramtypes', [router_1.RouteParams, gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, storage_service_1.StorageService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService, store_1.Store])
                 ], AppComponent);
                 return AppComponent;
             }());

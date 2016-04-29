@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/router', './app'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/router', './app', './header.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/router', './app'], function(exports_
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, app_1;
+    var core_1, router_1, app_1, header_component_1;
     var RootComponent;
     return {
         setters:[
@@ -22,6 +22,9 @@ System.register(['angular2/core', 'angular2/router', './app'], function(exports_
             },
             function (app_1_1) {
                 app_1 = app_1_1;
+            },
+            function (header_component_1_1) {
+                header_component_1 = header_component_1_1;
             }],
         execute: function() {
             RootComponent = (function () {
@@ -34,7 +37,7 @@ System.register(['angular2/core', 'angular2/router', './app'], function(exports_
                         directives: [router_1.ROUTER_DIRECTIVES]
                     }),
                     router_1.RouteConfig([
-                        { path: '/', name: 'Map', component: app_1.AppComponent, useAsDefault: true },
+                        { path: '/map/', name: 'Map', component: header_component_1.AppHeader },
                         { path: '/:id', name: 'Route', component: app_1.AppComponent }
                     ]), 
                     __metadata('design:paramtypes', [])
