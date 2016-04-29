@@ -8,7 +8,7 @@ import {NgClass} from 'angular2/common';
         <div *ngIf="results.length" class="search-results-panel">
             <div class="results">
                 <ul class="results-list">
-                    <li class="results-item" *ngFor="#result of results; #i=index" 
+                    <li class="results-item" *ngFor="let result of results; let i=index" 
                         (click)="resultClicked(i)">
                         {{result.name}}, {{result.county}}  {{result.type}}
                     </li>

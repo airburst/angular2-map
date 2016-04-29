@@ -10,21 +10,23 @@
     <meta name="description" content="OS Mapping and route planner">
     <meta name="author" content="Mark Fairhurst">
 
-    <!--<script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>-->
-    <script src="node_modules/reflect-metadata/Reflect.js"></script>
-    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/es6-shim/es6-shim.min.js"></script>
+    <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
+    <script src="node_modules/angular2/es6/dev/src/testing/shims_for_IE.js"></script>
+    <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
     <script src="node_modules/systemjs/dist/system.src.js"></script>
     <script src="node_modules/rxjs/bundles/Rx.js"></script>
     <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
     <script src="node_modules/angular2/bundles/http.dev.js"></script>
-    
-    <!--<script src="node_modules/chart.js/Chart.min.js"></script>-->
+    <script src="node_modules/angular2/bundles/router.dev.js"></script>
     <script>
         System.config({
             packages: {        
                 app: {
-                    format: 'register'
+                    format: 'register',
+                    defaultExtension: 'js'
                 },
+                rxjs: { defaultExtension: 'js' },
                 '@ngrx/store': {
                     main: 'index.js',
                     format: 'cjs'           
@@ -34,6 +36,8 @@
                 }  
             },
             map: {
+                'rxjs': 'node_modules/rxjs',
+                'rxjs/subject': 'node_modules/rxjs',
                 '@ngrx/store': 'node_modules/@ngrx/store/dist',
                 'd3': 'node_modules/d3'
             }  
@@ -53,7 +57,7 @@
 
 <body>
     <my-app>loading...</my-app>
-    
+
     <script src="http://d3js.org/d3.v3.min.js"></script>
 </body>
 
