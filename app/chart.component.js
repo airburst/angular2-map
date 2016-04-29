@@ -38,24 +38,26 @@ System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './red
         execute: function() {
             ElevationChart = (function () {
                 function ElevationChart(elementRef, store) {
-                    var _this = this;
                     this.elementRef = elementRef;
                     this.store = store;
                     this.height = 244;
                     this.margin = { top: 10, right: 10, bottom: 20, left: 40 };
                     this.transitionTime = 250;
                     this.labelBox = { width: 160, height: 60 };
+                }
+                ElevationChart.prototype.ngOnInit = function () {
+                    var _this = this;
                     this.width = parseInt(d3.select('.chart').style('width'));
                     this.chartWidth = this.width - this.margin.left - this.margin.right;
                     this.chartHeight = 244 - this.margin.top - this.margin.bottom;
-                    // Subscribe to changes in elevation observable        
-                    this.route = new route_1.RouteObserver(store);
+                    // Subscribe to changes in elevation observable 
+                    this.route = new route_1.RouteObserver(this.store);
                     this.route.elevation$.subscribe(function (v) {
                         _this.data = _this.addDistanceToData(utils_1.flatten(v));
                         _this.factor = _this.data.length / _this.chartWidth;
                         _this.update();
                     });
-                }
+                };
                 ElevationChart.prototype.addDistanceToData = function (elevation) {
                     var averageDistance = this.store.getState().details.distance / elevation.length, chartData = [];
                     elevation.forEach(function (ele, i) {

@@ -76,7 +76,10 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(gpxService, fileService, scriptLoadService, storageService, elevationService, directionsService, gazetteerService, store) {
+                function AppComponent(
+                    // private routeParams: RouteParams,
+                    // private router: Router,
+                    gpxService, fileService, scriptLoadService, storageService, elevationService, directionsService, gazetteerService, store) {
                     this.gpxService = gpxService;
                     this.fileService = fileService;
                     this.scriptLoadService = scriptLoadService;
@@ -91,6 +94,8 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
+                    // let id = this.routeParams.get('id');
+                    // console.log(id)
                     var _this = this;
                     this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
@@ -178,10 +183,12 @@ System.register(['angular2/core', 'angular2/common', './services/file.service', 
                 };
                 AppComponent = __decorate([
                     core_1.Component({
-                        selector: 'my-app',
+                        // selector: 'my-app',
                         template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"resetRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (search)=\"search($event)\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n            (toggleRoads)=\"toggleRoads()\"\n        >\n        </app-header>\n        <search-results [results]=\"searchResults\"\n            (selected)=\"selectSearchResult($event)\"\n        ></search-results>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader, infopanel_component_1.InfoPanel, search_results_component_1.SearchResults],
                         providers: [
+                            // RouteParams,
+                            // Router,
                             gpx_service_1.GpxService,
                             file_service_1.FileService,
                             scriptload_service_1.ScriptLoadService,

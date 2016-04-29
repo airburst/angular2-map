@@ -1,5 +1,5 @@
 /// <reference path="../typings/d3.d.ts"/>
-import {Component, EventEmitter, ElementRef} from 'angular2/core';
+import {Component, EventEmitter, ElementRef, OnInit} from 'angular2/core';
 import {NgClass} from 'angular2/common';
 import * as d3 from 'd3';
 import {Store} from '@ngrx/store';
@@ -80,24 +80,12 @@ import {flatten} from './utils/utils';
     `]
 })
 
-export class ElevationChart {
+export class ElevationChart implements OnInit {
 
     constructor(
         public elementRef: ElementRef,
         public store: Store<AppStore>
-    ) {
-        this.width = parseInt(d3.select('.chart').style('width'));
-        this.chartWidth = this.width - this.margin.left - this.margin.right;
-        this.chartHeight = 244 - this.margin.top - this.margin.bottom;
-
-        // Subscribe to changes in elevation observable        
-        this.route = new RouteObserver(store);
-        this.route.elevation$.subscribe((v) => {
-            this.data = this.addDistanceToData(flatten(v));
-            this.factor = this.data.length / this.chartWidth;
-            this.update();
-        });
-    }
+    ) { }
 
     private route: RouteObserver;
     private data: any[];
@@ -115,6 +103,20 @@ export class ElevationChart {
     private transitionTime: number = 250;
     private factor: number;
     private labelBox: any = { width: 160, height: 60 };
+    
+    ngOnInit() {
+        this.width = parseInt(d3.select('.chart').style('width'));
+        this.chartWidth = this.width - this.margin.left - this.margin.right;
+        this.chartHeight = 244 - this.margin.top - this.margin.bottom;   
+
+        // Subscribe to changes in elevation observable 
+        this.route = new RouteObserver(this.store);
+        this.route.elevation$.subscribe((v) => {
+            this.data = this.addDistanceToData(flatten(v));
+            this.factor = this.data.length / this.chartWidth;
+            this.update();
+        });
+    }
 
     addDistanceToData(elevation: any[]): any[] {
         let averageDistance = this.store.getState().details.distance / elevation.length,

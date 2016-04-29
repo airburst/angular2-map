@@ -1,5 +1,6 @@
 import {Component, EventEmitter, OnInit} from 'angular2/core';
 import {FORM_DIRECTIVES, Control} from 'angular2/common';
+//import {RouteParams, Router} from 'angular2/router';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {StorageService} from './services/storage.service';
@@ -20,7 +21,7 @@ import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS, TOGGLE_ROADS} from './reduce
 import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
 
 @Component({
-    selector: 'my-app',
+    // selector: 'my-app',
     template: `
         <app-header [route]="route.details$ | async"
             (clear)="resetRoute()"
@@ -43,6 +44,8 @@ import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
         `,
     directives: [FORM_DIRECTIVES, OsMap, AppHeader, InfoPanel, SearchResults],
     providers: [
+        // RouteParams,
+        // Router,
         GpxService,
         FileService,
         ScriptLoadService,
@@ -62,6 +65,8 @@ export class AppComponent implements OnInit {
     private errorMessage: any = '';
 
     constructor(
+        // private routeParams: RouteParams,
+        // private router: Router,
         private gpxService: GpxService,
         private fileService: FileService,
         private scriptLoadService: ScriptLoadService,
@@ -77,6 +82,9 @@ export class AppComponent implements OnInit {
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
+        // let id = this.routeParams.get('id');
+        // console.log(id)
+        
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
