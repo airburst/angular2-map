@@ -77,11 +77,13 @@ export class AppComponent implements OnInit {
         this.route = new RouteObserver(store);
         this.searchResults = [];
         // Get id parameter
-        console.log(this.params.get('id'))
+        this.routeId = this.params.get('id');
     }
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
+        console.log('route id: ', this.routeId);
+        
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
