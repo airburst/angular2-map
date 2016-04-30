@@ -33,7 +33,7 @@ export class StorageService {
             throw new Error('Bad response status: ' + res.status);
         }
         let body = res.json();
-        if (body.length === 0) { return {}; }
+        if (body.length === 0) { return { name: 'false' }; }
         return body[0].route;
     }
 

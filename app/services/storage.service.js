@@ -50,7 +50,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/add/
                     }
                     var body = res.json();
                     if (body.length === 0) {
-                        return {};
+                        return { name: 'false' };
                     }
                     return body[0].route;
                 };

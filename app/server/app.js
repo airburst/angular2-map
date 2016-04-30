@@ -4,6 +4,7 @@ var app = require('koa')();
 var serve = require('koa-static');
 var parse = require('co-body');
 var router = require('koa-router')();
+var cors = require('koa-cors');
 var http = require('http');
 
 // Import rethinkdb
@@ -26,7 +27,8 @@ router.get('/', function* (next) {
 
 app
     .use(router.routes())
-    .use(router.allowedMethods());
+    .use(router.allowedMethods())
+    .use(cors({ origin: true }));
 
 router
     .get('/route', get)

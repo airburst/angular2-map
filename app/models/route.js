@@ -3,7 +3,7 @@ System.register(['../reducers/track', '../reducers/markers', '../reducers/elevat
     var __moduleName = context_1 && context_1.id;
     var _this = this;
     var track_1, markers_1, elevation_1, details_1;
-    var Route, RouteObserver, SetRouteInStore, boundingRectangle, distance, initialBounds, centre, distanceBetween, getZoomLevel;
+    var Route, RouteObserver, boundingRectangle, distance, initialBounds, centre, distanceBetween, getZoomLevel;
     return {
         setters:[
             function (track_1_1) {
@@ -34,44 +34,45 @@ System.register(['../reducers/track', '../reducers/markers', '../reducers/elevat
             exports_1("Route", Route);
             RouteObserver = (function () {
                 function RouteObserver(store) {
+                    this.store = store;
                     this.details$ = store.select('details');
                     this.track$ = store.select('track');
                     this.elevation$ = store.select('elevation');
                     this.searchResults$ = store.select('results');
                 }
+                RouteObserver.prototype.setRoute = function (route) {
+                    var box = boundingRectangle(route.track);
+                    console.log('box', box); //
+                    var payload = Object.assign({}, route.details, {
+                        lat: box.lat,
+                        lon: box.lon,
+                        zoom: box.zoom,
+                        distance: box.distance,
+                        easting: 0,
+                        northing: 0
+                    });
+                    console.log('payload', payload); // 
+                    this.store.dispatch({
+                        type: details_1.SET_DETAILS,
+                        payload: payload
+                    });
+                    this.store.dispatch({
+                        type: markers_1.SET_MARKERS,
+                        payload: route.markers
+                    });
+                    this.store.dispatch({
+                        type: track_1.SET_TRACK,
+                        payload: route.track
+                    });
+                    this.store.dispatch({
+                        type: elevation_1.SET_ELEVATION,
+                        payload: route.elevation
+                    });
+                };
+                ;
                 return RouteObserver;
             }());
             exports_1("RouteObserver", RouteObserver);
-            exports_1("SetRouteInStore", SetRouteInStore = function (route) {
-                console.log('SetRouteInStore', route); //
-                var box = boundingRectangle(route.track);
-                console.log('box', box); //
-                var payload = Object.assign({}, route.details, {
-                    lat: box.lat,
-                    lon: box.lon,
-                    zoom: box.zoom,
-                    distance: box.distance,
-                    easting: 0,
-                    northing: 0
-                });
-                console.log('payload', payload); // 
-                _this.store.dispatch({
-                    type: details_1.SET_DETAILS,
-                    payload: payload
-                });
-                _this.store.dispatch({
-                    type: markers_1.SET_MARKERS,
-                    payload: route.markers
-                });
-                _this.store.dispatch({
-                    type: track_1.SET_TRACK,
-                    payload: route.track
-                });
-                _this.store.dispatch({
-                    type: elevation_1.SET_ELEVATION,
-                    payload: route.elevation
-                });
-            });
             exports_1("boundingRectangle", boundingRectangle = function (tracks) {
                 var b = Object.assign({}, initialBounds), dist = 0, lastPoint = tracks[0].track[0], self = _this;
                 tracks.forEach(function (s) {

@@ -1,6 +1,6 @@
 import {Injectable} from 'angular2/core';
 import {Store} from '@ngrx/store';
-import {Point, WayPoint, Marker, Segment, AppStore, Route, SetRouteInStore} from '../models/route';
+import {Point, WayPoint, Marker, Segment, AppStore, Route, RouteObserver} from '../models/route';
 import {replaceAll, flatten} from '../utils/utils';
 import {initialState} from '../reducers/details';
 
@@ -9,6 +9,7 @@ export class GpxService {
 
     public appStore: AppStore;  // Refactor to Route
     public route: Route;
+    private routeObserver: RouteObserver;
 
     constructor(public store: Store<AppStore>) { }
 
@@ -19,6 +20,7 @@ export class GpxService {
             elevation: [],
             markers: []
         }
+        this.routeObserver = new RouteObserver(this.store);
     }
 
     read(gpxData: any): void {
@@ -77,7 +79,7 @@ export class GpxService {
         this.appStore.details.hasNewElevation = false;
         
         this.route = new Route(this.appStore);
-        SetRouteInStore(this.route);
+        this.routeObserver.setRoute(this.route);
     }
 
     // TODO: understand the full schema:
@@ -111,7 +113,7 @@ export class GpxService {
         this.appStore.details.hasNewElevation = false;
 
         this.route = new Route(this.appStore);
-        SetRouteInStore(this.route);
+        this.routeObserver.setRoute(this.route);
     }
 
     private template: any = {

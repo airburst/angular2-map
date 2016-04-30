@@ -84,48 +84,47 @@ export class RouteObserver {
     public elevation$: Observable<Array<any>>;
     public searchResults$: Observable<Array<LocationResult>>;
     
-    constructor(store: Store<AppStore>) {
+    constructor(public store: Store<AppStore>) {
         this.details$ = store.select('details');
         this.track$ = store.select('track');
         this.elevation$ = store.select('elevation');
         this.searchResults$ = store.select('results');
     }
+    
+    setRoute(route: Route) {
+        let box = boundingRectangle(route.track);
+        console.log('box', box)//
+        let payload = Object.assign({}, 
+                route.details, {
+                    lat: box.lat,
+                    lon: box.lon,
+                    zoom: box.zoom,
+                    distance: box.distance,
+                    easting: 0,
+                    northing: 0
+                });
+    console.log('payload', payload)// 
+        this.store.dispatch({
+            type: SET_DETAILS,
+            payload: payload
+        });
+        
+        this.store.dispatch({
+            type: SET_MARKERS,
+            payload: route.markers
+        });
+        
+        this.store.dispatch({
+            type: SET_TRACK,
+            payload: route.track
+        });
+
+        this.store.dispatch({
+            type: SET_ELEVATION,
+            payload: route.elevation
+        });        
+    };
 }
-
-export const SetRouteInStore = (route: Route) => {
-    console.log('SetRouteInStore', route)//
-    let box = boundingRectangle(route.track);
-    console.log('box', box)//
-    let payload = Object.assign({}, 
-            route.details, {
-                lat: box.lat,
-                lon: box.lon,
-                zoom: box.zoom,
-                distance: box.distance,
-                easting: 0,
-                northing: 0
-            });
-console.log('payload', payload)// 
-    this.store.dispatch({
-        type: SET_DETAILS,
-        payload: payload
-    });
-    
-    this.store.dispatch({
-        type: SET_MARKERS,
-        payload: route.markers
-    });
-    
-    this.store.dispatch({
-        type: SET_TRACK,
-        payload: route.track
-    });
-
-    this.store.dispatch({
-        type: SET_ELEVATION,
-        payload: route.elevation
-    });        
-};
 
 export const boundingRectangle = (tracks: Array<Segment>) => {
     let b = Object.assign({}, initialBounds),

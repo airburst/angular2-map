@@ -189,8 +189,11 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     if (this.routeId !== null) {
                         var r = this.storageService.getRoute(this.routeId)
                             .subscribe(function (route) {
-                            // Check not empty
-                            route_1.SetRouteInStore(route);
+                            if (route.name !== 'false') {
+                                _this.route.setRoute(route);
+                                _this.osmap.centreAndSetMapEvents();
+                                _this.osmap.removeMapEvents();
+                            }
                         }, function (error) { return _this.errorMessage = error; });
                     }
                 };

@@ -50,6 +50,7 @@ System.register(['angular2/core', '@ngrx/store', '../models/route', '../utils/ut
                         elevation: [],
                         markers: []
                     };
+                    this.routeObserver = new route_1.RouteObserver(this.store);
                 };
                 GpxService.prototype.read = function (gpxData) {
                     var route = gpxData[0], name = gpxData[1], ext = gpxData[2];
@@ -101,7 +102,7 @@ System.register(['angular2/core', '@ngrx/store', '../models/route', '../utils/ut
                     this.appStore.details.isEditable = true;
                     this.appStore.details.hasNewElevation = false;
                     this.route = new route_1.Route(this.appStore);
-                    route_1.SetRouteInStore(this.route);
+                    this.routeObserver.setRoute(this.route);
                 };
                 // TODO: understand the full schema:
                 // http://www8.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd
@@ -129,7 +130,7 @@ System.register(['angular2/core', '@ngrx/store', '../models/route', '../utils/ut
                     this.appStore.details.isEditable = true;
                     this.appStore.details.hasNewElevation = false;
                     this.route = new route_1.Route(this.appStore);
-                    route_1.SetRouteInStore(this.route);
+                    this.routeObserver.setRoute(this.route);
                 };
                 GpxService.prototype.write = function (name) {
                     var _this = this;

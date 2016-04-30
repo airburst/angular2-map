@@ -12,7 +12,7 @@ import {AppHeader} from './header.component';
 import {InfoPanel} from './infopanel.component';
 import {SearchResults} from './search.results.component';
 import {GazetteerService} from './osmaps/gazetteer';
-import {RouteObserver, Route, AppStore, SetRouteInStore} from './models/route';
+import {RouteObserver, Route, AppStore} from './models/route';
 import {settings} from './config/config';
 import {Store} from '@ngrx/store';
 import {SET_TRACK, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
@@ -185,8 +185,11 @@ export class AppComponent implements OnInit {
             let r = this.storageService.getRoute(this.routeId)
                 .subscribe(
                     (route) => {
-                        // Check not empty
-                        SetRouteInStore(route);
+                        if (route.name !== 'false') {
+                            this.route.setRoute(route);
+                            this.osmap.centreAndSetMapEvents();
+                            this.osmap.removeMapEvents();
+                        }
                     },
                     error => this.errorMessage = <any>error
                 );
