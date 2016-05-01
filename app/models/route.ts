@@ -88,16 +88,16 @@ export class RouteObserver {
     }
     
     setRoute(route: Route) {
-        let box = boundingRectangle(route.track),
-            payload = Object.assign({}, 
-                route.details, {
-                    lat: box.lat,
-                    lon: box.lon,
-                    zoom: box.zoom,
-                    distance: box.distance,
-                    easting: 0,
-                    northing: 0
-                }); 
+        let box = boundingRectangle(route.track);
+        let payload = Object.assign({}, 
+            route.details, {
+                lat: box.lat,
+                lon: box.lon,
+                zoom: box.zoom,
+                distance: box.distance,
+                easting: 0,
+                northing: 0
+            });
         this.store.dispatch({
             type: SET_DETAILS,
             payload: payload
@@ -123,9 +123,10 @@ export class RouteObserver {
 export const boundingRectangle = (tracks: Array<Segment>) => {
     let b = Object.assign({}, initialBounds),
         dist: number = 0,
-        lastPoint: Point = tracks[0].track[0],
+        lastPoint: Point = (tracks[0].track.length > 0) ?
+            tracks[0].track[0] :
+            tracks[0].waypoint,
         self = this;
-        
     tracks.forEach(<Segment>(s) => {
         s.track.forEach((t) => {
             b.minLat = Math.min(b.minLat, t.lat);

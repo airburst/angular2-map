@@ -39,7 +39,8 @@ System.register(['../reducers/track', '../reducers/markers', '../reducers/elevat
                     this.searchResults$ = store.select('results');
                 }
                 RouteObserver.prototype.setRoute = function (route) {
-                    var box = boundingRectangle(route.track), payload = Object.assign({}, route.details, {
+                    var box = boundingRectangle(route.track);
+                    var payload = Object.assign({}, route.details, {
                         lat: box.lat,
                         lon: box.lon,
                         zoom: box.zoom,
@@ -69,7 +70,9 @@ System.register(['../reducers/track', '../reducers/markers', '../reducers/elevat
             }());
             exports_1("RouteObserver", RouteObserver);
             exports_1("boundingRectangle", boundingRectangle = function (tracks) {
-                var b = Object.assign({}, initialBounds), dist = 0, lastPoint = tracks[0].track[0], self = _this;
+                var b = Object.assign({}, initialBounds), dist = 0, lastPoint = (tracks[0].track.length > 0) ?
+                    tracks[0].track[0] :
+                    tracks[0].waypoint, self = _this;
                 tracks.forEach(function (s) {
                     s.track.forEach(function (t) {
                         b.minLat = Math.min(b.minLat, t.lat);
