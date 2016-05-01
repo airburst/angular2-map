@@ -79,8 +79,9 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(params, gpxService, fileService, scriptLoadService, storageService, elevationService, directionsService, gazetteerService, store) {
+                function AppComponent(params, router, gpxService, fileService, scriptLoadService, storageService, elevationService, directionsService, gazetteerService, store) {
                     this.params = params;
+                    this.router = router;
                     this.gpxService = gpxService;
                     this.fileService = fileService;
                     this.scriptLoadService = scriptLoadService;
@@ -98,7 +99,6 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    console.log('route id: ', this.routeId);
                     this.fileService.setAllowedExtensions(['tcx', 'gpx']);
                     var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
                     Promise.all(loadPromises)
@@ -145,6 +145,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                 AppComponent.prototype.clearRoute = function () {
                     this.store.dispatch({ type: track_1.CLEAR_TRACK });
                     this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
+                    this.router.navigate(['Map']);
                     this.osmap.init();
                 };
                 AppComponent.prototype.resetRoute = function () {
@@ -177,6 +178,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     }
                 };
                 AppComponent.prototype.selectSearchResult = function (selected) {
+                    this.store.dispatch({ type: details_1.CLEAR_DETAILS });
                     this.store.dispatch({
                         type: details_1.UPDATE_DETAILS,
                         payload: { easting: selected.location.lon, northing: selected.location.lat }
@@ -215,7 +217,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                             directions_service_1.DirectionsService
                         ]
                     }), 
-                    __metadata('design:paramtypes', [router_1.RouteParams, gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, storage_service_1.StorageService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService, store_1.Store])
+                    __metadata('design:paramtypes', [router_1.RouteParams, router_1.Router, gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, storage_service_1.StorageService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService, store_1.Store])
                 ], AppComponent);
                 return AppComponent;
             }());

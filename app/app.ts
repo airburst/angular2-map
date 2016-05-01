@@ -66,6 +66,7 @@ export class AppComponent implements OnInit {
 
     constructor(
         public params: RouteParams,
+        public router: Router,
         private gpxService: GpxService,
         private fileService: FileService,
         private scriptLoadService: ScriptLoadService,
@@ -82,8 +83,6 @@ export class AppComponent implements OnInit {
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
-        console.log('route id: ', this.routeId);
-        
         this.fileService.setAllowedExtensions(['tcx', 'gpx']);
         let scripts = [settings.osMapUrl(), settings.gMapUrl],
             loadPromises = scripts.map(this.scriptLoadService.load);
@@ -137,6 +136,7 @@ export class AppComponent implements OnInit {
     clearRoute() {
         this.store.dispatch({ type: CLEAR_TRACK });
         this.store.dispatch({ type: CLEAR_ELEVATION });
+        this.router.navigate(['Map']);
         this.osmap.init();
     }
     
@@ -173,6 +173,7 @@ export class AppComponent implements OnInit {
     }
 
     selectSearchResult(selected) {
+        this.store.dispatch({ type: CLEAR_DETAILS });
         this.store.dispatch({
             type: UPDATE_DETAILS,
             payload: { easting: selected.location.lon, northing: selected.location.lat }
