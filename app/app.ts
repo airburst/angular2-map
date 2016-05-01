@@ -37,6 +37,7 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
         </app-header>
         <search-results [results]="searchResults"
             (selected)="selectSearchResult($event)"
+            (closed)="closeSearchResult()"
         ></search-results>
         <map></map>
         <infopanel [route]="route.details$ | async"
@@ -196,6 +197,10 @@ export class AppComponent implements OnInit {
 
     selectSearchResult(selected) {
         this.clearRoute({ easting: selected.location.lon, northing: selected.location.lat });
+    }
+
+    closeSearchResult() {
+        this.store.dispatch({ type: CLEAR_RESULTS });
     }
     
     loadRoute() {

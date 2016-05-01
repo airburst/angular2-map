@@ -24,6 +24,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1, contex
             SearchResults = (function () {
                 function SearchResults() {
                     this.selected = new core_1.EventEmitter();
+                    this.closed = new core_1.EventEmitter();
                 }
                 SearchResults.prototype.resultClicked = function (item) {
                     var point = this.results[item].location;
@@ -37,13 +38,17 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1, contex
                     core_1.Output(), 
                     __metadata('design:type', Object)
                 ], SearchResults.prototype, "selected", void 0);
+                __decorate([
+                    core_1.Output(), 
+                    __metadata('design:type', Object)
+                ], SearchResults.prototype, "closed", void 0);
                 SearchResults = __decorate([
                     core_1.Component({
                         selector: 'search-results',
                         inputs: ['results'],
-                        template: "\n        <div *ngIf=\"results.length\" class=\"search-results-panel\">\n            <div class=\"results\">\n                <ul class=\"results-list\">\n                    <li class=\"results-item\" *ngFor=\"let result of results; let i=index\" \n                        (click)=\"resultClicked(i)\">\n                        {{result.name}}, {{result.county}}  {{result.type}}\n                    </li>\n                </ul>\n            </div>\n        </div>\n    ",
+                        template: "\n        <div *ngIf=\"results.length\" class=\"search-results-panel\">\n            <div class=\"results\">\n                <ul class=\"results-list\">\n                    <li class=\"results-item\" *ngFor=\"let result of results; let i=index\" \n                        (click)=\"resultClicked(i)\">\n                        {{result.name}}, {{result.county}}  {{result.type}}\n                    </li>\n                </ul>\n            </div>\n            <div class=\"close-button\">\n                <button class=\"btn btn-close\" (click)=\"closed.emit()\">Close</button>\n            </div>\n        </div>\n    ",
                         directives: [common_1.NgClass],
-                        styles: ["\n        .search-results-panel {\n            position: absolute;\n            display: block;\n            top: 18px;\n            left: 8px;\n            padding: 36px 0 0 0;\n            max-height: 300px;\n            width: 500px;\n            background-color: white;\n            z-index: 900;\n            display: flex;\n            box-shadow: 0 5px 5px -3px rgba(0,0,0,.14),\n                0 8px 10px 1px rgba(0,0,0,.098),\n                0 3px 14px 2px rgba(0,0,0,.084);\n        }\n        \n        .results {\n            width: 100%;\n            overflow-y: scroll;\n        }\n\n        .results-list {\n            width: 100%;\n            list-style-type: none;\n            padding: 0;\n            margin: 0;\n        }\n\n        .results-item {\n            padding: 20px 16px;\n            font-family: 'Roboto', 'Arial', 'Helvetica';\n            border-bottom: 1px solid #e2e2e2;\n            cursor: pointer;\n        }\n        .results-item:hover {\n            background-color: #e2e2e2;\n        }\n    "],
+                        styles: ["\n        .search-results-panel {\n            position: absolute;\n            top: 18px;\n            left: 8px;\n            padding: 36px 0 0 0;\n            width: 500px;\n            background-color: white;\n            z-index: 900;\n            display: flex;\n            flex-direction: column;\n            box-shadow: 0 5px 5px -3px rgba(0,0,0,.14),\n                0 8px 10px 1px rgba(0,0,0,.098),\n                0 3px 14px 2px rgba(0,0,0,.084);\n        }\n        \n        .results {\n            width: 100%;\n            overflow-y: scroll;\n            max-height: 300px;\n            display: flex;\n        }\n\n        .results-list {\n            width: 100%;\n            list-style-type: none;\n            padding: 0;\n            margin: 0;\n        }\n\n        .results-item {\n            padding: 20px 16px;\n            font-family: 'Roboto', 'Arial', 'Helvetica';\n            border-bottom: 1px solid #e2e2e2;\n            cursor: pointer;\n        }\n        .results-item:hover {\n            background-color: #e2e2e2;\n        }\n\n        .close-button {\n            display: flex;\n            justify-content: right;\n        }\n    "],
                         changeDetection: core_1.ChangeDetectionStrategy.OnPush
                     }), 
                     __metadata('design:paramtypes', [])

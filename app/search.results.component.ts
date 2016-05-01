@@ -14,21 +14,23 @@ import {NgClass} from 'angular2/common';
                     </li>
                 </ul>
             </div>
+            <div class="close-button">
+                <button class="btn btn-close" (click)="closed.emit()">Close</button>
+            </div>
         </div>
     `,
     directives: [NgClass],
     styles: [`
         .search-results-panel {
             position: absolute;
-            display: block;
             top: 18px;
             left: 8px;
             padding: 36px 0 0 0;
-            max-height: 300px;
             width: 500px;
             background-color: white;
             z-index: 900;
             display: flex;
+            flex-direction: column;
             box-shadow: 0 5px 5px -3px rgba(0,0,0,.14),
                 0 8px 10px 1px rgba(0,0,0,.098),
                 0 3px 14px 2px rgba(0,0,0,.084);
@@ -37,6 +39,8 @@ import {NgClass} from 'angular2/common';
         .results {
             width: 100%;
             overflow-y: scroll;
+            max-height: 300px;
+            display: flex;
         }
 
         .results-list {
@@ -55,6 +59,11 @@ import {NgClass} from 'angular2/common';
         .results-item:hover {
             background-color: #e2e2e2;
         }
+
+        .close-button {
+            display: flex;
+            justify-content: right;
+        }
     `],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -62,6 +71,7 @@ import {NgClass} from 'angular2/common';
 export class SearchResults {
     @Input() results: any[];
     @Output() selected = new EventEmitter();
+    @Output() closed = new EventEmitter();
     
     resultClicked(item) {
         let point = this.results[item].location;

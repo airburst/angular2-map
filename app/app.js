@@ -203,6 +203,9 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                 AppComponent.prototype.selectSearchResult = function (selected) {
                     this.clearRoute({ easting: selected.location.lon, northing: selected.location.lat });
                 };
+                AppComponent.prototype.closeSearchResult = function () {
+                    this.store.dispatch({ type: gazetteer_2.CLEAR_RESULTS });
+                };
                 AppComponent.prototype.loadRoute = function () {
                     var _this = this;
                     if (this.routeId !== null) {
@@ -228,7 +231,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                 AppComponent = __decorate([
                     core_1.Component({
                         // selector: 'my-app',
-                        template: "\n        <app-header [route]=\"route.track$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (search)=\"search($event)\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n            (toggleRoads)=\"toggleRoads()\"\n            (debug)=\"debug()\"\n        >\n        </app-header>\n        <search-results [results]=\"searchResults\"\n            (selected)=\"selectSearchResult($event)\"\n        ></search-results>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
+                        template: "\n        <app-header [route]=\"route.track$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (search)=\"search($event)\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n            (toggleRoads)=\"toggleRoads()\"\n            (debug)=\"debug()\"\n        >\n        </app-header>\n        <search-results [results]=\"searchResults\"\n            (selected)=\"selectSearchResult($event)\"\n            (closed)=\"closeSearchResult()\"\n        ></search-results>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader, infopanel_component_1.InfoPanel, search_results_component_1.SearchResults],
                         providers: [
                             gpx_service_1.GpxService,
