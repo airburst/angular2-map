@@ -162,6 +162,7 @@ export class AppComponent implements OnInit {
         }
         this.store.dispatch({ type: CLEAR_TRACK });
         this.store.dispatch({ type: CLEAR_ELEVATION });
+        this.store.dispatch({ type: CLEAR_RESULTS });
         this.router.navigate(['Map']);
         this.osmap.init();
     }
@@ -195,7 +196,6 @@ export class AppComponent implements OnInit {
 
     selectSearchResult(selected) {
         this.clearRoute({ easting: selected.location.lon, northing: selected.location.lat });
-        this.store.dispatch({ type: CLEAR_RESULTS });   // Empty the search results
     }
     
     loadRoute() {

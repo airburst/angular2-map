@@ -171,6 +171,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     }
                     this.store.dispatch({ type: track_1.CLEAR_TRACK });
                     this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
+                    this.store.dispatch({ type: gazetteer_2.CLEAR_RESULTS });
                     this.router.navigate(['Map']);
                     this.osmap.init();
                 };
@@ -201,7 +202,6 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                 };
                 AppComponent.prototype.selectSearchResult = function (selected) {
                     this.clearRoute({ easting: selected.location.lon, northing: selected.location.lat });
-                    this.store.dispatch({ type: gazetteer_2.CLEAR_RESULTS }); // Empty the search results
                 };
                 AppComponent.prototype.loadRoute = function () {
                     var _this = this;
