@@ -24,7 +24,7 @@ import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
     // selector: 'my-app',
     template: `
         <app-header [route]="route.details$ | async"
-            (clear)="resetRoute()"
+            (clear)="clearRoute()"
             (remove)="removeLast()"
             (save)="save()"
             (search)="search($event)"
@@ -83,27 +83,34 @@ export class AppComponent implements OnInit {
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
     ngOnInit() {
-        this.fileService.setAllowedExtensions(['tcx', 'gpx']);
-        let scripts = [settings.osMapUrl(), settings.gMapUrl],
-            loadPromises = scripts.map(this.scriptLoadService.load);
+        if ((!window.OpenSpace) && (!window.google)) {
+            this.fileService.setAllowedExtensions(['tcx', 'gpx']);
+            let scripts = [settings.osMapUrl(), settings.gMapUrl],
+                loadPromises = scripts.map(this.scriptLoadService.load);
 
-        Promise.all(loadPromises)
-            .then((value) => {
-                this.directionsService.init();
-                this.elevationService.init();
-                this.osmap = new OsMap(this.directionsService, this.store);
-                this.osmap.init();
-                
-                // Watch for search results
-                this.route.searchResults$.subscribe((results) => {
-                    this.handleSearchResults(results);
+            Promise.all(loadPromises)
+                .then((value) => {
+                    this.elevationService.init();
+                    this.startMap();
+
+                    this.route.searchResults$.subscribe((results) => {
+                        this.handleSearchResults(results);
+                    });
+
+                    this.loadRoute();
+
+                }, function (value) {
+                    console.error('Script not found:', value)
                 });
-                
-                this.loadRoute();
-                
-            }, function(value) {
-                console.error('Script not found:', value)
-            });
+        } else {
+            this.startMap();
+        }
+    }
+
+    startMap() {
+        this.directionsService.init();
+        this.osmap = new OsMap(this.directionsService, this.store);
+        this.osmap.init();
     }
 
     importFile(ev) {
@@ -133,16 +140,15 @@ export class AppComponent implements OnInit {
             );
     }
     
-    clearRoute() {
+    clearRoute(details?: any) {
+        this.store.dispatch({ type: CLEAR_DETAILS });
+        if (details !== undefined) {
+            this.store.dispatch({ type: UPDATE_DETAILS, payload: details });
+        }
         this.store.dispatch({ type: CLEAR_TRACK });
         this.store.dispatch({ type: CLEAR_ELEVATION });
         this.router.navigate(['Map']);
         this.osmap.init();
-    }
-    
-    resetRoute() {
-        this.store.dispatch({ type: CLEAR_DETAILS });
-        this.clearRoute();
     }
 
     removeLast() {
@@ -173,13 +179,8 @@ export class AppComponent implements OnInit {
     }
 
     selectSearchResult(selected) {
-        this.store.dispatch({ type: CLEAR_DETAILS });
-        this.store.dispatch({
-            type: UPDATE_DETAILS,
-            payload: { easting: selected.location.lon, northing: selected.location.lat }
-        });
+        this.clearRoute({ easting: selected.location.lon, northing: selected.location.lat });
         this.store.dispatch({ type: CLEAR_RESULTS });   // Empty the search results
-        this.clearRoute();
     }
     
     loadRoute() {

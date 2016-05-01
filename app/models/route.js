@@ -41,9 +41,7 @@ System.register(['../reducers/track', '../reducers/markers', '../reducers/elevat
                     this.searchResults$ = store.select('results');
                 }
                 RouteObserver.prototype.setRoute = function (route) {
-                    var box = boundingRectangle(route.track);
-                    console.log('box', box); //
-                    var payload = Object.assign({}, route.details, {
+                    var box = boundingRectangle(route.track), payload = Object.assign({}, route.details, {
                         lat: box.lat,
                         lon: box.lon,
                         zoom: box.zoom,
@@ -51,7 +49,6 @@ System.register(['../reducers/track', '../reducers/markers', '../reducers/elevat
                         easting: 0,
                         northing: 0
                     });
-                    console.log('payload', payload); // 
                     this.store.dispatch({
                         type: details_1.SET_DETAILS,
                         payload: payload

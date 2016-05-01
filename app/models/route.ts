@@ -92,9 +92,8 @@ export class RouteObserver {
     }
     
     setRoute(route: Route) {
-        let box = boundingRectangle(route.track);
-        console.log('box', box)//
-        let payload = Object.assign({}, 
+        let box = boundingRectangle(route.track),
+            payload = Object.assign({}, 
                 route.details, {
                     lat: box.lat,
                     lon: box.lon,
@@ -102,8 +101,7 @@ export class RouteObserver {
                     distance: box.distance,
                     easting: 0,
                     northing: 0
-                });
-    console.log('payload', payload)// 
+                }); 
         this.store.dispatch({
             type: SET_DETAILS,
             payload: payload

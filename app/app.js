@@ -99,22 +99,29 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    this.fileService.setAllowedExtensions(['tcx', 'gpx']);
-                    var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
-                    Promise.all(loadPromises)
-                        .then(function (value) {
-                        _this.directionsService.init();
-                        _this.elevationService.init();
-                        _this.osmap = new osmap_1.OsMap(_this.directionsService, _this.store);
-                        _this.osmap.init();
-                        // Watch for search results
-                        _this.route.searchResults$.subscribe(function (results) {
-                            _this.handleSearchResults(results);
+                    if ((!window.OpenSpace) && (!window.google)) {
+                        this.fileService.setAllowedExtensions(['tcx', 'gpx']);
+                        var scripts = [config_1.settings.osMapUrl(), config_1.settings.gMapUrl], loadPromises = scripts.map(this.scriptLoadService.load);
+                        Promise.all(loadPromises)
+                            .then(function (value) {
+                            _this.elevationService.init();
+                            _this.startMap();
+                            _this.route.searchResults$.subscribe(function (results) {
+                                _this.handleSearchResults(results);
+                            });
+                            _this.loadRoute();
+                        }, function (value) {
+                            console.error('Script not found:', value);
                         });
-                        _this.loadRoute();
-                    }, function (value) {
-                        console.error('Script not found:', value);
-                    });
+                    }
+                    else {
+                        this.startMap();
+                    }
+                };
+                AppComponent.prototype.startMap = function () {
+                    this.directionsService.init();
+                    this.osmap = new osmap_1.OsMap(this.directionsService, this.store);
+                    this.osmap.init();
                 };
                 AppComponent.prototype.importFile = function (ev) {
                     var _this = this;
@@ -142,15 +149,15 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     this.storageService.saveRoute(r)
                         .subscribe(function (route) { return _this.savedRoute = route; }, function (error) { return _this.errorMessage = error; });
                 };
-                AppComponent.prototype.clearRoute = function () {
+                AppComponent.prototype.clearRoute = function (details) {
+                    this.store.dispatch({ type: details_1.CLEAR_DETAILS });
+                    if (details !== undefined) {
+                        this.store.dispatch({ type: details_1.UPDATE_DETAILS, payload: details });
+                    }
                     this.store.dispatch({ type: track_1.CLEAR_TRACK });
                     this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
                     this.router.navigate(['Map']);
                     this.osmap.init();
-                };
-                AppComponent.prototype.resetRoute = function () {
-                    this.store.dispatch({ type: details_1.CLEAR_DETAILS });
-                    this.clearRoute();
                 };
                 AppComponent.prototype.removeLast = function () {
                     this.store.dispatch({ type: track_1.REMOVE_LAST_SEGMENT });
@@ -178,13 +185,8 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     }
                 };
                 AppComponent.prototype.selectSearchResult = function (selected) {
-                    this.store.dispatch({ type: details_1.CLEAR_DETAILS });
-                    this.store.dispatch({
-                        type: details_1.UPDATE_DETAILS,
-                        payload: { easting: selected.location.lon, northing: selected.location.lat }
-                    });
+                    this.clearRoute({ easting: selected.location.lon, northing: selected.location.lat });
                     this.store.dispatch({ type: gazetteer_2.CLEAR_RESULTS }); // Empty the search results
-                    this.clearRoute();
                 };
                 AppComponent.prototype.loadRoute = function () {
                     var _this = this;
@@ -205,7 +207,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                 AppComponent = __decorate([
                     core_1.Component({
                         // selector: 'my-app',
-                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"resetRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (search)=\"search($event)\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n            (toggleRoads)=\"toggleRoads()\"\n            (debug)=\"debug()\"\n        >\n        </app-header>\n        <search-results [results]=\"searchResults\"\n            (selected)=\"selectSearchResult($event)\"\n        ></search-results>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
+                        template: "\n        <app-header [route]=\"route.details$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (search)=\"search($event)\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n            (toggleRoads)=\"toggleRoads()\"\n            (debug)=\"debug()\"\n        >\n        </app-header>\n        <search-results [results]=\"searchResults\"\n            (selected)=\"selectSearchResult($event)\"\n        ></search-results>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader, infopanel_component_1.InfoPanel, search_results_component_1.SearchResults],
                         providers: [
                             gpx_service_1.GpxService,
