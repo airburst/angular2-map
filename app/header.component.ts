@@ -38,17 +38,17 @@ import {Segment} from './models/route';
                     <div *ngIf="!route.followsRoads" class="icon icon-walk"></div>
                     <span *ngIf="!route.followsRoads">Walk</span>
                 </a>
-                <a class="item" href="#" (click)="save.emit(); false;">
-                    <div class="icon icon-save"></div>
-                    <span>Save</span>
-                </a>
                 <a class="item" href="#" (click)="fileTrigger(); false;">
                     <div class="icon icon-import"></div>
                     <span>Import</span>
                     <label for="file" class="hidden">Load GPX or TCX File:</label>
                     <input class="hidden" id="file" type="file" (change)="import.emit($event)">
                 </a>
-                <a class="item" href="#" (click)="export.emit(); false;">
+                <a *ngIf="route.length" class="item" href="#" (click)="save.emit(); false;">
+                    <div class="icon icon-save"></div>
+                    <span>Save</span>
+                </a>
+                <a *ngIf="route.length" class="item" href="#" (click)="export.emit(); false;">
                     <div class="icon icon-export"></div>
                     <span>Export</span>
                 </a>

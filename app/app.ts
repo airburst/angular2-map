@@ -24,7 +24,7 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 @Component({
     // selector: 'my-app',
     template: `
-        <app-header [route]="route.details$ | async"
+        <app-header [route]="route.track$ | async"
             (clear)="clearRoute()"
             (remove)="removeLast()"
             (save)="save()"
