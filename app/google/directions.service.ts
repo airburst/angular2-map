@@ -1,7 +1,7 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
 ///<reference path="../../node_modules/angular2/typings/browser.d.ts"/>
 import {Injectable} from 'angular2/core';
-import {Point} from '../route';
+import {Point} from '../models/route';
 
 @Injectable()
 export class DirectionsService {

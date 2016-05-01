@@ -16,12 +16,12 @@ import {Segment} from './models/route';
                     <div class="item">
                         <div class="value">{{route.ascent}} m</div>
                         <div class="label">Height Gain 
-                            <a *ngIf="!route.hasNewElevation && !calculating" class="header-link" href="#" title="recalculate elevation" (click)="recalculateElevation()">Recalculate</a>
+                            <a *ngIf="!route.hasNewElevation && !calculating" class="header-link" href="#" title="recalculate elevation" (click)="recalculateElevation(); false;">Recalculate</a>
                         </div>
                     </div>
                 </div>
                 <div class="right">
-                    <a class="toggle-link" href="#" (click)="togglePanel()">
+                    <a class="toggle-link" href="#" (click)="togglePanel(); false;">
                         <div class="centre-container">
                             <div class="toggle-text">{{toggleText}}</div>
                         </div>

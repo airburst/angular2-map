@@ -31,6 +31,7 @@ import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
             (import)="importFile($event)"
             (export)="exportFile($event)"
             (toggleRoads)="toggleRoads()"
+            (debug)="debug()"
         >
         </app-header>
         <search-results [results]="searchResults"
@@ -194,6 +195,10 @@ export class AppComponent implements OnInit {
                     error => this.errorMessage = <any>error
                 );
         }
+    }
+
+    debug() {
+        console.log(this.store.getState())
     }
 
 }

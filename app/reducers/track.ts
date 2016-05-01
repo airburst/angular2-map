@@ -1,5 +1,5 @@
 import {Reducer, Action} from '@ngrx/store';
-import {Segment} from '../route';
+import {Segment} from '../models/route';
 export const CLEAR_TRACK = 'CLEAR_TRACK';
 export const SET_TRACK = 'SET_TRACK';
 export const ADD_SEGMENT = 'ADD_SEGMENT';

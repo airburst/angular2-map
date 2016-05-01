@@ -20,31 +20,35 @@ import {Segment} from './models/route';
             </div>
             
             <div class="right">
-                <a class="item" href="#" (click)="clear.emit()">
+                <a class="item" href="#" (click)="debug.emit(); false;">
+                    <div class="icon icon-debug"></div>
+                    <span>Debug</span>
+                </a>
+                <a class="item" href="#" (click)="clear.emit(); false;">
                     <div class="icon icon-clear"></div>
                     <span>Clear</span>
                 </a>
-                <a class="item" href="#" (click)="remove.emit()">
+                <a class="item" href="#" (click)="remove.emit(); false;">
                     <div class="icon icon-undo"></div>
                     <span>Undo</span>
                 </a>
-                <a class="item" href="#" (click)="toggleRoads.emit()">
+                <a class="item" href="#" (click)="toggleRoads.emit(); false;">
                     <div *ngIf="route.followsRoads" class="icon icon-bike"></div>
                     <span *ngIf="route.followsRoads">Ride</span>
                     <div *ngIf="!route.followsRoads" class="icon icon-walk"></div>
                     <span *ngIf="!route.followsRoads">Walk</span>
                 </a>
-                <a class="item" href="#" (click)="save.emit()">
+                <a class="item" href="#" (click)="save.emit(); false;">
                     <div class="icon icon-save"></div>
                     <span>Save</span>
                 </a>
-                <a class="item" href="#" (click)="fileTrigger()">
+                <a class="item" href="#" (click)="fileTrigger(); false;">
                     <div class="icon icon-import"></div>
                     <span>Import</span>
                     <label for="file" class="hidden">Load GPX or TCX File:</label>
                     <input class="hidden" id="file" type="file" (change)="import.emit($event)">
                 </a>
-                <a class="item" href="#" (click)="export.emit()">
+                <a class="item" href="#" (click)="export.emit(); false;">
                     <div class="icon icon-export"></div>
                     <span>Export</span>
                 </a>
@@ -151,6 +155,7 @@ import {Segment} from './models/route';
         .icon-bike { background: url(dist/assets/images/icons/ic_directions_bike_white_24px.svg); }
         .icon-walk { background: url(dist/assets/images/icons/ic_directions_walk_white_24px.svg); }
         .icon-search { background: url(dist/assets/images/icons/ic_search_white_24px.svg); }
+        .icon-debug { background: url(dist/assets/images/icons/ic_bug_report_white_24px.svg); }
 
         .hidden { display: none; }
     `],
@@ -166,6 +171,7 @@ export class AppHeader {
     @Output() search = new EventEmitter();
     @Output() export = new EventEmitter();
     @Output() toggleRoads = new EventEmitter();
+    @Output() debug = new EventEmitter();
     
     searchTrigger(ev) {
         this.search.emit(ev.target.value);

@@ -1,5 +1,5 @@
 import {Reducer, Action} from '@ngrx/store';
-import {RouteDetails} from '../route';
+import {RouteDetails} from '../models/route';
 export const CLEAR_DETAILS = 'CLEAR_DETAILS';
 export const SET_DETAILS = 'SET_DETAILS';
 export const UPDATE_DETAILS = 'UPDATE_DETAILS';

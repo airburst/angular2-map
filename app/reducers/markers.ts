@@ -1,5 +1,5 @@
 import {Reducer, Action} from '@ngrx/store';
-import {Marker} from '../route';
+import {Marker} from '../models/route';
 export const CLEAR_MARKERS = 'CLEAR_MARKERS';
 export const SET_MARKERS = 'SET_MARKERS';
 export const ADD_MARKER = 'ADD_MARKER';
