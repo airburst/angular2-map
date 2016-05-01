@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/add/operator/map', 'rxjs/add/operator/catch'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/add/operator/map', 'rxjs/add/operator/catch', '../models/route'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/add/
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, Observable_1;
+    var core_1, http_1, Observable_1, route_1;
     var StorageService;
     return {
         setters:[
@@ -24,7 +24,10 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/add/
                 Observable_1 = Observable_1_1;
             },
             function (_1) {},
-            function (_2) {}],
+            function (_2) {},
+            function (route_1_1) {
+                route_1 = route_1_1;
+            }],
         execute: function() {
             StorageService = (function () {
                 function StorageService(http) {
@@ -52,7 +55,9 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/add/
                     if (body.length === 0) {
                         return { details: { name: 'false' } };
                     }
-                    return body[0].route;
+                    var data = (body[0]) ? body[0] : body, route = new route_1.Route(data.route);
+                    route.id = body.id;
+                    return route;
                 };
                 StorageService.prototype.handleError = function (error) {
                     // In a real world app, we might send the error to remote logging infrastructure

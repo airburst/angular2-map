@@ -19,6 +19,7 @@ import {SET_TRACK, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
 import {SET_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from './reducers/elevation';
 import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS, TOGGLE_ROADS} from './reducers/details';
 import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 @Component({
     // selector: 'my-app',
@@ -51,7 +52,8 @@ import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
         StorageService,
         ElevationService,
         GazetteerService,
-        DirectionsService
+        DirectionsService,
+        ToastsManager
     ]
 })
 
@@ -74,7 +76,8 @@ export class AppComponent implements OnInit {
         private elevationService: ElevationService,
         private directionsService: DirectionsService,
         private gazetteerService: GazetteerService,
-        public store: Store<AppStore>
+        public store: Store<AppStore>,
+        public toastr: ToastsManager
     ) {
         this.route = new RouteObserver(store);
         this.searchResults = [];
@@ -134,8 +137,16 @@ export class AppComponent implements OnInit {
         let r = new Route(this.store.getState());
         this.storageService.saveRoute(r)
             .subscribe(
-                route => this.savedRoute = route,
-                error => this.errorMessage = <any>error
+                (route) => {
+                    this.savedRoute = <Route>route;
+                    //this.router.navigate(['Route', { id: this.savedRoute.id }]);
+                    this.showSuccess(this.savedRoute.id, 'Your form link');
+                },
+                (error) => {
+                    this.errorMessage = <any>error;
+                    console.log(this.errorMessage)
+                    //this.showError(this.errorMessage);
+                }
             );
     }
 
@@ -205,6 +216,14 @@ export class AppComponent implements OnInit {
 
     debug() {
         console.log(this.store.getState())
+    }
+
+    showError(message: any) {
+        this.toastr.error(message, 'Oops!');
+    }
+
+    showSuccess(message: string, title: string) {
+        this.toastr.success(message, title);
     }
 
 }

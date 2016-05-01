@@ -63,12 +63,14 @@ export class Route {
     track: Segment[];
     elevation: any[];
     markers: Marker[];
+    id: string;
     
     constructor(appData: AppStore) {
         this.details = appData.details;
         this.track = appData.track;
         this.elevation = appData.elevation;
         this.markers = appData.markers;
+        this.id = '';
     }
 }
 

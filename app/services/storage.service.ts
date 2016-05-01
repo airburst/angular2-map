@@ -3,7 +3,8 @@ import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import {Route} from '../models/route';
+import {Route, AppStore} from '../models/route';
+import {initialState} from '../reducers/details';
 
 @Injectable()
 export class StorageService {
@@ -12,7 +13,7 @@ export class StorageService {
 
     constructor(private http: Http) { }
 
-    getRoute(id: string): Observable<Route> {
+    getRoute(id: string): Observable<any> {
         return this.http.get(this.baseUrl + id)
             .map(this.extractData)
             .catch(this.handleError);
@@ -33,8 +34,13 @@ export class StorageService {
             throw new Error('Bad response status: ' + res.status);
         }
         let body = res.json();
-        if (body.length === 0) { return { details: { name: 'false' } }; }
-        return body[0].route;
+        if (body.length === 0) {
+            return { details: { name: 'false' } };
+        }
+        let data = (body[0]) ? body[0] : body,
+            route = new Route(data.route);
+        route.id = body.id;
+        return route;
     }
 
     private handleError(error: any) {

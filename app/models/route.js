@@ -25,6 +25,7 @@ System.register(['../reducers/track', '../reducers/markers', '../reducers/elevat
                     this.track = appData.track;
                     this.elevation = appData.elevation;
                     this.markers = appData.markers;
+                    this.id = '';
                 }
                 return Route;
             }());

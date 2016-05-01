@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', 'angular2/router', './services/file.service', './services/scriptload.service', './services/storage.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './infopanel.component', './search.results.component', './osmaps/gazetteer', './models/route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation', './reducers/details', './reducers/gazetteer'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', 'angular2/router', './services/file.service', './services/scriptload.service', './services/storage.service', './google/elevation.service', './google/directions.service', './osmaps/gpx.service', './osmaps/osmap', './header.component', './infopanel.component', './search.results.component', './osmaps/gazetteer', './models/route', './config/config', '@ngrx/store', './reducers/track', './reducers/elevation', './reducers/details', './reducers/gazetteer', 'ng2-toastr/ng2-toastr'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, router_1, file_service_1, scriptload_service_1, storage_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, infopanel_component_1, search_results_component_1, gazetteer_1, route_1, config_1, store_1, track_1, elevation_1, details_1, gazetteer_2;
+    var core_1, common_1, router_1, file_service_1, scriptload_service_1, storage_service_1, elevation_service_1, directions_service_1, gpx_service_1, osmap_1, header_component_1, infopanel_component_1, search_results_component_1, gazetteer_1, route_1, config_1, store_1, track_1, elevation_1, details_1, gazetteer_2, ng2_toastr_1;
     var AppComponent;
     return {
         setters:[
@@ -76,10 +76,13 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
             },
             function (gazetteer_2_1) {
                 gazetteer_2 = gazetteer_2_1;
+            },
+            function (ng2_toastr_1_1) {
+                ng2_toastr_1 = ng2_toastr_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(params, router, gpxService, fileService, scriptLoadService, storageService, elevationService, directionsService, gazetteerService, store) {
+                function AppComponent(params, router, gpxService, fileService, scriptLoadService, storageService, elevationService, directionsService, gazetteerService, store, toastr) {
                     this.params = params;
                     this.router = router;
                     this.gpxService = gpxService;
@@ -90,6 +93,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     this.directionsService = directionsService;
                     this.gazetteerService = gazetteerService;
                     this.store = store;
+                    this.toastr = toastr;
                     this.errorMessage = '';
                     this.routeId = '';
                     this.route = new route_1.RouteObserver(store);
@@ -146,7 +150,15 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     var _this = this;
                     var r = new route_1.Route(this.store.getState());
                     this.storageService.saveRoute(r)
-                        .subscribe(function (route) { return _this.savedRoute = route; }, function (error) { return _this.errorMessage = error; });
+                        .subscribe(function (route) {
+                        _this.savedRoute = route;
+                        //this.router.navigate(['Route', { id: this.savedRoute.id }]);
+                        _this.showSuccess(_this.savedRoute.id, 'Your form link');
+                    }, function (error) {
+                        _this.errorMessage = error;
+                        console.log(_this.errorMessage);
+                        //this.showError(this.errorMessage);
+                    });
                 };
                 // updateRouteName(name) {
                 //     this.store.dispatch({ type: UPDATE_DETAILS, payload: name });
@@ -207,6 +219,12 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                 AppComponent.prototype.debug = function () {
                     console.log(this.store.getState());
                 };
+                AppComponent.prototype.showError = function (message) {
+                    this.toastr.error(message, 'Oops!');
+                };
+                AppComponent.prototype.showSuccess = function (message, title) {
+                    this.toastr.success(message, title);
+                };
                 AppComponent = __decorate([
                     core_1.Component({
                         // selector: 'my-app',
@@ -219,10 +237,11 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                             storage_service_1.StorageService,
                             elevation_service_1.ElevationService,
                             gazetteer_1.GazetteerService,
-                            directions_service_1.DirectionsService
+                            directions_service_1.DirectionsService,
+                            ng2_toastr_1.ToastsManager
                         ]
                     }), 
-                    __metadata('design:paramtypes', [router_1.RouteParams, router_1.Router, gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, storage_service_1.StorageService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService, store_1.Store])
+                    __metadata('design:paramtypes', [router_1.RouteParams, router_1.Router, gpx_service_1.GpxService, file_service_1.FileService, scriptload_service_1.ScriptLoadService, storage_service_1.StorageService, elevation_service_1.ElevationService, directions_service_1.DirectionsService, gazetteer_1.GazetteerService, store_1.Store, ng2_toastr_1.ToastsManager])
                 ], AppComponent);
                 return AppComponent;
             }());
