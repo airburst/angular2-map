@@ -59,22 +59,16 @@ export interface AppStore {
 }
 
 export class Route {
-    name: string;
     details: RouteDetails;
     track: Segment[];
     elevation: any[];
     markers: Marker[];
-    createdAt: string;
-    id: string;
     
     constructor(appData: AppStore) {
         this.details = appData.details;
-        this.name = this.details.name;
         this.track = appData.track;
         this.elevation = appData.elevation;
         this.markers = appData.markers;
-        this.createdAt = '';
-        this.id = '';
     }
 }
 

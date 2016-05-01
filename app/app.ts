@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit} from 'angular2/core';
+import {Component, EventEmitter, OnInit, ViewContainerRef} from 'angular2/core';
 import {FORM_DIRECTIVES, Control} from 'angular2/common';
 import {RouteParams, Router} from 'angular2/router';
 import {FileService} from './services/file.service';
@@ -131,7 +131,6 @@ export class AppComponent implements OnInit {
     }
     
     save() {
-        console.log('Saving');
         let r = new Route(this.store.getState());
         this.storageService.saveRoute(r)
             .subscribe(
@@ -139,6 +138,11 @@ export class AppComponent implements OnInit {
                 error => this.errorMessage = <any>error
             );
     }
+
+    // updateRouteName(name) {
+    //     this.store.dispatch({ type: UPDATE_DETAILS, payload: name });
+    //     this.save();
+    // }
     
     clearRoute(details?: any) {
         this.store.dispatch({ type: CLEAR_DETAILS });
@@ -188,7 +192,7 @@ export class AppComponent implements OnInit {
             let r = this.storageService.getRoute(this.routeId)
                 .subscribe(
                     (route) => {
-                        if (route.name !== 'false') {
+                        if (route.details.name !== 'false') {
                             this.route.setRoute(route);
                             this.osmap.centreAndSetMapEvents();
                             this.osmap.removeMapEvents();

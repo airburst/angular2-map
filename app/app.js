@@ -144,11 +144,14 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                 };
                 AppComponent.prototype.save = function () {
                     var _this = this;
-                    console.log('Saving');
                     var r = new route_1.Route(this.store.getState());
                     this.storageService.saveRoute(r)
                         .subscribe(function (route) { return _this.savedRoute = route; }, function (error) { return _this.errorMessage = error; });
                 };
+                // updateRouteName(name) {
+                //     this.store.dispatch({ type: UPDATE_DETAILS, payload: name });
+                //     this.save();
+                // }
                 AppComponent.prototype.clearRoute = function (details) {
                     this.store.dispatch({ type: details_1.CLEAR_DETAILS });
                     if (details !== undefined) {
@@ -193,7 +196,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     if (this.routeId !== null) {
                         var r = this.storageService.getRoute(this.routeId)
                             .subscribe(function (route) {
-                            if (route.name !== 'false') {
+                            if (route.details.name !== 'false') {
                                 _this.route.setRoute(route);
                                 _this.osmap.centreAndSetMapEvents();
                                 _this.osmap.removeMapEvents();

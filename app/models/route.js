@@ -22,12 +22,9 @@ System.register(['../reducers/track', '../reducers/markers', '../reducers/elevat
             Route = (function () {
                 function Route(appData) {
                     this.details = appData.details;
-                    this.name = this.details.name;
                     this.track = appData.track;
                     this.elevation = appData.elevation;
                     this.markers = appData.markers;
-                    this.createdAt = '';
-                    this.id = '';
                 }
                 return Route;
             }());
