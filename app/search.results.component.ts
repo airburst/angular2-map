@@ -51,7 +51,7 @@ import {NgClass} from 'angular2/common';
         }
 
         .results-item {
-            padding: 20px 16px;
+            padding: 16px;
             font-family: 'Roboto', 'Arial', 'Helvetica';
             border-bottom: 1px solid #e2e2e2;
             cursor: pointer;
