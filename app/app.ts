@@ -18,6 +18,7 @@ import {Store} from '@ngrx/store';
 import {SET_TRACK, REMOVE_LAST_SEGMENT, CLEAR_TRACK} from './reducers/track';
 import {SET_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from './reducers/elevation';
 import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS, TOGGLE_ROADS} from './reducers/details';
+import {CLEAR_MARKERS} from './reducers/markers';
 import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
@@ -35,7 +36,7 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
             (debug)="debug()"
         >
         </app-header>
-        <search-results [results]="searchResults"
+        <search-results [results]="route.searchResults$ | async"
             (selected)="selectSearchResult($event)"
             (closed)="closeSearchResult()"
         ></search-results>
@@ -62,7 +63,6 @@ export class AppComponent implements OnInit {
 
     public osmap: OsMap;
     public route: RouteObserver;
-    public searchResults: any[];
     private savedRoute: Route;
     private errorMessage: any = '';
     private routeId: string = '';
@@ -81,8 +81,7 @@ export class AppComponent implements OnInit {
         public toastr: ToastsManager
     ) {
         this.route = new RouteObserver(store);
-        this.searchResults = [];
-        this.routeId = this.params.get('id');   // Get id parameter, if present
+        this.routeId = this.params.get('id');
     }
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
@@ -158,12 +157,12 @@ export class AppComponent implements OnInit {
     
     clearRoute(details?: any) {
         this.store.dispatch({ type: CLEAR_DETAILS });
-        if (details !== undefined) {
-            this.store.dispatch({ type: UPDATE_DETAILS, payload: details });
-        }
         this.store.dispatch({ type: CLEAR_TRACK });
         this.store.dispatch({ type: CLEAR_ELEVATION });
+        this.store.dispatch({ type: CLEAR_MARKERS });
         this.store.dispatch({ type: CLEAR_RESULTS });
+        
+        if (details !== undefined) { this.store.dispatch({ type: UPDATE_DETAILS, payload: details }); }
         this.router.navigate(['Map']);
         this.osmap.init();
     }
@@ -190,8 +189,6 @@ export class AppComponent implements OnInit {
     handleSearchResults(results) {
         if (results.length === 1) {
             this.selectSearchResult(results[0]);
-        } else {
-            this.searchResults = results;
         }
     }
 
@@ -211,7 +208,7 @@ export class AppComponent implements OnInit {
                         if (route.details.name !== 'false') {
                             this.route.setRoute(route);
                             this.osmap.centreAndSetMapEvents();
-                            this.osmap.removeMapEvents();
+                            this.osmap.removeMapEvents();   // TODO: only remove if imported?
                         }
                     },
                     error => this.errorMessage = <any>error
