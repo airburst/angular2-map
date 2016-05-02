@@ -23,7 +23,7 @@ import {RouteObserver, AppStore} from './models/route';
                         <div class="label">Height Gain</div>
                     </div>
                     
-                    <div *ngIf="!route.hasNewElevation && !calculating &&!doneCalculating" class="item">
+                    <div *ngIf="!route.hasNewElevation && !calculating" class="item">
                         <div class="value">
                             <a  class="header-link" href="#" title="recalculate elevation" 
                                 (click)="recalculateElevation(); false;">Recalculate
@@ -147,7 +147,7 @@ export class InfoPanel {
     private show: boolean;
     private toggleText: string;
     private calculating: boolean;
-    private doneCalculating: boolean;
+    //private doneCalculating: boolean;
     private recalcDuration: number;
     private remainingTime: number;
     private period: number;
@@ -157,7 +157,6 @@ export class InfoPanel {
     constructor(public store: Store<AppStore>) {
         this.show = false;
         this.calculating = false;
-        this.doneCalculating = false;
         this.setToggleText();
         this.recalcDuration = 0;
         this.remainingTime = 0;
@@ -195,7 +194,6 @@ export class InfoPanel {
     stopCountdown() {
         clearInterval(this.cancelCountdown);
         this.calculating = false;
-        this.doneCalculating = true;
         this.recalcDuration = 0;
     }
     
