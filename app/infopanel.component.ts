@@ -2,6 +2,9 @@ import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'a
 import {NgClass} from 'angular2/common';
 import {ElevationChart} from './chart.component';
 import {Segment} from './models/route';
+import {Store} from '@ngrx/store';
+import {UPDATE_DETAILS} from './reducers/details';
+import {RouteObserver, AppStore} from './models/route';
 
 @Component({
     selector: 'infopanel',
@@ -9,16 +12,29 @@ import {Segment} from './models/route';
         <div class="infopanel" [ngClass]="{show: show}">
             <div class="elevation-header">
                 <div class="left">
+                
                     <div class="item">
                         <div class="value">{{route.distance | number:'1.1-2'}} km</div>
                         <div class="label">Distance</div>
                     </div>
+                    
                     <div class="item">
                         <div class="value">{{route.ascent}} m</div>
-                        <div class="label">Height Gain 
-                            <a *ngIf="!route.hasNewElevation && !calculating" class="header-link" href="#" title="recalculate elevation" (click)="recalculateElevation(); false;">Recalculate</a>
+                        <div class="label">Height Gain</div>
+                    </div>
+                    
+                    <div *ngIf="!route.hasNewElevation && !calculating &&!doneCalculating" class="item">
+                        <div class="value">
+                            <a  class="header-link" href="#" title="recalculate elevation" 
+                                (click)="recalculateElevation(); false;">Recalculate
+                            </a>
                         </div>
                     </div>
+                    
+                    <div *ngIf="calculating" class="item">
+                        <div class="value">{{remainingTime}} s</div>
+                    </div>
+                    
                 </div>
                 <div class="right">
                     <a class="toggle-link" href="#" (click)="togglePanel(); false;">
@@ -121,36 +137,75 @@ import {Segment} from './models/route';
         .icon-clear { background: url(dist/assets/images/icons/ic_close_white_24px.svg); }
         .icon-up { background: url(dist/assets/images/icons/ic_arrow_drop_up_white_24px.svg); }
         .icon-down { background: url(dist/assets/images/icons/ic_arrow_drop_down_white_24px.svg); }
-    `],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    `]
 })
 
 export class InfoPanel {
-    @Input() route: Segment[];
+    @Input() route: any;
     @Output() recalc = new EventEmitter();
 
     private show: boolean;
     private toggleText: string;
     private calculating: boolean;
-    
-    constructor() {
+    private doneCalculating: boolean;
+    private recalcDuration: number;
+    private remainingTime: number;
+    private period: number;
+    private cancelCountdown: number;
+    private routeObserver: RouteObserver;
+
+    constructor(public store: Store<AppStore>) {
         this.show = false;
         this.calculating = false;
+        this.doneCalculating = false;
         this.setToggleText();
+        this.recalcDuration = 0;
+        this.remainingTime = 0;
+        this.period = 2000;
+        this.routeObserver = new RouteObserver(store);
+        
+        this.routeObserver.details$.subscribe((v) => {
+            this.checkForRecalc(v);
+        });
     }
-    
+
     recalculateElevation() {
         this.calculating = true;
-        this.recalc.emit();
+        this.recalc.emit({value: 'true'});
+    }
+
+    checkForRecalc(details: any) {
+        if ((details.recalculateTime !== this.recalcDuration) && (details.recalculateTime !== 0)) {
+            this.startCountdown(details.recalculateTime);
+        }
+    }
+    
+    startCountdown(startTime: number, period?: number) {
+        if (period) { this.period = period; }
+        this.recalcDuration = startTime;
+        this.remainingTime = startTime - this.period / 1000;
+        this.cancelCountdown = setInterval(this.updateRemainingTime.bind(this), 1000 );
+    }
+
+    updateRemainingTime() {
+        this.remainingTime -= 1;
+        if (this.remainingTime <= 0) { this.stopCountdown(); }
+    }
+
+    stopCountdown() {
+        clearInterval(this.cancelCountdown);
+        this.calculating = false;
+        this.doneCalculating = true;
+        this.recalcDuration = 0;
     }
     
     togglePanel() {
         this.show = !this.show;
         this.setToggleText()
     }
-    
+
     setToggleText() {
         this.toggleText = (this.show) ? 'Elevation On' : 'Elevation Off';
     }
-    
+
 }

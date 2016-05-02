@@ -38,7 +38,7 @@ import {Segment} from './models/route';
                     <div *ngIf="!route.followsRoads" class="icon icon-walk"></div>
                     <span *ngIf="!route.followsRoads">Walk</span>
                 </a>
-                <a class="item" href="#" (click)="fileTrigger(); false;">
+                <a class="item" href="#" (click)="fileTrigger()">
                     <div class="icon icon-import"></div>
                     <span>Import</span>
                     <label for="file" class="hidden">Load GPX or TCX File:</label>

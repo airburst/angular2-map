@@ -154,8 +154,8 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     this.storageService.saveRoute(r)
                         .subscribe(function (route) {
                         _this.savedRoute = route;
-                        //this.router.navigate(['Route', { id: this.savedRoute.id }]);
-                        _this.showSuccess(_this.savedRoute.id, 'Your form link');
+                        _this.router.navigate(['Route', { id: _this.savedRoute.id }]);
+                        _this.showSuccess('You can share the link from the address bar.', 'Your form link');
                     }, function (error) {
                         _this.errorMessage = error;
                         console.log(_this.errorMessage);

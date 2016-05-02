@@ -48,6 +48,7 @@ export interface RouteDetails {
     isEditable: boolean;
     hasNewElevation: boolean;
     selectedPointIndex: number;
+    recalculateTime?: number;
 }
 
 export interface AppStore {

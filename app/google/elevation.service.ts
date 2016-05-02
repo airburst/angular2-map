@@ -60,7 +60,10 @@ export class ElevationService {
         if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 1)) {
             path = this.convertToGoogleRoute(segment.track);
             pathArray = chunk(path, this.sampleSize);
+            
+            // Publish recalculation estimate for infopanel to render
             recalcTime = pathArray.length * throttle / 1000;
+            this.publishRecalcTime(recalcTime);
 
             elevationPromises = [];
             pathArray.forEach((p, i) => {
@@ -79,6 +82,7 @@ export class ElevationService {
                         type: UPDATE_DETAILS,
                         payload: { hasNewElevation: true }
                     });
+                    this.publishRecalcTime(0);
                 }.bind(this), function(error) {
                     console.log(error);
                 });
@@ -156,6 +160,13 @@ export class ElevationService {
     
     clear() {
         this.store.dispatch({ type: CLEAR_ELEVATION });
+    }
+    
+    publishRecalcTime(duration: number) {
+        this.store.dispatch({
+            type: UPDATE_DETAILS,
+            payload: { recalculateTime: duration }
+        });
     }
 
 }

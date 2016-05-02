@@ -73,7 +73,9 @@ System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/st
                     if ((segment !== undefined) && (!segment.hasElevationData) && (segment.track.length > 1)) {
                         path = this.convertToGoogleRoute(segment.track);
                         pathArray = utils_1.chunk(path, this.sampleSize);
+                        // Publish recalculation estimate for infopanel to render
                         recalcTime = pathArray.length * throttle / 1000;
+                        this.publishRecalcTime(recalcTime);
                         elevationPromises = [];
                         pathArray.forEach(function (p, i) {
                             elevationPromises.push(_this.elevation(i * throttle, p));
@@ -90,6 +92,7 @@ System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/st
                                 type: details_1.UPDATE_DETAILS,
                                 payload: { hasNewElevation: true }
                             });
+                            this.publishRecalcTime(0);
                         }.bind(this), function (error) {
                             console.log(error);
                         });
@@ -162,6 +165,12 @@ System.register(['angular2/core', '../utils/utils', '../models/route', '@ngrx/st
                 };
                 ElevationService.prototype.clear = function () {
                     this.store.dispatch({ type: elevation_1.CLEAR_ELEVATION });
+                };
+                ElevationService.prototype.publishRecalcTime = function (duration) {
+                    this.store.dispatch({
+                        type: details_1.UPDATE_DETAILS,
+                        payload: { recalculateTime: duration }
+                    });
                 };
                 ElevationService = __decorate([
                     core_1.Injectable(), 

@@ -176,7 +176,7 @@ export class ElevationChart implements OnInit {
             labelY = (this.chartHeight / 2),
             index = Math.floor(x * this.factor),
             point = this.data[index],
-            elevationText = 'Elevation: ' + point[1].toFixed(1),
+            elevationText = 'Elevation: ' + point[1].toFixed(1),    //TODO: catch errors when no point
             distanceText = 'Distance: ' + point[0].toFixed(1);
 
         // Draw the line and details box

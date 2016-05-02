@@ -139,8 +139,8 @@ export class AppComponent implements OnInit {
             .subscribe(
                 (route) => {
                     this.savedRoute = <Route>route;
-                    //this.router.navigate(['Route', { id: this.savedRoute.id }]);
-                    this.showSuccess(this.savedRoute.id, 'Your form link');
+                    this.router.navigate(['Route', { id: this.savedRoute.id }]);
+                    this.showSuccess('You can share the link from the address bar.', 'Your form link');
                 },
                 (error) => {
                     this.errorMessage = <any>error;

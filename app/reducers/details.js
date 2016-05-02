@@ -21,7 +21,8 @@ System.register([], function(exports_1, context_1) {
                 followsRoads: true,
                 isEditable: false,
                 hasNewElevation: true,
-                selectedPointIndex: -1
+                selectedPointIndex: -1,
+                recalculateTime: 0
             });
             exports_1("details", details = function (state, action) {
                 if (state === void 0) { state = initialState; }

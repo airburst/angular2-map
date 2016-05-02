@@ -101,7 +101,8 @@ System.register(['angular2/core', 'angular2/common', 'd3', '@ngrx/store', './red
                 ElevationChart.prototype.mouseMove = function (ev) {
                     var x = ev.clientX - this.margin.left, labelOffset = 10, labelRightBuffer = this.labelBox.width, labelX = ((x + labelOffset) < (this.chartWidth - labelRightBuffer)) ?
                         (x + labelOffset) :
-                        (x - labelRightBuffer - labelOffset), labelY = (this.chartHeight / 2), index = Math.floor(x * this.factor), point = this.data[index], elevationText = 'Elevation: ' + point[1].toFixed(1), distanceText = 'Distance: ' + point[0].toFixed(1);
+                        (x - labelRightBuffer - labelOffset), labelY = (this.chartHeight / 2), index = Math.floor(x * this.factor), point = this.data[index], elevationText = 'Elevation: ' + point[1].toFixed(1), //TODO: catch errors when no point
+                    distanceText = 'Distance: ' + point[0].toFixed(1);
                     // Draw the line and details box
                     d3.select('#focusLineX')
                         .attr('x1', x).attr('y1', 0)
