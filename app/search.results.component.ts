@@ -15,7 +15,7 @@ import {NgClass} from 'angular2/common';
                 </ul>
             </div>
             <div class="close-button">
-                <button class="btn btn-close" (click)="closed.emit()">Close</button>
+                <button class="btn btn-close" (click)="closed.emit()">CLOSE</button>
             </div>
         </div>
     `,
@@ -61,8 +61,22 @@ import {NgClass} from 'angular2/common';
         }
 
         .close-button {
+            display: -webkit-flex;
             display: flex;
-            justify-content: right;
+            -webkit-flex-direction: row;
+            flex-direction: row;
+            /*-webkit-justify-content: flex-end;
+            justify-content: flex-end;*/
+        }
+        
+        .btn-close {
+            background-color: #00897B;
+            color: white;
+            border: 0px;
+            margin: 8px 16px;
+            padding: 8px 20px;
+            font-family: 'Roboto', 'Arial', 'Helvetica';
+            cursor: pointer;
         }
     `],
     changeDetection: ChangeDetectionStrategy.OnPush
