@@ -123,6 +123,7 @@ export class AppComponent implements OnInit {
                 this.osmap.centreAndSetMapEvents();
                 this.osmap.removeMapEvents();
                 ev.target.value = null;  // Empty the file input so that it can detect changes
+                this.makeRouteNonEditable();
             });
         }
     }
@@ -209,7 +210,7 @@ export class AppComponent implements OnInit {
                         this.route.setRoute(route);
                         this.osmap.centreAndSetMapEvents();
                         this.osmap.removeMapEvents();   // TODO: only remove if imported?
-                        this.store.dispatch({ type: UPDATE_DETAILS, payload: { isEditable: false } });
+                        this.makeRouteNonEditable();
                     }
                 },
                 error => this.errorMessage = <any>error
@@ -223,6 +224,10 @@ export class AppComponent implements OnInit {
 
     showSuccess(message: string, title: string) {
         this.toastr.success(message, title);
+    }
+
+    makeRouteNonEditable() {
+        this.store.dispatch({ type: UPDATE_DETAILS, payload: { isEditable: false } });
     }
 
 }

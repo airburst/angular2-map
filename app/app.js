@@ -141,6 +141,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                             _this.osmap.centreAndSetMapEvents();
                             _this.osmap.removeMapEvents();
                             ev.target.value = null; // Empty the file input so that it can detect changes
+                            _this.makeRouteNonEditable();
                         });
                     }
                 };
@@ -215,7 +216,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                                 _this.route.setRoute(route);
                                 _this.osmap.centreAndSetMapEvents();
                                 _this.osmap.removeMapEvents(); // TODO: only remove if imported?
-                                _this.store.dispatch({ type: details_1.UPDATE_DETAILS, payload: { isEditable: false } });
+                                _this.makeRouteNonEditable();
                             }
                         }, function (error) { return _this.errorMessage = error; });
                     }
@@ -225,6 +226,9 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                 };
                 AppComponent.prototype.showSuccess = function (message, title) {
                     this.toastr.success(message, title);
+                };
+                AppComponent.prototype.makeRouteNonEditable = function () {
+                    this.store.dispatch({ type: details_1.UPDATE_DETAILS, payload: { isEditable: false } });
                 };
                 AppComponent = __decorate([
                     core_1.Component({
