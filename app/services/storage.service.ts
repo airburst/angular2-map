@@ -40,7 +40,7 @@ export class StorageService {
         }
         let data = (body[0]) ? body[0] : body,
             route = new Route(data.route);
-        route.id = body.id;
+        route.id = data.id;
         return route;
     }
 

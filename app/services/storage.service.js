@@ -57,7 +57,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/add/
                         return { details: { name: 'false' } };
                     }
                     var data = (body[0]) ? body[0] : body, route = new route_1.Route(data.route);
-                    route.id = body.id;
+                    route.id = data.id;
                     return route;
                 };
                 StorageService.prototype.handleError = function (error) {

@@ -65,6 +65,7 @@ export class Route {
     elevation: any[];
     markers: Marker[];
     id: string;
+    name: string;
     
     constructor(appData: AppStore) {
         this.details = appData.details;
@@ -72,6 +73,7 @@ export class Route {
         this.elevation = appData.elevation;
         this.markers = appData.markers;
         this.id = '';
+        this.name = 'Unnamed Route';
     }
 }
 

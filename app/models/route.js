@@ -26,6 +26,7 @@ System.register(['../reducers/track', '../reducers/markers', '../reducers/elevat
                     this.elevation = appData.elevation;
                     this.markers = appData.markers;
                     this.id = '';
+                    this.name = 'Unnamed Route';
                 }
                 return Route;
             }());
