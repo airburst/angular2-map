@@ -20,30 +20,35 @@ import {Segment} from './models/route';
             </div>
             
             <div class="right">
-                <a class="item" href="#" (click)="debug.emit(); false;">
+                <!--<a class="item" href="#" (click)="debug.emit(); false;">
                     <div class="icon icon-debug"></div>
                     <span>Debug</span>
-                </a>
-                <a class="item" href="#" (click)="clear.emit(); false;">
-                    <div class="icon icon-clear"></div>
-                    <span>Clear</span>
-                </a>
-                <a class="item" href="#" (click)="remove.emit(); false;">
-                    <div class="icon icon-undo"></div>
-                    <span>Undo</span>
-                </a>
+                </a>-->
+
                 <a class="item" href="#" (click)="toggleRoads.emit(); false;">
                     <div *ngIf="route.followsRoads" class="icon icon-bike"></div>
                     <span *ngIf="route.followsRoads">Ride</span>
                     <div *ngIf="!route.followsRoads" class="icon icon-walk"></div>
                     <span *ngIf="!route.followsRoads">Walk</span>
                 </a>
+
+                <a class="item" href="#" (click)="remove.emit(); false;">
+                    <div class="icon icon-undo"></div>
+                    <span>Undo</span>
+                </a>
+
+                <a class="item" href="#" (click)="clear.emit(); false;">
+                    <div class="icon icon-clear"></div>
+                    <span>Clear</span>
+                </a>
+                
                 <a class="item" href="#" (click)="fileTrigger()">
                     <div class="icon icon-import"></div>
                     <span>Import</span>
                     <label for="file" class="hidden">Load GPX or TCX File:</label>
                     <input class="hidden" id="file" type="file" (change)="import.emit($event)">
                 </a>
+
                 <a *ngIf="route.length" class="item" href="#" (click)="save.emit(); false;">
                     <div class="icon icon-save"></div>
                     <span>Save</span>
