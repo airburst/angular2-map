@@ -32,7 +32,8 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/add/
             StorageService = (function () {
                 function StorageService(http) {
                     this.http = http;
-                    this.baseUrl = 'http://localhost:3000/route/';
+                    //private baseUrl: string = 'http://localhost:3000/route/';
+                    this.baseUrl = 'http://mapsapi.fairhursts.net/route/';
                 }
                 StorageService.prototype.getRoute = function (id) {
                     return this.http.get(this.baseUrl + id)
