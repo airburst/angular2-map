@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
-import {Segment} from './models/route';
+import {Segment, RouteDetails} from './models/route';
 
 @Component({
     selector: 'app-header',
-    inputs: ['route'],
+    inputs: ['details', 'route'],
     template: `
         <div class="stats">
         
@@ -26,10 +26,10 @@ import {Segment} from './models/route';
                 </a>-->
 
                 <a class="item" href="#" (click)="toggleRoads.emit(); false;">
-                    <div *ngIf="route.followsRoads" class="icon icon-bike"></div>
-                    <span *ngIf="route.followsRoads">Ride</span>
-                    <div *ngIf="!route.followsRoads" class="icon icon-walk"></div>
-                    <span *ngIf="!route.followsRoads">Walk</span>
+                    <div *ngIf="details.followsRoads" class="icon icon-bike"></div>
+                    <span *ngIf="details.followsRoads">Ride</span>
+                    <div *ngIf="!details.followsRoads" class="icon icon-walk"></div>
+                    <span *ngIf="!details.followsRoads">Walk</span>
                 </a>
 
                 <a class="item" href="#" (click)="remove.emit(); false;">
@@ -168,6 +168,7 @@ import {Segment} from './models/route';
 })
 
 export class AppHeader {
+    @Input() details: RouteDetails;
     @Input() route: Segment[];
     @Output() clear = new EventEmitter();
     @Output() remove = new EventEmitter();
