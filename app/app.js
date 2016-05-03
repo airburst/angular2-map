@@ -101,7 +101,6 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                     this.routeId = '';
                     this.route = new route_1.RouteObserver(store);
                     this.routeId = this.params.get('id');
-                    console.log('route', this.routeId);
                 }
                 // Lazy load OpenSpace and Google scripts and initialise map canvas
                 AppComponent.prototype.ngOnInit = function () {

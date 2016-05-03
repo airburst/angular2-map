@@ -83,7 +83,6 @@ export class AppComponent implements OnInit {
     ) {
         this.route = new RouteObserver(store);
         this.routeId = this.params.get('id');
-        console.log('route', this.routeId)
     }
 
     // Lazy load OpenSpace and Google scripts and initialise map canvas
