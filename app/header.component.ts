@@ -37,12 +37,12 @@ import {Segment, RouteDetails} from './models/route';
                     <span>Clear</span>
                 </a>
                 
-                <a class="item" href="#" (click)="fileTrigger()">
+                <button class="item" (click)="fileTrigger()">
                     <div class="icon icon-import"></div>
                     <span>Import</span>
                     <label for="file" class="hidden">Load GPX or TCX File:</label>
                     <input class="hidden" id="file" type="file" (change)="import.emit($event)">
-                </a>
+                </button>
 
                 <a *ngIf="route.length && details.isEditable" class="item" href="#" (click)="save.emit(); false;">
                     <div class="icon icon-save"></div>
@@ -134,6 +134,9 @@ import {Segment, RouteDetails} from './models/route';
             text-decoration: none;
             font-size: 0.8em;
             line-height: 1.2em;
+            padding: 0;
+            background: transparent;
+            border: 0;
         }
         .item>div {
             margin-left: 13px;
