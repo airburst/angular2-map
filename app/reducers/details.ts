@@ -15,7 +15,7 @@ export const initialState: RouteDetails = {
     lon: 0,
     zoom: 7,
     followsRoads: true,
-    isEditable: false,
+    isEditable: true,
     hasNewElevation: true,
     selectedPointIndex: -1,
     recalculateTime: 0

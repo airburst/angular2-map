@@ -34,7 +34,6 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
             (import)="importFile($event)"
             (export)="exportFile($event)"
             (toggleRoads)="toggleRoads()"
-            (debug)="debug()"
         >
         </app-header>
         <search-results [results]="route.searchResults$ | async"
@@ -127,27 +126,27 @@ export class AppComponent implements OnInit {
             });
         }
     }
-    
+
     exportFile() {
         let name = this.store.getState().details.name + '.gpx',
-            gpx = this.gpxService.write();   
+            gpx = this.gpxService.write();
         this.fileService.save(gpx, name);
     }
-    
+
     save() {
         let r = new Route(this.store.getState());
         this.storageService.saveRoute(r)
             .subscribe(
-                (route) => {
-                    this.savedRoute = <Route>route;
-                    this.router.navigate(['Route', { id: this.savedRoute.id }]);
-                    this.showSuccess('You can share the link from the address bar.', 'Your form link');
-                },
-                (error) => {
-                    this.errorMessage = <any>error;
-                    console.log(this.errorMessage)
-                    //this.showError(this.errorMessage);
-                }
+            (route) => {
+                this.savedRoute = <Route>route;
+                this.router.navigate(['Route', { id: this.savedRoute.id }]);
+                this.showSuccess('You can share the link from the address bar.', 'Your form link');
+            },
+            (error) => {
+                this.errorMessage = <any>error;
+                console.log(this.errorMessage)
+                //this.showError(this.errorMessage);
+            }
             );
     }
 
@@ -155,14 +154,14 @@ export class AppComponent implements OnInit {
     //     this.store.dispatch({ type: UPDATE_DETAILS, payload: name });
     //     this.save();
     // }
-    
+
     clearRoute(details?: any) {
         this.store.dispatch({ type: CLEAR_DETAILS });
         this.store.dispatch({ type: CLEAR_TRACK });
         this.store.dispatch({ type: CLEAR_ELEVATION });
         this.store.dispatch({ type: CLEAR_MARKERS });
         this.store.dispatch({ type: CLEAR_RESULTS });
-        
+
         if (details !== undefined) { this.store.dispatch({ type: UPDATE_DETAILS, payload: details }); }
         this.router.navigate(['Map']);
         this.osmap.init();
@@ -172,7 +171,7 @@ export class AppComponent implements OnInit {
         this.store.dispatch({ type: REMOVE_LAST_SEGMENT });
         this.store.dispatch({ type: REMOVE_ELEVATION });
     }
-    
+
     toggleRoads() {
         this.store.dispatch({ type: TOGGLE_ROADS });
     }
@@ -186,7 +185,7 @@ export class AppComponent implements OnInit {
     search(place: string) {
         if (place !== '') { this.gazetteerService.searchPostcode(place); }
     }
-    
+
     handleSearchResults(results) {
         if (results.length === 1) {
             this.selectSearchResult(results[0]);
@@ -200,25 +199,22 @@ export class AppComponent implements OnInit {
     closeSearchResult() {
         this.store.dispatch({ type: CLEAR_RESULTS });
     }
-    
+
     loadRoute() {
         if (this.routeId !== null) {
             let r = this.storageService.getRoute(this.routeId)
                 .subscribe(
-                    (route) => {
-                        if (route.details.name !== 'false') {
-                            this.route.setRoute(route);
-                            this.osmap.centreAndSetMapEvents();
-                            this.osmap.removeMapEvents();   // TODO: only remove if imported?
-                        }
-                    },
-                    error => this.errorMessage = <any>error
+                (route) => {
+                    if (route.details.name !== 'false') {
+                        this.route.setRoute(route);
+                        this.osmap.centreAndSetMapEvents();
+                        this.osmap.removeMapEvents();   // TODO: only remove if imported?
+                        this.store.dispatch({ type: UPDATE_DETAILS, payload: { isEditable: false } });
+                    }
+                },
+                error => this.errorMessage = <any>error
                 );
         }
-    }
-
-    debug() {
-        console.log(this.store.getState())
     }
 
     showError(message: any) {

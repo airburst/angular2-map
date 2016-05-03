@@ -20,19 +20,14 @@ import {Segment, RouteDetails} from './models/route';
             </div>
             
             <div class="right">
-                <!--<a class="item" href="#" (click)="debug.emit(); false;">
-                    <div class="icon icon-debug"></div>
-                    <span>Debug</span>
-                </a>-->
-
-                <a class="item" href="#" (click)="toggleRoads.emit(); false;">
+                <a *ngIf="details.isEditable" class="item" href="#" (click)="toggleRoads.emit(); false;">
                     <div *ngIf="details.followsRoads" class="icon icon-bike"></div>
                     <span *ngIf="details.followsRoads">Ride</span>
                     <div *ngIf="!details.followsRoads" class="icon icon-walk"></div>
                     <span *ngIf="!details.followsRoads">Walk</span>
                 </a>
 
-                <a class="item" href="#" (click)="remove.emit(); false;">
+                <a *ngIf="details.isEditable" class="item" href="#" (click)="remove.emit(); false;">
                     <div class="icon icon-undo"></div>
                     <span>Undo</span>
                 </a>
@@ -49,11 +44,11 @@ import {Segment, RouteDetails} from './models/route';
                     <input class="hidden" id="file" type="file" (change)="import.emit($event)">
                 </a>
 
-                <a *ngIf="route.length" class="item" href="#" (click)="save.emit(); false;">
+                <a *ngIf="route.length && details.isEditable" class="item" href="#" (click)="save.emit(); false;">
                     <div class="icon icon-save"></div>
                     <span>Save</span>
                 </a>
-                <a *ngIf="route.length" class="item" href="#" (click)="export.emit(); false;">
+                <a *ngIf="route.length && details.isEditable" class="item" href="#" (click)="export.emit(); false;">
                     <div class="icon icon-export"></div>
                     <span>Export</span>
                 </a>
@@ -177,7 +172,6 @@ export class AppHeader {
     @Output() search = new EventEmitter();
     @Output() export = new EventEmitter();
     @Output() toggleRoads = new EventEmitter();
-    @Output() debug = new EventEmitter();
     
     searchTrigger(ev) {
         this.search.emit(ev.target.value);

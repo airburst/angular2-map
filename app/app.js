@@ -215,12 +215,10 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                                 _this.route.setRoute(route);
                                 _this.osmap.centreAndSetMapEvents();
                                 _this.osmap.removeMapEvents(); // TODO: only remove if imported?
+                                _this.store.dispatch({ type: details_1.UPDATE_DETAILS, payload: { isEditable: false } });
                             }
                         }, function (error) { return _this.errorMessage = error; });
                     }
-                };
-                AppComponent.prototype.debug = function () {
-                    console.log(this.store.getState());
                 };
                 AppComponent.prototype.showError = function (message) {
                     this.toastr.error(message, 'Oops!');
@@ -231,7 +229,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', './servi
                 AppComponent = __decorate([
                     core_1.Component({
                         // selector: 'my-app',
-                        template: "\n        <app-header [details]=\"route.details$ | async\"\n            [route]=\"route.track$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (search)=\"search($event)\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n            (toggleRoads)=\"toggleRoads()\"\n            (debug)=\"debug()\"\n        >\n        </app-header>\n        <search-results [results]=\"route.searchResults$ | async\"\n            (selected)=\"selectSearchResult($event)\"\n            (closed)=\"closeSearchResult()\"\n        ></search-results>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
+                        template: "\n        <app-header [details]=\"route.details$ | async\"\n            [route]=\"route.track$ | async\"\n            (clear)=\"clearRoute()\"\n            (remove)=\"removeLast()\"\n            (save)=\"save()\"\n            (search)=\"search($event)\"\n            (import)=\"importFile($event)\"\n            (export)=\"exportFile($event)\"\n            (toggleRoads)=\"toggleRoads()\"\n        >\n        </app-header>\n        <search-results [results]=\"route.searchResults$ | async\"\n            (selected)=\"selectSearchResult($event)\"\n            (closed)=\"closeSearchResult()\"\n        ></search-results>\n        <map></map>\n        <infopanel [route]=\"route.details$ | async\"\n            (recalc)=\"recalculateElevation()\"\n        >\n        </infopanel>\n        ",
                         directives: [common_1.FORM_DIRECTIVES, osmap_1.OsMap, header_component_1.AppHeader, infopanel_component_1.InfoPanel, search_results_component_1.SearchResults],
                         providers: [
                             gpx_service_1.GpxService,
