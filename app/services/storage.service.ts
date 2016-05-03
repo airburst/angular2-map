@@ -9,7 +9,8 @@ import {initialState} from '../reducers/details';
 @Injectable()
 export class StorageService {
 
-    private baseUrl: string = 'http://localhost:3000/route/';
+    //private baseUrl: string = 'http://localhost:3000/route/';
+    private baseUrl: string = 'http://mapsapi.fairhursts.net/route/';
 
     constructor(private http: Http) { }
 
