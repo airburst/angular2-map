@@ -44,7 +44,7 @@ import {Segment, RouteDetails} from './models/route';
                     <input class="hidden" id="file" type="file" (change)="import.emit($event)">
                 </button>
 
-                <a *ngIf="route.length && details.isEditable" class="item" href="#" (click)="save.emit(); false;">
+                <a *ngIf="route.length" class="item" href="#" (click)="save.emit(); false;">
                     <div class="icon icon-save"></div>
                     <span>Save</span>
                 </a>
