@@ -44,9 +44,11 @@ export class GpxService {
     }
 
     private gpxToRoute(xml: Document): void {
-        // Route Name (gpx/metadata/name)
-        let meta = xml.getElementsByTagName('metadata')[0];
-        this.appStore.details.name = ((meta.getElementsByTagName('name')[0]) !== undefined) ? meta.getElementsByTagName('name')[0].textContent : '';
+        // Route Name (trk/name)
+        let trk = xml.getElementsByTagName('trk')
+
+        this.appStore.details.name = (trk[0].getElementsByTagName('name') !== undefined) ? 
+            trk[0].getElementsByTagName('name')[0].textContent : '';
 
         // Waypoints (gpx/wpt[@lat, @lon, name]) -> Markers
         let wayPoints: NodeListOf<Element> = xml.getElementsByTagName('wpt');
@@ -77,7 +79,7 @@ export class GpxService {
         this.appStore.elevation.push(elevation);
         this.appStore.details.isEditable = true;
         this.appStore.details.hasNewElevation = false;
-        
+       
         this.route = new Route(this.appStore);
         this.routeObserver.setRoute(this.route);
     }

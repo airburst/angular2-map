@@ -72,9 +72,10 @@ System.register(['angular2/core', '@ngrx/store', '../models/route', '../utils/ut
                     }
                 };
                 GpxService.prototype.gpxToRoute = function (xml) {
-                    // Route Name (gpx/metadata/name)
-                    var meta = xml.getElementsByTagName('metadata')[0];
-                    this.appStore.details.name = ((meta.getElementsByTagName('name')[0]) !== undefined) ? meta.getElementsByTagName('name')[0].textContent : '';
+                    // Route Name (trk/name)
+                    var trk = xml.getElementsByTagName('trk');
+                    this.appStore.details.name = (trk[0].getElementsByTagName('name') !== undefined) ?
+                        trk[0].getElementsByTagName('name')[0].textContent : '';
                     // Waypoints (gpx/wpt[@lat, @lon, name]) -> Markers
                     var wayPoints = xml.getElementsByTagName('wpt');
                     for (var i = 0; i < wayPoints.length; i++) {
