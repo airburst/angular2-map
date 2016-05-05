@@ -99,6 +99,7 @@ import {Segment, RouteDetails} from './models/route';
             padding-left: 0.5em;
             height: 2.6em;
             width: 100%;
+            font-family: 'Roboto', 'Arial', 'Helvetica';
             font-size: 0.6em;
             color: white;
             border: 0px;
@@ -141,6 +142,9 @@ import {Segment, RouteDetails} from './models/route';
         .item>div {
             margin-left: 13px;
             border: 0;
+        }
+        .item>span {
+            font-family: 'Roboto', 'Arial', 'Helvetica';
         }
         
         .icon {
