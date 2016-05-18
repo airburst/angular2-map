@@ -1,7 +1,7 @@
-import {bootstrap} from 'angular2/platform/browser';
-import {provide} from 'angular2/core';
-import {HTTP_PROVIDERS} from 'angular2/http';
-import {ROUTER_PROVIDERS} from 'angular2/router';
+import {bootstrap} from '@angular/platform-browser-dynamic';
+import {provide} from '@angular/core';
+import {HTTP_PROVIDERS} from '@angular/http';
+import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from '@angular/router-deprecated';
 import {RootComponent} from './root';
 import {ToastOptions} from 'ng2-toastr/ng2-toastr';
 import {provideStore} from '@ngrx/store';

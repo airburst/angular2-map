@@ -1,5 +1,5 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
-import {Injectable} from 'angular2/core';
+import {Injectable} from '@angular/core';
 import {chunk, flatten, elevationData} from '../utils/utils';
 import {Point, MapPoint, Segment, AppStore, RouteObserver} from '../models/route';
 import {Store} from '@ngrx/store';

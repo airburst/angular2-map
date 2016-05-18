@@ -1,5 +1,5 @@
 ///<reference path="../../typings/window.extend.d.ts"/>
-import {Injectable} from 'angular2/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
 import {LocationResult} from '../models/os';

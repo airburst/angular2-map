@@ -1,6 +1,6 @@
 /// <reference path="../typings/d3.d.ts"/>
-import {Component, EventEmitter, ElementRef, OnInit} from 'angular2/core';
-import {NgClass} from 'angular2/common';
+import {Component, EventEmitter, ElementRef, OnInit} from '@angular/core';
+import {NgClass} from '@angular/common';
 import * as d3 from 'd3';
 import {Store} from '@ngrx/store';
 import {UPDATE_DETAILS} from './reducers/details';

@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
-import {NgClass} from 'angular2/common';
+import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from '@angular/core';
+import {NgClass} from '@angular/common';
 import {ElevationChart} from './chart.component';
 import {Segment} from './models/route';
 import {Store} from '@ngrx/store';

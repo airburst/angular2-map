@@ -1,6 +1,6 @@
-import { Component } from 'angular2/core';
-import { RouteConfig, ROUTER_DIRECTIVES } from 'angular2/router';
-import { AppComponent } from './app';
+import {Component} from '@angular/core';
+import {RouteConfig, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
+import {AppComponent} from './app';
 @Component({
     selector: 'my-app',
     template: `

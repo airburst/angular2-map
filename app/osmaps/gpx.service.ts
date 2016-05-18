@@ -1,4 +1,4 @@
-import {Injectable} from 'angular2/core';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Point, WayPoint, Marker, Segment, AppStore, Route, RouteObserver} from '../models/route';
 import {replaceAll, flatten} from '../utils/utils';

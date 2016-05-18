@@ -1,6 +1,7 @@
-import {Component, EventEmitter, OnInit, ViewContainerRef} from 'angular2/core';
-import {FORM_DIRECTIVES, Control} from 'angular2/common';
-import {RouteParams, Router} from 'angular2/router';
+import {Component, EventEmitter, OnInit, ViewContainerRef} from '@angular/core';
+import {FORM_DIRECTIVES, Control} from '@angular/common';
+//import {Router} from '@angular/router';
+import {Router, RouteParams} from '@angular/router-deprecated';
 import {FileService} from './services/file.service';
 import {ScriptLoadService} from './services/scriptload.service';
 import {StorageService} from './services/storage.service';
@@ -20,7 +21,7 @@ import {SET_ELEVATION, REMOVE_ELEVATION, CLEAR_ELEVATION} from './reducers/eleva
 import {SET_DETAILS, UPDATE_DETAILS, CLEAR_DETAILS, TOGGLE_ROADS} from './reducers/details';
 import {CLEAR_MARKERS} from './reducers/markers';
 import {SET_RESULTS, CLEAR_RESULTS} from './reducers/gazetteer';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import {ToastsManager} from 'ng2-toastr/ng2-toastr';
 
 @Component({
     // selector: 'my-app',

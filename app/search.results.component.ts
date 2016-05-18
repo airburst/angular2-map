@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
-import {NgClass} from 'angular2/common';
+import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from '@angular/core';
+import {NgClass} from '@angular/common';
 
 @Component({
     selector: 'search-results',

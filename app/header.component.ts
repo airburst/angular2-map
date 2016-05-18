@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from 'angular2/core';
-import {FORM_DIRECTIVES} from 'angular2/common';
+import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from '@angular/core';
+import {FORM_DIRECTIVES} from '@angular/common';
 import {Segment, RouteDetails} from './models/route';
 
 @Component({

@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from 'angular2/core';
-import {FORM_DIRECTIVES} from 'angular2/common';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FORM_DIRECTIVES} from '@angular/common';
 import {Point, MapPoint, WayPoint, Marker, Segment, AppStore, RouteObserver, distance} from '../models/route';
 import {uuid} from '../utils/utils';
 import {DirectionsService} from '../google/directions.service';
