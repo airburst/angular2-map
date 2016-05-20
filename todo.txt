@@ -1,12 +1,12 @@
 Features
 
-- Spinner for screen load
-- progress bar for recalculating elevation
-- Save (API)
+- Display and change name of (editable) route: use update API
+- Mobile friendly layout
+
 - Toasts for warnings and messages
   - osmaps/gazetteer.ts: no matches found for search
+  - Compat with rc1 (let)
+  - change green colour
   
-- Disable export/save if no route
-
-
-Build system for production: Angular cli
+- Build system for production: Angular cli
+- Spinner for screen load
