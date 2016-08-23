@@ -119,13 +119,13 @@ export class GpxService {
     }
 
     private template: any = {
-        header: '<?xml version="1.0" encoding="UTF-8"?>' + 
-            '<gpx creator="maps.fairhursts.net" version="1.1" xmlns="http://www.topografix.com/GPX/1/1">',
-        title: '<metadata><name>{name}</name></metadata><trk><name>{name}</name>',
-        point: '<trkpt lon="{lon}" lat="{lat}">' +
+        header: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + 
+            '<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="maps.fairhursts.net">',
+        title: '<metadata><name>{name}</name></metadata><rte><name>{name}</name>',
+        point: '<rtept lon="{lon}" lat="{lat}">' +
                '<ele>{ele}</ele>' +
-               '</trkpt>',
-        end: '</trk></gpx>'
+               '</rtept>',
+        end: '</rte></gpx>'
     }
 
     write(name?: string): string {
